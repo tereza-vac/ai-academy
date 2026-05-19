@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brand */
+    --brand-50: 217 87% 97%;
+    --brand-100: 218 87% 94%;
+    --brand-400: 212 100% 66%;
+    --brand-500: 212 100% 50%;
+    --brand-600: 212 100% 40%;
+    --brand-800: 215 96% 22%;
+    --brand-900: 215 97% 13%;
+
+    /* Neutrals */
+    --neutral-0: 0 0% 100%;
+    --neutral-50: 210 20% 98%;
+    --neutral-100: 240 5% 96%;
+    --neutral-150: 240 6% 93%;
+    --neutral-200: 240 7% 89%;
+    --neutral-250: 240 7% 83%;
+    --neutral-400: 240 9% 61%;
+    --neutral-500: 240 8% 49%;
+    --neutral-700: 244 9% 32%;
+    --neutral-800: 240 9% 24%;
+    --neutral-900: 240 9% 15%;
+    --neutral-950: 240 9% 9%;
+
+    /* Status */
+    --emerald-50: 132 68% 93%;
+    --emerald-500: 132 49% 47%;
+    --saffron-100: 55 78% 91%;
+    --saffron-500: 42 75% 55%;
+    --coral-100: 5 87% 94%;
+    --coral-500: 4 81% 61%;
+    --coral-600: 3 69% 52%;
+    --premium-50: 23 92% 95%;
+    --premium-500: 22 97% 61%;
+
+    /* Tokens */
+    --background: var(--neutral-50);
+    --foreground: var(--neutral-950);
+
+    --card: var(--neutral-0);
+    --card-foreground: var(--neutral-950);
+
+    --popover: var(--neutral-0);
+    --popover-foreground: var(--neutral-950);
+
+    --primary: var(--brand-500);
+    --primary-foreground: var(--neutral-0);
+
+    --secondary: var(--neutral-100);
+    --secondary-foreground: var(--neutral-900);
+
+    --muted: var(--neutral-100);
+    --muted-foreground: 208 6% 39%;
+
+    --accent: var(--brand-500);
+    --accent-foreground: var(--neutral-0);
+
+    --destructive: var(--coral-600);
+    --destructive-foreground: var(--neutral-0);
+
+    --border: var(--neutral-150);
+    --input: var(--neutral-200);
+    --ring: var(--brand-500);
+
+    --sidebar: var(--neutral-50);
+    --sidebar-foreground: var(--neutral-900);
+
+    --success: var(--emerald-500);
+    --success-foreground: var(--neutral-0);
+    --success-soft: var(--emerald-50);
+    --warning: var(--saffron-500);
+    --warning-foreground: var(--neutral-900);
+    --warning-soft: var(--saffron-100);
+    --coral: var(--coral-500);
+    --coral-foreground: var(--neutral-0);
+    --coral-soft: var(--coral-100);
+    --premium: var(--premium-500);
+    --premium-foreground: var(--neutral-0);
+    --premium-soft: var(--premium-50);
+
+    --brand-soft: var(--brand-50);
+    --brand-muted: var(--brand-100);
+
+    --surface-base: var(--neutral-0);
+    --surface-elevated: var(--neutral-0);
+    --surface-soft: var(--neutral-50);
+    --surface-sunken: var(--neutral-100);
+    --surface-hover: var(--neutral-100);
+
+    --text-primary: var(--neutral-950);
+    --text-secondary: 244 9% 32%;
+    --text-tertiary: 240 8% 49%;
+    --text-inverse: var(--neutral-0);
+
+    --border-subtle: var(--neutral-150);
+    --border-strong: var(--neutral-250);
+  }
+
+  .dark {
+    --background: var(--neutral-950);
+    --foreground: var(--neutral-50);
+
+    --card: var(--neutral-900);
+    --card-foreground: var(--neutral-50);
+    --popover: var(--neutral-900);
+    --popover-foreground: var(--neutral-50);
+
+    --primary: var(--brand-400);
+    --primary-foreground: var(--neutral-950);
+
+    --secondary: var(--neutral-800);
+    --secondary-foreground: var(--neutral-50);
+
+    --muted: var(--neutral-800);
+    --muted-foreground: var(--neutral-400);
+
+    --accent: var(--brand-400);
+    --accent-foreground: var(--neutral-950);
+
+    --border: var(--neutral-800);
+    --input: var(--neutral-800);
+
+    --sidebar: var(--neutral-950);
+    --sidebar-foreground: var(--neutral-50);
+
+    --surface-base: var(--neutral-900);
+    --surface-elevated: var(--neutral-800);
+    --surface-soft: var(--neutral-900);
+    --surface-sunken: var(--neutral-950);
+    --surface-hover: var(--neutral-800);
+
+    --text-primary: var(--neutral-50);
+    --text-secondary: var(--neutral-200);
+    --text-tertiary: var(--neutral-400);
+
+    --border-subtle: var(--neutral-800);
+    --border-strong: var(--neutral-700);
+
+    --brand-soft: 215 96% 16%;
+    --brand-muted: 215 96% 22%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Subtle focus ring across the app */
+  :focus-visible {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border-strong));
+    border-radius: 9999px;
+  }
+}

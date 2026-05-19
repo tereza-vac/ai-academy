@@ -1,0 +1,4 @@
+# Local development data
+.branches
+.temp
+.env

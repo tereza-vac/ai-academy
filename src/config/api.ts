@@ -1,0 +1,17 @@
+function getFallbackSupabaseUrl(): string {
+  if (typeof window === "undefined") return "http://127.0.0.1:54321";
+  const host = window.location.hostname || "127.0.0.1";
+  return `http://${host}:54321`;
+}
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || getFallbackSupabaseUrl();
+const SUPABASE_PUBLISHABLE_KEY =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_local_anon_key";
+
+export const API_CONFIG = {
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+
+  RADAR_INGEST_URL: `${SUPABASE_URL}/functions/v1/radar-ingest`,
+  AI_ENRICH_URL: `${SUPABASE_URL}/functions/v1/ai-enrich`,
+} as const;
