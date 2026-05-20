@@ -3,7 +3,6 @@ import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sidebarNavigation } from "@/config/navigation";
 import { useUIStore } from "@/stores/uiStore";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { SidebarUserMenu } from "@/components/sidebar-user-menu";
 
 function Logo({ collapsed }: { collapsed: boolean }) {
@@ -79,8 +78,7 @@ export function AppSidebar() {
           })}
         </nav>
 
-        <div className={cn("flex flex-col gap-3 border-t border-border-subtle", collapsed ? "items-center p-2" : "p-3")}>
-          <ThemeToggle variant={collapsed ? "compact" : "row"} />
+        <div className={cn("border-t border-border-subtle", collapsed ? "flex justify-center p-2" : "p-3")}>
           <SidebarUserMenu collapsed={collapsed} />
         </div>
       </div>
