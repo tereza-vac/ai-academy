@@ -133,23 +133,29 @@ function makeOpenAI() {
   return createOpenAI({ apiKey });
 }
 
+// OpenAI structured-output strict mode requires every property to appear in
+// `required`. Use `.nullable()` instead of `.optional()` so the field is always
+// present (with a value or `null`) and the schema validates as strict.
 const QuizQuestionSchema = z.object({
   id: z.string(),
   kind: z.enum(["mcq", "flashcard"]),
   prompt: z.string(),
-  options: z.array(z.string()).optional(),
-  answerIndex: z.number().int().min(0).optional(),
-  answer: z.string().optional(),
-  explanation: z.string().optional(),
+  options: z.array(z.string()).nullable()
+    .describe("4 options for MCQ questions; null for flashcards."),
+  answerIndex: z.number().int().min(0).nullable()
+    .describe("0-based index of the correct option for MCQ; null for flashcards."),
+  answer: z.string().nullable()
+    .describe("The answer text for flashcards; null for MCQ."),
+  explanation: z.string().nullable()
+    .describe("Brief explanation of the answer."),
 });
 
 const SummarySchema = z.object({
   summary: z.string().describe("2–4 sentence summary suitable for an AI learning library."),
-  tags: z.array(z.string()).max(8).describe("Short, lowercase tags. No #."),
+  tags: z.array(z.string()).describe("Up to 8 short, lowercase tags. No leading #."),
   topicHints: z
     .array(z.string())
-    .max(5)
-    .describe("Slugs of topics this resource probably relates to (if any)."),
+    .describe("Up to 5 topic slugs this resource probably relates to (empty array if none)."),
 });
 
 export const openAIEnrichment: AIEnrichmentService = {
@@ -196,16 +202,17 @@ export const openAIEnrichment: AIEnrichmentService = {
         `Topic body:\n${topicBody.slice(0, 4000)}`,
       ].join("\n\n"),
     });
-    // Defensive: cast to widened union (Zod narrows everything as optional).
+    // Strip the `null` placeholders the model has to emit under strict mode so
+    // the client sees the original `field?: T` shape.
     return {
       questions: object.questions.map((q, i) => ({
         id: q.id || `q${i + 1}`,
         kind: q.kind,
         prompt: q.prompt,
-        options: q.options,
-        answerIndex: q.answerIndex,
-        answer: q.answer,
-        explanation: q.explanation,
+        ...(q.options !== null ? { options: q.options } : {}),
+        ...(q.answerIndex !== null ? { answerIndex: q.answerIndex } : {}),
+        ...(q.answer !== null ? { answer: q.answer } : {}),
+        ...(q.explanation !== null ? { explanation: q.explanation } : {}),
       })),
     };
   },
