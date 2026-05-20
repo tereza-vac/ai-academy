@@ -18,28 +18,94 @@ const trackAccent: Record<string, string> = {
   coral: "bg-coral-soft text-[hsl(var(--coral))]",
 };
 
+const FALLBACK_COLORS = ["brand", "premium", "success", "coral"] as const;
+const UNCATEGORISED_KEY = "__uncategorised__";
+
+interface DerivedGroup {
+  track: Track;
+  topics: Topic[];
+  /** True when this group's track metadata had to be inferred from topic rows. */
+  derived: boolean;
+}
+
 export function Component() {
   const tracksQuery = useQuery({ queryKey: queryKeys.tracks, queryFn: listTracks });
   const topicsQuery = useQuery({ queryKey: queryKeys.topics, queryFn: listTopics });
 
-  const grouped = useMemo(() => {
+  // Build groups from topic rows, then decorate with `tracks` metadata when available.
+  // This keeps the page useful when the `tracks` table is empty, blocked by RLS, or
+  // out-of-sync with what `topics.track_id` references.
+  const grouped = useMemo<DerivedGroup[]>(() => {
     const tracks = tracksQuery.data ?? [];
     const topics = topicsQuery.data ?? [];
-    const map = new Map<string | null, Topic[]>();
-    for (const t of topics) {
-      const key = t.trackId ?? null;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(t);
+
+    const trackById = new Map(tracks.map((t) => [t.id, t]));
+
+    const byKey = new Map<string, Topic[]>();
+    for (const topic of topics) {
+      const key = topic.trackId ?? UNCATEGORISED_KEY;
+      const bucket = byKey.get(key) ?? [];
+      bucket.push(topic);
+      byKey.set(key, bucket);
     }
-    return tracks
-      .map((track) => ({ track, topics: (map.get(track.id) ?? []).sort((a, b) => a.position - b.position) }))
-      .filter(({ topics }) => topics.length > 0);
+
+    let derivedIndex = 0;
+    const groups: DerivedGroup[] = Array.from(byKey.entries()).map(([key, items]) => {
+      const sortedTopics = [...items].sort((a, b) => a.position - b.position);
+
+      if (key === UNCATEGORISED_KEY) {
+        return {
+          track: {
+            id: UNCATEGORISED_KEY,
+            slug: "uncategorised",
+            title: "Uncategorised topics",
+            description: "Topics that aren't linked to a track yet.",
+            color: "brand",
+            position: Number.MAX_SAFE_INTEGER,
+          },
+          topics: sortedTopics,
+          derived: true,
+        };
+      }
+
+      const known = trackById.get(key);
+      if (known) {
+        return { track: known, topics: sortedTopics, derived: false };
+      }
+
+      // Topics reference a track id we can't read (missing row, RLS, etc.).
+      // Push them to the end and label them generically — better than dropping them silently.
+      const color = FALLBACK_COLORS[derivedIndex % FALLBACK_COLORS.length];
+      derivedIndex += 1;
+      return {
+        track: {
+          id: key,
+          slug: `track-${derivedIndex}`,
+          title: `Track ${derivedIndex}`,
+          description: "Track metadata isn't available — showing topics by their stored track id.",
+          color,
+          position: 1_000 + derivedIndex,
+        },
+        topics: sortedTopics,
+        derived: true,
+      };
+    });
+
+    return groups.sort((a, b) => a.track.position - b.track.position);
   }, [tracksQuery.data, topicsQuery.data]);
 
   const totalMinutes = useMemo(
     () => (topicsQuery.data ?? []).reduce((sum, t) => sum + t.estimatedMinutes, 0),
     [topicsQuery.data],
   );
+
+  const isLoading = tracksQuery.isLoading || topicsQuery.isLoading;
+
+  // Prefer the number of groups we can actually render (covers the case where
+  // topics exist but the `tracks` table is empty or unreadable). Fall back to
+  // the raw `tracks` count when there are no topics yet but tracks exist.
+  const tracksCount =
+    grouped.length > 0 ? grouped.length : tracksQuery.data?.length ?? 0;
 
   return (
     <div className="space-y-8">
@@ -52,12 +118,12 @@ export function Component() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <SummaryStat
           label="Tracks"
-          value={tracksQuery.data?.length ?? "—"}
+          value={isLoading ? "—" : tracksCount}
           icon={<Layers className="h-4 w-4" />}
         />
         <SummaryStat
           label="Topics"
-          value={topicsQuery.data?.length ?? "—"}
+          value={isLoading ? "—" : topicsQuery.data?.length ?? 0}
           icon={<Layers className="h-4 w-4" />}
         />
         <SummaryStat
@@ -68,10 +134,16 @@ export function Component() {
       </div>
 
       <div className="space-y-10">
-        {tracksQuery.isLoading || topicsQuery.isLoading
+        {isLoading
           ? Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)
-          : grouped.map(({ track, topics }) => (
-              <TrackSection key={track.id} track={track} topics={topics} />
+          : grouped.map(({ track, topics, derived }, idx) => (
+              <TrackSection
+                key={track.id}
+                track={track}
+                topics={topics}
+                derived={derived}
+                indexLabel={idx + 1}
+              />
             ))}
       </div>
     </div>
@@ -96,7 +168,17 @@ function SummaryStat({ label, value, icon }: { label: string; value: React.React
   );
 }
 
-function TrackSection({ track, topics }: { track: Track; topics: Topic[] }) {
+function TrackSection({
+  track,
+  topics,
+  derived,
+  indexLabel,
+}: {
+  track: Track;
+  topics: Topic[];
+  derived: boolean;
+  indexLabel: number;
+}) {
   const accent = trackAccent[track.color ?? ""] ?? trackAccent.brand;
 
   return (
@@ -109,11 +191,12 @@ function TrackSection({ track, topics }: { track: Track; topics: Topic[] }) {
               accent,
             )}
           >
-            {track.position}
+            {indexLabel}
           </div>
           <div>
-            <div className="text-caption-xs uppercase tracking-wide text-content-tertiary">
-              Track
+            <div className="flex items-center gap-2 text-caption-xs uppercase tracking-wide text-content-tertiary">
+              <span>Track</span>
+              {derived ? <Badge variant="muted">derived</Badge> : null}
             </div>
             <h2 className="text-heading-sm font-semibold tracking-tight text-content-primary">
               {track.title}
