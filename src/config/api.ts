@@ -5,8 +5,12 @@ function getFallbackSupabaseUrl(): string {
 }
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || getFallbackSupabaseUrl();
+// Accept either `VITE_SUPABASE_PUBLISHABLE_KEY` (new naming used by `supabase start`)
+// or `VITE_SUPABASE_ANON_KEY` (legacy, still issued by the hosted dashboard).
 const SUPABASE_PUBLISHABLE_KEY =
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_local_anon_key";
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  "sb_publishable_local_anon_key";
 
 export const API_CONFIG = {
   SUPABASE_URL,

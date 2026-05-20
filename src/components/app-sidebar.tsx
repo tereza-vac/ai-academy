@@ -3,6 +3,8 @@ import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sidebarNavigation } from "@/config/navigation";
 import { useUIStore } from "@/stores/uiStore";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { SidebarUserMenu } from "@/components/sidebar-user-menu";
 
 function Logo({ collapsed }: { collapsed: boolean }) {
   return (
@@ -77,21 +79,9 @@ export function AppSidebar() {
           })}
         </nav>
 
-        <div className="border-t border-border-subtle p-3">
-          {!collapsed ? (
-            <div className="rounded-xl border border-border-subtle bg-surface-elevated p-3">
-              <div className="text-body-sm font-semibold tracking-tight text-content-primary">
-                Tip
-              </div>
-              <p className="mt-1 text-body-sm text-content-secondary">
-                Save anything that catches your eye in Radar — it shows up in your Library.
-              </p>
-            </div>
-          ) : (
-            <div className="flex h-9 items-center justify-center rounded-lg bg-surface-elevated text-content-tertiary shadow-elevation-sm">
-              <Sparkles className="h-4 w-4" />
-            </div>
-          )}
+        <div className={cn("flex flex-col gap-3 border-t border-border-subtle", collapsed ? "items-center p-2" : "p-3")}>
+          <ThemeToggle variant={collapsed ? "compact" : "row"} />
+          <SidebarUserMenu collapsed={collapsed} />
         </div>
       </div>
     </aside>

@@ -61,9 +61,14 @@ export async function createNote(input: {
     return note;
   }
 
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth.user?.id;
+  if (!userId) throw new Error("You must be signed in to create notes.");
+
   const { data, error } = await supabase
     .from("notes")
     .insert({
+      user_id: userId,
       title: input.title,
       body: input.body ?? null,
       topic_id: input.topicId ?? null,

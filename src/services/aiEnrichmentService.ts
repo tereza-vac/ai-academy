@@ -13,6 +13,8 @@
  */
 
 import { API_CONFIG } from "@/config/api";
+import { dataMode } from "@/lib/dataMode";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface SummarizeInput {
   url: string;
@@ -125,12 +127,17 @@ export const mockEnrichment: AIEnrichmentService = {
 type Action = "summarize" | "embed" | "generateQuiz";
 
 async function callEdge<T>(action: Action, payload: unknown): Promise<T> {
+  // Prefer the user's access token (lets the edge function attribute usage)
+  // and fall back to the publishable key for unauthenticated calls.
+  const { data } = await supabase.auth.getSession();
+  const accessToken = data.session?.access_token ?? API_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+
   const res = await fetch(API_CONFIG.AI_ENRICH_URL, {
     method: "POST",
     headers: {
       "content-type": "application/json",
       apikey: API_CONFIG.SUPABASE_PUBLISHABLE_KEY,
-      Authorization: `Bearer ${API_CONFIG.SUPABASE_PUBLISHABLE_KEY}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({ action, payload }),
   });
@@ -138,7 +145,8 @@ async function callEdge<T>(action: Action, payload: unknown): Promise<T> {
     const text = await res.text().catch(() => "");
     throw new Error(`ai-enrich ${action} failed: ${res.status} ${text}`);
   }
-  const json = (await res.json()) as { data: T };
+  const json = (await res.json()) as { data: T; error: string | null };
+  if (json.error) throw new Error(json.error);
   return json.data;
 }
 
@@ -151,7 +159,11 @@ export const remoteEnrichment: AIEnrichmentService = {
 /**
  * Default implementation the rest of the app should import.
  *
- * Today this is `mockEnrichment`. Flip the constant below when the edge
- * function is wired to OpenAI.
+ * - In `mock` mode (no Supabase URL) we use bundled `mockEnrichment` so the
+ *   app boots without any backend.
+ * - In `supabase` mode we go through the `ai-enrich` edge function, which
+ *   in turn calls OpenAI (or its mock fallback) — see
+ *   `supabase/functions/_shared/ai.ts`.
  */
-export const defaultEnrichment: AIEnrichmentService = mockEnrichment;
+export const defaultEnrichment: AIEnrichmentService =
+  dataMode === "supabase" ? remoteEnrichment : mockEnrichment;

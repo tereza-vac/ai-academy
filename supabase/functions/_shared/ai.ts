@@ -1,18 +1,25 @@
 /**
  * Edge-side AI enrichment.
  *
- * Mirrors the client-side `AIEnrichmentService` interface from
- * `src/services/aiEnrichmentService.ts`. Two implementations:
+ * Mirrors the client-side `AIEnrichmentService` from
+ * `src/services/aiEnrichmentService.ts`. Two real implementations are wired
+ * here:
  *
- *   - `mockEnrichment`  — deterministic placeholder, lets the rest of the
- *                          pipeline work without an OpenAI key.
- *   - `openAIEnrichment` — stubbed; flip to a real `fetch` call to
- *                          `https://api.openai.com/v1/...` when ready. The
- *                          types are designed to mirror OpenAI's API so wiring
- *                          stays mechanical.
+ *   - `mockEnrichment`    deterministic placeholders. Always available, no
+ *                         secrets required.
+ *   - `openAIEnrichment`  real OpenAI calls via the Vercel AI SDK
+ *                         (`generateText`, `generateObject`, `embed`) — the
+ *                         same pattern sciobot-next uses, scaled down to the
+ *                         one provider we need today.
  *
- * Picks an implementation based on whether `OPENAI_API_KEY` is set.
+ * `pickEnrichment()` chooses based on `OPENAI_API_KEY`. If you'd rather route
+ * through the Vercel AI Gateway (multi-provider with one key, sciobot's
+ * approach), set `AI_GATEWAY_API_KEY` and swap the `createOpenAI` factory for
+ * `gateway` from `npm:ai` — the surface stays identical.
  */
+import { embed, generateObject } from "npm:ai@6";
+import { createOpenAI } from "npm:@ai-sdk/openai@3";
+import { z } from "npm:zod@4";
 
 export interface SummarizeInput {
   url: string;
@@ -55,6 +62,8 @@ export interface AIEnrichmentService {
   embedText(input: EmbedInput): Promise<EmbedOutput>;
   generateQuiz(input: GenerateQuizInput): Promise<GenerateQuizOutput>;
 }
+
+/* ---------- Mock implementation (deterministic, no secrets) ---------- */
 
 function deterministicTags(text: string): string[] {
   const lower = text.toLowerCase();
@@ -113,36 +122,100 @@ export const mockEnrichment: AIEnrichmentService = {
   },
 };
 
-/**
- * Stubbed OpenAI implementation. The endpoints and request shapes are
- * what you'd actually call — uncomment the `fetch` blocks and remove the
- * `throw` to enable.
- */
+/* ---------- OpenAI implementation (Vercel AI SDK) ---------- */
+
+const CHAT_MODEL = Deno.env.get("OPENAI_CHAT_MODEL") ?? "gpt-4o-mini";
+const EMBEDDING_MODEL = Deno.env.get("OPENAI_EMBEDDING_MODEL") ?? "text-embedding-3-small";
+
+function makeOpenAI() {
+  const apiKey = Deno.env.get("OPENAI_API_KEY");
+  if (!apiKey) throw new Error("OPENAI_API_KEY is not set");
+  return createOpenAI({ apiKey });
+}
+
+const QuizQuestionSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["mcq", "flashcard"]),
+  prompt: z.string(),
+  options: z.array(z.string()).optional(),
+  answerIndex: z.number().int().min(0).optional(),
+  answer: z.string().optional(),
+  explanation: z.string().optional(),
+});
+
+const SummarySchema = z.object({
+  summary: z.string().describe("2–4 sentence summary suitable for an AI learning library."),
+  tags: z.array(z.string()).max(8).describe("Short, lowercase tags. No #."),
+  topicHints: z
+    .array(z.string())
+    .max(5)
+    .describe("Slugs of topics this resource probably relates to (if any)."),
+});
+
 export const openAIEnrichment: AIEnrichmentService = {
-  async summarizeResource(_input) {
-    throw new Error(
-      "openAIEnrichment.summarizeResource is not wired yet. " +
-      "Replace the body with a call to https://api.openai.com/v1/chat/completions.",
-    );
+  async summarizeResource({ url, title, rawText }) {
+    const openai = makeOpenAI();
+    const { object } = await generateObject({
+      model: openai(CHAT_MODEL),
+      schema: SummarySchema,
+      system:
+        "You produce concise, factual summaries for an internal AI learning platform. " +
+        "Prefer specific terminology over marketing language. If you don't have enough context, say so.",
+      prompt: [
+        `URL: ${url}`,
+        `Title: ${title}`,
+        rawText ? `Content:\n${rawText.slice(0, 6000)}` : null,
+      ].filter(Boolean).join("\n\n"),
+    });
+    return object;
   },
-  async embedText(_input) {
-    throw new Error(
-      "openAIEnrichment.embedText is not wired yet. " +
-      "Replace the body with a call to https://api.openai.com/v1/embeddings " +
-      "(model: text-embedding-3-small).",
-    );
+
+  async embedText({ text }) {
+    const openai = makeOpenAI();
+    const { embedding } = await embed({
+      model: openai.embedding(EMBEDDING_MODEL),
+      value: text,
+    });
+    return { embedding, model: EMBEDDING_MODEL };
   },
-  async generateQuiz(_input) {
-    throw new Error(
-      "openAIEnrichment.generateQuiz is not wired yet. " +
-      "Replace the body with a structured-output call (response_format: json_schema).",
-    );
+
+  async generateQuiz({ topicTitle, topicBody, count = 4 }) {
+    const openai = makeOpenAI();
+    const { object } = await generateObject({
+      model: openai(CHAT_MODEL),
+      schema: z.object({
+        questions: z.array(QuizQuestionSchema).min(1).max(10),
+      }),
+      system:
+        "You write short quizzes for an internal AI learning platform. Mix multiple-choice " +
+        "and flashcards. For MCQ: 4 options, exactly one correct, `answerIndex` is 0-based, " +
+        "include a brief `explanation`. For flashcards: a `prompt` (question) and `answer`. " +
+        "Use stable string ids like 'q1', 'q2', ….",
+      prompt: [
+        `Generate ${count} questions for the topic "${topicTitle}".`,
+        `Topic body:\n${topicBody.slice(0, 4000)}`,
+      ].join("\n\n"),
+    });
+    // Defensive: cast to widened union (Zod narrows everything as optional).
+    return {
+      questions: object.questions.map((q, i) => ({
+        id: q.id || `q${i + 1}`,
+        kind: q.kind,
+        prompt: q.prompt,
+        options: q.options,
+        answerIndex: q.answerIndex,
+        answer: q.answer,
+        explanation: q.explanation,
+      })),
+    };
   },
 };
 
+/**
+ * Pick an implementation based on env. Today: real OpenAI when the key is set,
+ * mock otherwise. Add more branches here (gateway, Anthropic, …) as needed.
+ */
 export function pickEnrichment(): AIEnrichmentService {
-  // Today: always mock. Once `openAIEnrichment` is implemented, uncomment.
-  // const hasKey = Boolean(Deno.env.get("OPENAI_API_KEY"));
-  // return hasKey ? openAIEnrichment : mockEnrichment;
-  return mockEnrichment;
+  const hasOpenAIKey = Boolean(Deno.env.get("OPENAI_API_KEY"));
+  return hasOpenAIKey ? openAIEnrichment : mockEnrichment;
 }

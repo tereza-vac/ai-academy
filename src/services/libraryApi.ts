@@ -56,10 +56,15 @@ export async function saveResource(input: {
     return item;
   }
 
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth.user?.id;
+  if (!userId) throw new Error("You must be signed in to save resources.");
+
   const { data, error } = await supabase
     .from("saved_items")
     .upsert(
       {
+        user_id: userId,
         resource_id: input.resourceId,
         note: input.note ?? null,
         tags: input.tags ?? [],

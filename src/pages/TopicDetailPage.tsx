@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Markdown } from "@/components/markdown";
 import { ResourceCard } from "@/components/resource-card";
+import { AIGeneratedQuestions } from "@/components/ai-generated-questions";
 import { getTopicBySlug, listTopics } from "@/services/topicsApi";
 import { listResources } from "@/services/resourcesApi";
 import { listQuizzes } from "@/services/practiceApi";
@@ -150,6 +151,8 @@ export function Component() {
               </CardContent>
             </Card>
           ) : null}
+
+          <AIGeneratedQuestions topic={topic} />
         </aside>
       </div>
 
