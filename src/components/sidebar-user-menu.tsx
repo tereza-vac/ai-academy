@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   ChevronsUpDown,
   Copy,
+  Globe,
   Keyboard,
   Laptop,
   LogIn,
@@ -34,6 +35,14 @@ import { cn } from "@/lib/utils";
 import { isMock } from "@/lib/dataMode";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "@/services/authApi";
+import {
+  localeNames,
+  selectAvailableLocales,
+  selectLocale,
+  useLocaleStore,
+  type Locales,
+} from "@/stores/localeStore";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 function initials(name: string | null, email: string) {
   if (name) {
@@ -73,38 +82,43 @@ function Avatar({
 }
 
 function ThemeSubMenu() {
+  const { LL } = useI18nContext();
   const { theme, setTheme, resolvedTheme } = useTheme();
-  // `theme` is undefined until next-themes hydrates — fall back to "system".
   const value = (theme ?? "system") as "light" | "dark" | "system";
-  const effective = resolvedTheme === "dark" ? "Dark" : "Light";
+  const summary =
+    value === "light"
+      ? LL.userMenu.themeLight()
+      : value === "dark"
+        ? LL.userMenu.themeDark()
+        : `${LL.userMenu.themeSystem()} · ${
+            resolvedTheme === "dark" ? LL.userMenu.themeDark() : LL.userMenu.themeLight()
+          }`;
 
   return (
     <DropdownMenuSub>
       <DropdownMenuSubTrigger>
         <Palette />
-        <span className="flex-1">Appearance</span>
-        <span className="ml-auto text-caption-xs text-content-tertiary">
-          {value === "system" ? `System · ${effective}` : value === "dark" ? "Dark" : "Light"}
-        </span>
+        <span className="flex-1">{LL.userMenu.appearance()}</span>
+        <span className="ml-auto text-caption-xs text-content-tertiary">{summary}</span>
       </DropdownMenuSubTrigger>
       <DropdownMenuPortal>
         <DropdownMenuSubContent sideOffset={6} alignOffset={-4}>
-          <DropdownMenuLabel>Theme</DropdownMenuLabel>
+          <DropdownMenuLabel>{LL.userMenu.theme()}</DropdownMenuLabel>
           <DropdownMenuRadioGroup
             value={value}
             onValueChange={(v) => setTheme(v as "light" | "dark" | "system")}
           >
             <DropdownMenuRadioItem value="light">
               <Sun className="mr-2 h-4 w-4 text-content-tertiary" />
-              Light
+              {LL.userMenu.themeLight()}
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="dark">
               <Moon className="mr-2 h-4 w-4 text-content-tertiary" />
-              Dark
+              {LL.userMenu.themeDark()}
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="system">
               <Laptop className="mr-2 h-4 w-4 text-content-tertiary" />
-              System
+              {LL.userMenu.themeSystem()}
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuSubContent>
@@ -113,49 +127,90 @@ function ThemeSubMenu() {
   );
 }
 
+function LanguageSubMenu() {
+  const { LL } = useI18nContext();
+  const locale = useLocaleStore(selectLocale);
+  const available = useLocaleStore(selectAvailableLocales);
+  const setLocale = useLocaleStore((s) => s.setLocale);
+
+  return (
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>
+        <Globe />
+        <span className="flex-1">{LL.userMenu.language()}</span>
+        <span className="ml-auto text-caption-xs text-content-tertiary">
+          {localeNames[locale]}
+        </span>
+      </DropdownMenuSubTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuSubContent sideOffset={6} alignOffset={-4}>
+          <DropdownMenuLabel>{LL.userMenu.language()}</DropdownMenuLabel>
+          <DropdownMenuRadioGroup
+            value={locale}
+            onValueChange={(v) => setLocale(v as Locales)}
+          >
+            {available.map((l) => (
+              <DropdownMenuRadioItem key={l} value={l}>
+                {localeNames[l]}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuSubContent>
+      </DropdownMenuPortal>
+    </DropdownMenuSub>
+  );
+}
+
 export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
+  const { LL } = useI18nContext();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Avoid SSR/hydration mismatch on the trigger label that reads from next-themes
+  // Suppress hydration shift on theme-derived label inside the dropdown
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  void mounted;
 
   async function handleSignOut() {
     try {
       await signOut();
-      toast.success("Signed out");
+      toast.success(LL.userMenu.signedOut());
       navigate("/login", { replace: true });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Sign out failed");
+      toast.error(e instanceof Error ? e.message : LL.userMenu.signOutFailed());
     }
   }
 
   async function copyEmail(email: string) {
     try {
       await navigator.clipboard.writeText(email);
-      toast.success("Email copied");
+      toast.success(LL.userMenu.copiedEmail());
     } catch {
-      toast.error("Couldn't copy email");
+      toast.error(LL.userMenu.copyEmailFailed());
     }
   }
 
-  // Mock mode and signed-out users get a lightweight CTA.
+  // Mock mode + signed-out users
   if (!user) {
     if (isMock) {
       return collapsed ? (
         <div
           className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-sunken text-content-tertiary"
-          title="Demo mode (no auth)"
+          title={LL.userMenu.demoModeTitle()}
         >
           <UserIcon className="h-4 w-4" />
         </div>
       ) : (
-        <DemoCard />
+        <div className="rounded-xl border border-border-subtle bg-surface-elevated p-2.5 text-body-sm text-content-secondary">
+          <div className="font-medium text-content-primary">{LL.userMenu.demoModeTitle()}</div>
+          <div className="text-caption-xs text-content-tertiary">
+            {LL.userMenu.demoModeDescription()}
+          </div>
+        </div>
       );
     }
     return collapsed ? (
-      <Button asChild variant="ghost" size="icon-sm" aria-label="Sign in">
+      <Button asChild variant="ghost" size="icon-sm" aria-label={LL.userMenu.signIn()}>
         <Link to="/login">
           <LogIn className="h-4 w-4" />
         </Link>
@@ -164,7 +219,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
       <Button asChild variant="outline" className="w-full">
         <Link to="/login">
           <LogIn className="h-4 w-4" />
-          Sign in
+          {LL.userMenu.signIn()}
         </Link>
       </Button>
     );
@@ -172,15 +227,12 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
 
   const display = user.displayName ?? user.email.split("@")[0];
 
-  // Tiny lock to keep theme picker label stable until mounted
-  void mounted;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          aria-label={`${display} menu`}
+          aria-label={LL.userMenu.trigger()}
           className={cn(
             "group flex w-full items-center gap-2 rounded-xl text-left transition-colors outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
             collapsed
@@ -235,42 +287,32 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
         <DropdownMenuSeparator />
 
         <ThemeSubMenu />
+        <LanguageSubMenu />
 
         <DropdownMenuItem onSelect={() => copyEmail(user.email)}>
           <Copy />
-          <span>Copy email</span>
+          <span>{LL.userMenu.copyEmail()}</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem
           onSelect={(e) => {
             e.preventDefault();
-            toast("Keyboard shortcuts coming soon", {
-              description: "Press / to focus search (when we ship it).",
+            toast(LL.userMenu.keyboardShortcutsToast(), {
+              description: LL.userMenu.keyboardShortcutsHint(),
             });
           }}
         >
           <Keyboard />
-          <span>Keyboard shortcuts</span>
+          <span>{LL.userMenu.keyboardShortcuts()}</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem destructive onSelect={handleSignOut}>
           <LogOut />
-          <span>Sign out</span>
+          <span>{LL.userMenu.signOut()}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-}
-
-function DemoCard() {
-  return (
-    <div className="rounded-xl border border-border-subtle bg-surface-elevated p-2.5 text-body-sm text-content-secondary">
-      <div className="font-medium text-content-primary">Demo mode</div>
-      <div className="text-caption-xs text-content-tertiary">
-        Configure Supabase to enable sign-in.
-      </div>
-    </div>
   );
 }

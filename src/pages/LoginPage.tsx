@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/useAuth";
 import { signInWithEmail, signInWithOAuth } from "@/services/authApi";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -21,6 +22,7 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export function Component() {
+  const { LL } = useI18nContext();
   const { user, isLoading } = useAuth();
   const location = useLocation();
   const from = (location.state as { from?: string } | null)?.from ?? "/";
@@ -44,10 +46,9 @@ export function Component() {
     setPending("google");
     try {
       await signInWithOAuth("google");
-      // Browser will redirect to Google — no further UI needed.
     } catch (e) {
       setPending(null);
-      toast.error(e instanceof Error ? e.message : "Google sign-in failed");
+      toast.error(e instanceof Error ? e.message : LL.auth.googleSignInFailed());
     }
   }
 
@@ -58,9 +59,9 @@ export function Component() {
     try {
       await signInWithEmail({ email: email.trim() });
       setEmailSent(true);
-      toast.success("Magic link sent — check your inbox.");
+      toast.success(LL.auth.magicLinkSentToast());
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Email sign-in failed");
+      toast.error(e instanceof Error ? e.message : LL.auth.emailSignInFailed());
     } finally {
       setPending(null);
     }
@@ -75,17 +76,17 @@ export function Component() {
           </div>
           <div className="leading-tight">
             <div className="text-body-lg font-semibold tracking-tight text-content-primary">
-              AI Academy
+              {LL.common.appName()}
             </div>
-            <div className="text-caption-xs text-content-tertiary">internal · MVP</div>
+            <div className="text-caption-xs text-content-tertiary">{LL.common.tagline()}</div>
           </div>
         </div>
 
         <Card variant="elevated">
           <CardHeader>
-            <CardTitle>Sign in</CardTitle>
+            <CardTitle>{LL.auth.signInTitle()}</CardTitle>
             <p className="text-body-md text-content-secondary">
-              Use your work Google account, or get a one-time magic link by email.
+              {LL.auth.signInDescription()}
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -100,27 +101,27 @@ export function Component() {
               ) : (
                 <GoogleIcon className="h-4 w-4" />
               )}
-              Continue with Google
+              {LL.auth.continueWithGoogle()}
             </Button>
 
             <div className="flex items-center gap-3 text-caption-xs uppercase tracking-wide text-content-tertiary">
               <Separator className="flex-1" />
-              or
+              {LL.auth.orDivider()}
               <Separator className="flex-1" />
             </div>
 
             {emailSent ? (
               <div className="rounded-xl border border-border-subtle bg-success-soft p-4 text-body-md text-content-primary">
-                <div className="font-medium">Check your inbox</div>
+                <div className="font-medium">{LL.auth.magicLinkSentTitle()}</div>
                 <p className="text-body-sm text-content-secondary">
-                  We sent a magic link to <strong>{email}</strong>. Click it to finish signing in.
+                  {LL.auth.magicLinkSentBody({ email })}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleEmail} className="space-y-2">
                 <Input
                   type="email"
-                  placeholder="you@company.com"
+                  placeholder={LL.auth.emailPlaceholder()}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -137,13 +138,13 @@ export function Component() {
                   ) : (
                     <Mail className="h-4 w-4" />
                   )}
-                  Email me a magic link
+                  {LL.auth.sendMagicLink()}
                 </Button>
               </form>
             )}
 
             <p className="text-caption-xs text-content-tertiary">
-              By signing in you agree to our internal usage guidelines.
+              {LL.auth.terms()}
             </p>
           </CardContent>
         </Card>

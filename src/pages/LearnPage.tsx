@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { listTopics, listTracks } from "@/services/topicsApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { cn } from "@/lib/utils";
+import { useI18nContext } from "@/i18n/i18n-react";
+import type { TranslationFunctions } from "@/i18n/i18n-types";
 import type { Topic, Track } from "@/types/domain";
 
 const trackAccent: Record<string, string> = {
@@ -29,6 +31,7 @@ interface DerivedGroup {
 }
 
 export function Component() {
+  const { LL } = useI18nContext();
   const tracksQuery = useQuery({ queryKey: queryKeys.tracks, queryFn: listTracks });
   const topicsQuery = useQuery({ queryKey: queryKeys.topics, queryFn: listTopics });
 
@@ -58,8 +61,8 @@ export function Component() {
           track: {
             id: UNCATEGORISED_KEY,
             slug: "uncategorised",
-            title: "Uncategorised topics",
-            description: "Topics that aren't linked to a track yet.",
+            title: LL.learn.uncategorisedTitle(),
+            description: LL.learn.uncategorisedDescription(),
             color: "brand",
             position: Number.MAX_SAFE_INTEGER,
           },
@@ -81,8 +84,8 @@ export function Component() {
         track: {
           id: key,
           slug: `track-${derivedIndex}`,
-          title: `Track ${derivedIndex}`,
-          description: "Track metadata isn't available — showing topics by their stored track id.",
+          title: LL.learn.derivedTrackTitle({ n: derivedIndex }),
+          description: LL.learn.derivedTrackDescription(),
           color,
           position: 1_000 + derivedIndex,
         },
@@ -92,7 +95,7 @@ export function Component() {
     });
 
     return groups.sort((a, b) => a.track.position - b.track.position);
-  }, [tracksQuery.data, topicsQuery.data]);
+  }, [tracksQuery.data, topicsQuery.data, LL]);
 
   const totalMinutes = useMemo(
     () => (topicsQuery.data ?? []).reduce((sum, t) => sum + t.estimatedMinutes, 0),
@@ -110,25 +113,25 @@ export function Component() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Learn"
-        title="The AI learning map"
-        description="A short, opinionated path through the topics we think every internal team should be comfortable with. Pick a track or jump into any topic."
+        eyebrow={LL.learn.eyebrow()}
+        title={LL.learn.title()}
+        description={LL.learn.description()}
       />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <SummaryStat
-          label="Tracks"
+          label={LL.learn.statTracks()}
           value={isLoading ? "—" : tracksCount}
           icon={<Layers className="h-4 w-4" />}
         />
         <SummaryStat
-          label="Topics"
+          label={LL.learn.statTopics()}
           value={isLoading ? "—" : topicsQuery.data?.length ?? 0}
           icon={<Layers className="h-4 w-4" />}
         />
         <SummaryStat
-          label="Estimated reading"
-          value={totalMinutes ? `~${totalMinutes} min` : "—"}
+          label={LL.learn.statEstimatedReading()}
+          value={totalMinutes ? LL.common.estimatedReadingShort({ count: totalMinutes }) : "—"}
           icon={<Clock className="h-4 w-4" />}
         />
       </div>
@@ -139,6 +142,7 @@ export function Component() {
           : grouped.map(({ track, topics, derived }, idx) => (
               <TrackSection
                 key={track.id}
+                LL={LL}
                 track={track}
                 topics={topics}
                 derived={derived}
@@ -169,11 +173,13 @@ function SummaryStat({ label, value, icon }: { label: string; value: React.React
 }
 
 function TrackSection({
+  LL,
   track,
   topics,
   derived,
   indexLabel,
 }: {
+  LL: TranslationFunctions;
   track: Track;
   topics: Topic[];
   derived: boolean;
@@ -195,15 +201,17 @@ function TrackSection({
           </div>
           <div>
             <div className="flex items-center gap-2 text-caption-xs uppercase tracking-wide text-content-tertiary">
-              <span>Track</span>
-              {derived ? <Badge variant="muted">derived</Badge> : null}
+              <span>{LL.learn.trackEyebrow()}</span>
+              {derived ? <Badge variant="muted">{LL.learn.trackDerived()}</Badge> : null}
             </div>
             <h2 className="text-heading-sm font-semibold tracking-tight text-content-primary">
               {track.title}
             </h2>
           </div>
         </div>
-        <span className="text-body-sm text-content-tertiary">{topics.length} topics</span>
+        <span className="text-body-sm text-content-tertiary">
+          {LL.learn.topicsCount({ count: topics.length })}
+        </span>
       </div>
       {track.description ? (
         <p className="mb-4 max-w-2xl text-body-md text-content-secondary">{track.description}</p>
@@ -217,7 +225,7 @@ function TrackSection({
                 <div className="flex items-center gap-2">
                   <Badge variant="muted">{topic.difficulty}</Badge>
                   <span className="text-caption-xs text-content-tertiary">
-                    {topic.estimatedMinutes} min
+                    {LL.learn.topicMinutes({ count: topic.estimatedMinutes })}
                   </span>
                 </div>
                 <CardTitle>
@@ -234,7 +242,7 @@ function TrackSection({
                   ))}
                 </div>
                 <div className="mt-3 inline-flex items-center gap-1 text-body-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                  Open topic <ArrowRight className="h-3.5 w-3.5" />
+                  {LL.learn.openTopic()} <ArrowRight className="h-3.5 w-3.5" />
                 </div>
               </CardContent>
             </Card>

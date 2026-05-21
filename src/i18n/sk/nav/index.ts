@@ -1,0 +1,14 @@
+import type { NamespaceNavTranslation } from "../../i18n-types";
+
+const sk_nav: NamespaceNavTranslation = {
+  homeLink: "Domov",
+  learnLink: "Učenie",
+  radarLink: "Radar",
+  libraryLink: "Knižnica",
+  practiceLink: "Precvičovanie",
+  buildLabLink: "Build Lab",
+  expandSidebar: "Rozbaliť panel",
+  collapseSidebar: "Zbaliť panel",
+};
+
+export default sk_nav;

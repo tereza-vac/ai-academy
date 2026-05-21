@@ -22,14 +22,16 @@ import {
   updateNote,
 } from "@/services/notesApi";
 import { queryKeys } from "@/lib/queryKeys";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 export function Component() {
+  const { LL } = useI18nContext();
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Library"
-        title="Your library"
-        description="Saved Radar / Learn resources and personal notes. Everything here is private to you."
+        eyebrow={LL.library.eyebrow()}
+        title={LL.library.title()}
+        description={LL.library.description()}
       />
 
       <Tabs defaultValue="saved">

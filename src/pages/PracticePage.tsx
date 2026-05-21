@@ -10,8 +10,10 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { listQuizzes } from "@/services/practiceApi";
 import { listTopics } from "@/services/topicsApi";
 import { queryKeys } from "@/lib/queryKeys";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 export function Component() {
+  const { LL } = useI18nContext();
   const quizzesQuery = useQuery({ queryKey: queryKeys.quizzes, queryFn: listQuizzes });
   const topicsQuery = useQuery({ queryKey: queryKeys.topics, queryFn: listTopics });
 
@@ -20,9 +22,9 @@ export function Component() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Practice"
-        title="Quizzes & flashcards"
-        description="Quick checks to make sure each topic stuck. All quizzes track your score locally for now — and on Supabase once you sign in."
+        eyebrow={LL.practice.eyebrow()}
+        title={LL.practice.title()}
+        description={LL.practice.description()}
       />
 
       {quizzesQuery.isLoading ? (
@@ -34,8 +36,8 @@ export function Component() {
       ) : (quizzesQuery.data ?? []).length === 0 ? (
         <EmptyState
           icon={Brain}
-          title="No quizzes yet"
-          description="Add quizzes via Supabase, or generate them from topics using the AI enrichment service."
+          title={LL.practice.emptyTitle()}
+          description={LL.practice.emptyDescription()}
         />
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">

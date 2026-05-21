@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { router } from "./router";
 import { queryClient } from "./lib/queryClient";
 import { ThemeProvider } from "@/components/theme-provider";
+import { I18nBootProvider } from "@/providers/I18nBootProvider";
 
 export default function App() {
   return (
@@ -15,20 +16,22 @@ export default function App() {
       storageKey="ai-academy-theme"
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster
-          position="bottom-right"
-          theme="system"
-          toastOptions={{
-            classNames: {
-              toast:
-                "rounded-xl border border-border-subtle bg-surface-elevated shadow-elevation-md text-content-primary",
-            },
-          }}
-        />
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-      </QueryClientProvider>
+      <I18nBootProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <Toaster
+            position="bottom-right"
+            theme="system"
+            toastOptions={{
+              classNames: {
+                toast:
+                  "rounded-xl border border-border-subtle bg-surface-elevated shadow-elevation-md text-content-primary",
+              },
+            }}
+          />
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        </QueryClientProvider>
+      </I18nBootProvider>
     </ThemeProvider>
   );
 }

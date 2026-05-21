@@ -13,6 +13,7 @@ import { listResources } from "@/services/resourcesApi";
 import { listSavedItems, saveResource, unsaveResource } from "@/services/libraryApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { normalizeString } from "@/lib/utils";
+import { useI18nContext } from "@/i18n/i18n-react";
 import type { Resource } from "@/types/domain";
 
 const KINDS: Array<{ value: "all" | Resource["kind"]; label: string }> = [
@@ -24,6 +25,7 @@ const KINDS: Array<{ value: "all" | Resource["kind"]; label: string }> = [
 ];
 
 export function Component() {
+  const { LL } = useI18nContext();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [kind, setKind] = useState<"all" | Resource["kind"]>("all");
@@ -72,9 +74,9 @@ export function Component() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Radar"
-        title="What's new in AI"
-        description="A unified feed of articles, papers, releases and tools — pulled from registered RSS sources and curated picks. Save anything to your Library."
+        eyebrow={LL.radar.eyebrow()}
+        title={LL.radar.title()}
+        description={LL.radar.description()}
         actions={
           <Button
             variant="outline"

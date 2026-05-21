@@ -16,16 +16,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { listTopics } from "@/services/topicsApi";
 import { listRadarItems } from "@/services/radarApi";
 import { queryKeys } from "@/lib/queryKeys";
+import { useI18nContext } from "@/i18n/i18n-react";
+import type { TranslationFunctions } from "@/i18n/i18n-types";
 
-const sections = [
-  { label: "Learn",     href: "/learn",     icon: BookOpen,    description: "A structured map from foundations to agents." },
-  { label: "Radar",     href: "/radar",     icon: RadarIcon,   description: "What dropped this week across research and tools." },
-  { label: "Library",   href: "/library",   icon: LibraryIcon, description: "Your saved resources and personal notes." },
-  { label: "Practice",  href: "/practice",  icon: Brain,       description: "Quick quizzes and flashcards per topic." },
-  { label: "Build Lab", href: "/build-lab", icon: Wrench,      description: "Cursor prompts, playbooks, templates, checklists." },
+const sections: Array<{
+  labelKey: keyof TranslationFunctions["nav"];
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+}> = [
+  { labelKey: "learnLink",    href: "/learn",     icon: BookOpen,    description: "A structured map from foundations to agents." },
+  { labelKey: "radarLink",    href: "/radar",     icon: RadarIcon,   description: "What dropped this week across research and tools." },
+  { labelKey: "libraryLink",  href: "/library",   icon: LibraryIcon, description: "Your saved resources and personal notes." },
+  { labelKey: "practiceLink", href: "/practice",  icon: Brain,       description: "Quick quizzes and flashcards per topic." },
+  { labelKey: "buildLabLink", href: "/build-lab", icon: Wrench,      description: "Cursor prompts, playbooks, templates, checklists." },
 ];
 
 export function Component() {
+  const { LL } = useI18nContext();
   const topicsQuery = useQuery({
     queryKey: queryKeys.topics,
     queryFn: listTopics,
@@ -38,17 +46,17 @@ export function Component() {
   return (
     <div className="space-y-10">
       <PageHeader
-        eyebrow="Welcome"
-        title="AI Academy"
-        description="A small internal playground for getting better at AI — together. Pick a section to dive in, or scan what dropped this week."
+        eyebrow={LL.home.eyebrow()}
+        title={LL.home.title()}
+        description={LL.home.description()}
       />
 
       <section>
         <h2 className="mb-3 text-body-sm font-semibold uppercase tracking-wide text-content-tertiary">
-          Sections
+          {LL.home.sectionsHeading()}
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sections.map(({ label, href, icon: Icon, description }) => (
+          {sections.map(({ labelKey, href, icon: Icon, description }) => (
             <Link key={href} to={href} className="group">
               <Card variant="elevated" interactive className="h-full p-5">
                 <div className="flex items-start gap-3">
@@ -57,7 +65,7 @@ export function Component() {
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-1 text-body-lg font-semibold tracking-tight text-content-primary group-hover:text-primary">
-                      {label}
+                      {LL.nav[labelKey]()}
                       <ArrowRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
                     </div>
                     <p className="text-body-md text-content-secondary">{description}</p>
@@ -72,10 +80,10 @@ export function Component() {
       <section>
         <div className="mb-3 flex items-end justify-between">
           <h2 className="text-body-sm font-semibold uppercase tracking-wide text-content-tertiary">
-            Latest topics
+            {LL.home.latestTopics()}
           </h2>
           <Button variant="link" asChild>
-            <Link to="/learn">Browse all<ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/learn">{LL.home.browseAll()}<ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -109,10 +117,10 @@ export function Component() {
       <section>
         <div className="mb-3 flex items-end justify-between">
           <h2 className="text-body-sm font-semibold uppercase tracking-wide text-content-tertiary">
-            From the Radar
+            {LL.home.fromTheRadar()}
           </h2>
           <Button variant="link" asChild>
-            <Link to="/radar">Open Radar<ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/radar">{LL.home.openRadar()}<ArrowRight className="h-4 w-4" /></Link>
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">

@@ -9,6 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "i18n": "typesafe-i18n",
+    "i18n:build": "typesafe-i18n --no-watch",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:reset": "supabase db reset",
@@ -38,6 +40,7 @@
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "typesafe-i18n": "^5.27.1",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

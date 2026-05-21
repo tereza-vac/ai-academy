@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { defaultEnrichment } from "@/services/aiEnrichmentService";
+import { useI18nContext } from "@/i18n/i18n-react";
 import type { Topic } from "@/types/domain";
 
 interface GeneratedQuestion {
@@ -28,6 +29,7 @@ interface Props {
  * the local mock or the `ai-enrich` edge function depending on data mode.
  */
 export function AIGeneratedQuestions({ topic }: Props) {
+  const { LL } = useI18nContext();
   const [questions, setQuestions] = useState<GeneratedQuestion[]>([]);
 
   const generate = useMutation({
@@ -41,9 +43,10 @@ export function AIGeneratedQuestions({ topic }: Props) {
     },
     onSuccess: (data) => {
       setQuestions(data);
-      toast.success(`Generated ${data.length} question${data.length === 1 ? "" : "s"}`);
+      toast.success(LL.practice.generatedToast({ count: data.length }));
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Generation failed"),
+    onError: (e) =>
+      toast.error(e instanceof Error ? e.message : LL.practice.generationFailed()),
   });
 
   return (
@@ -51,9 +54,9 @@ export function AIGeneratedQuestions({ topic }: Props) {
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <CardTitle className="text-body-md">Practice with AI</CardTitle>
+            <CardTitle className="text-body-md">{LL.practice.aiCardTitle()}</CardTitle>
             <p className="text-body-sm text-content-secondary">
-              Generate fresh questions from this topic on demand.
+              {LL.practice.aiCardDescription()}
             </p>
           </div>
           <Button
@@ -66,7 +69,11 @@ export function AIGeneratedQuestions({ topic }: Props) {
             ) : (
               <Sparkles className="h-3.5 w-3.5" />
             )}
-            {questions.length > 0 ? "Regenerate" : "Generate"}
+            {generate.isPending
+              ? LL.practice.generating()
+              : questions.length > 0
+                ? LL.practice.regenerate()
+                : LL.practice.generate()}
           </Button>
         </div>
       </CardHeader>
@@ -78,9 +85,13 @@ export function AIGeneratedQuestions({ topic }: Props) {
               className="rounded-xl border border-border-subtle bg-surface-elevated p-4"
             >
               <div className="mb-2 flex items-center gap-2">
-                <Badge variant="muted">{q.kind === "mcq" ? "MCQ" : "Flashcard"}</Badge>
+                <Badge variant="muted">
+                  {q.kind === "mcq"
+                    ? LL.practice.questionKindMcq()
+                    : LL.practice.questionKindFlashcard()}
+                </Badge>
                 <span className="text-caption-xs text-content-tertiary">
-                  Question {idx + 1}
+                  {LL.practice.questionLabel({ n: idx + 1 })}
                 </span>
               </div>
               <div className="text-body-md font-medium text-content-primary">
@@ -104,7 +115,9 @@ export function AIGeneratedQuestions({ topic }: Props) {
               ) : null}
               {q.kind === "flashcard" && q.answer ? (
                 <div className="mt-2 rounded-lg bg-surface-soft p-2 text-body-sm text-content-primary">
-                  <span className="font-medium text-content-secondary">Answer: </span>
+                  <span className="font-medium text-content-secondary">
+                    {LL.practice.answerLabel()}{" "}
+                  </span>
                   {q.answer}
                 </div>
               ) : null}

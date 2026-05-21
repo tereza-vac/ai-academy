@@ -4,8 +4,10 @@ import { cn } from "@/lib/utils";
 import { sidebarNavigation } from "@/config/navigation";
 import { useUIStore } from "@/stores/uiStore";
 import { SidebarUserMenu } from "@/components/sidebar-user-menu";
+import { useI18nContext } from "@/i18n/i18n-react";
 
 function Logo({ collapsed }: { collapsed: boolean }) {
+  const { LL } = useI18nContext();
   return (
     <div className="flex items-center gap-2">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-elevation-sm">
@@ -14,9 +16,9 @@ function Logo({ collapsed }: { collapsed: boolean }) {
       {!collapsed && (
         <div className="leading-tight">
           <div className="text-body-md font-semibold tracking-tight text-content-primary">
-            AI Academy
+            {LL.common.appName()}
           </div>
-          <div className="text-caption-xs text-content-tertiary">internal · MVP</div>
+          <div className="text-caption-xs text-content-tertiary">{LL.common.tagline()}</div>
         </div>
       )}
     </div>
@@ -26,6 +28,7 @@ function Logo({ collapsed }: { collapsed: boolean }) {
 export function AppSidebar() {
   const collapsed = useUIStore((s) => s.sidebarCollapsed);
   const toggle = useUIStore((s) => s.toggleSidebar);
+  const { LL } = useI18nContext();
 
   return (
     <aside
@@ -45,7 +48,7 @@ export function AppSidebar() {
           <button
             type="button"
             onClick={toggle}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? LL.nav.expandSidebar() : LL.nav.collapseSidebar()}
             className="flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary transition-colors hover:bg-surface-hover hover:text-content-primary outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]"
           >
             {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
@@ -55,12 +58,13 @@ export function AppSidebar() {
         <nav className={cn("flex-1 space-y-1 overflow-y-auto", collapsed ? "p-2" : "p-3")}>
           {sidebarNavigation.map((item) => {
             const Icon = item.icon;
+            const label = LL.nav[item.labelKey]();
             return (
               <NavLink
                 key={item.href}
                 to={item.href}
                 end={item.href === "/"}
-                aria-label={collapsed ? item.label : undefined}
+                aria-label={collapsed ? label : undefined}
                 className={({ isActive }) =>
                   cn(
                     "flex h-9 items-center gap-2.5 rounded-lg text-body-md font-medium tracking-tight transition-colors duration-150 outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
@@ -72,7 +76,7 @@ export function AppSidebar() {
                 }
               >
                 <Icon className="h-4 w-4" />
-                {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+                {!collapsed && <span className="flex-1 truncate">{label}</span>}
               </NavLink>
             );
           })}

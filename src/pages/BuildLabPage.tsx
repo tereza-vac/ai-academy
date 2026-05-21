@@ -14,6 +14,7 @@ import { Markdown } from "@/components/markdown";
 import { listBuildLabItems } from "@/services/buildLabApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { normalizeString } from "@/lib/utils";
+import { useI18nContext } from "@/i18n/i18n-react";
 import type { BuildLabKind } from "@/types/domain";
 
 const KINDS: Array<{ value: "all" | BuildLabKind; label: string }> = [
@@ -32,6 +33,7 @@ const kindBadge: Record<BuildLabKind, "default" | "premium" | "success" | "warni
 };
 
 export function Component() {
+  const { LL } = useI18nContext();
   const [kind, setKind] = useState<"all" | BuildLabKind>("all");
   const [search, setSearch] = useState("");
 
@@ -57,9 +59,9 @@ export function Component() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Build Lab"
-        title="Prompts, playbooks, templates, checklists"
-        description="Reusable building blocks for working with AI day-to-day. Copy what you need, then adapt."
+        eyebrow={LL.buildLab.eyebrow()}
+        title={LL.buildLab.title()}
+        description={LL.buildLab.description()}
       />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
