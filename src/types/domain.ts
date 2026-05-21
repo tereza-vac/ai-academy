@@ -23,7 +23,9 @@ export interface Track {
   id: string;
   slug: string;
   title: string;
+  titleKey?: string | null;
   description: string | null;
+  descriptionKey?: string | null;
   color: string | null;
   position: number;
 }
@@ -33,8 +35,11 @@ export interface Topic {
   trackId: string | null;
   slug: string;
   title: string;
+  titleKey?: string | null;
   summary: string | null;
+  summaryKey?: string | null;
   bodyMd: string | null;
+  bodyKey?: string | null;
   difficulty: Difficulty;
   estimatedMinutes: number;
   prerequisites: string[];
@@ -46,9 +51,11 @@ export interface Resource {
   id: string;
   url: string;
   title: string;
+  titleKey?: string | null;
   sourceName: string | null;
   kind: ResourceKind;
   summary: string | null;
+  summaryKey?: string | null;
   author: string | null;
   publishedAt: string | null;
   imageUrl: string | null;
@@ -82,17 +89,23 @@ export interface QuestionMCQ {
   id: string;
   kind: "mcq";
   prompt: string;
+  promptKey?: string;
   options: string[];
+  optionKeys?: string[];
   answerIndex: number;
   explanation?: string;
+  explanationKey?: string;
 }
 
 export interface QuestionFlashcard {
   id: string;
   kind: "flashcard";
   prompt: string;
+  promptKey?: string;
   answer: string;
+  answerKey?: string;
   explanation?: string;
+  explanationKey?: string;
 }
 
 export type Question = QuestionMCQ | QuestionFlashcard;
@@ -101,7 +114,9 @@ export interface Quiz {
   id: string;
   slug: string;
   title: string;
+  titleKey?: string | null;
   description: string | null;
+  descriptionKey?: string | null;
   topicId: string | null;
   difficulty: Difficulty;
   questions: Question[];
@@ -112,9 +127,12 @@ export interface BuildLabItem {
   id: string;
   slug: string;
   title: string;
+  titleKey?: string | null;
   summary: string | null;
+  summaryKey?: string | null;
   kind: BuildLabKind;
   bodyMd: string;
+  bodyKey?: string | null;
   tags: string[];
   topicIds: string[];
   author: string | null;

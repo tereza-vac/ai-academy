@@ -13,6 +13,7 @@ import sk from './sk'
 import cs_auth from './cs/auth'
 import cs_buildLab from './cs/buildLab'
 import cs_common from './cs/common'
+import cs_content from './cs/content'
 import cs_home from './cs/home'
 import cs_learn from './cs/learn'
 import cs_library from './cs/library'
@@ -23,6 +24,7 @@ import cs_userMenu from './cs/userMenu'
 import en_auth from './en/auth'
 import en_buildLab from './en/buildLab'
 import en_common from './en/common'
+import en_content from './en/content'
 import en_home from './en/home'
 import en_learn from './en/learn'
 import en_library from './en/library'
@@ -33,6 +35,7 @@ import en_userMenu from './en/userMenu'
 import pl_auth from './pl/auth'
 import pl_buildLab from './pl/buildLab'
 import pl_common from './pl/common'
+import pl_content from './pl/content'
 import pl_home from './pl/home'
 import pl_learn from './pl/learn'
 import pl_library from './pl/library'
@@ -43,6 +46,7 @@ import pl_userMenu from './pl/userMenu'
 import sk_auth from './sk/auth'
 import sk_buildLab from './sk/buildLab'
 import sk_common from './sk/common'
+import sk_content from './sk/content'
 import sk_home from './sk/home'
 import sk_learn from './sk/learn'
 import sk_library from './sk/library'
@@ -57,6 +61,7 @@ const localeTranslations = {
 		auth: cs_auth,
 		buildLab: cs_buildLab,
 		common: cs_common,
+		content: cs_content,
 		home: cs_home,
 		learn: cs_learn,
 		library: cs_library,
@@ -70,6 +75,7 @@ const localeTranslations = {
 		auth: en_auth,
 		buildLab: en_buildLab,
 		common: en_common,
+		content: en_content,
 		home: en_home,
 		learn: en_learn,
 		library: en_library,
@@ -83,6 +89,7 @@ const localeTranslations = {
 		auth: pl_auth,
 		buildLab: pl_buildLab,
 		common: pl_common,
+		content: pl_content,
 		home: pl_home,
 		learn: pl_learn,
 		library: pl_library,
@@ -96,6 +103,7 @@ const localeTranslations = {
 		auth: sk_auth,
 		buildLab: sk_buildLab,
 		common: sk_common,
+		content: sk_content,
 		home: sk_home,
 		learn: sk_learn,
 		library: sk_library,

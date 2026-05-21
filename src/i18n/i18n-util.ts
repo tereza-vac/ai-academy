@@ -21,6 +21,7 @@ export const namespaces: Namespaces[] = [
 	'auth',
 	'buildLab',
 	'common',
+	'content',
 	'home',
 	'learn',
 	'library',

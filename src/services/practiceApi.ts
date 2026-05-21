@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { isMock } from "@/lib/dataMode";
+import { localizeQuiz } from "@/lib/contentLocalization";
 import { mockQuizzes } from "@/lib/mockData";
 import type { Difficulty, Question, Quiz } from "@/types/domain";
 
@@ -7,7 +8,9 @@ interface QuizRow {
   id: string;
   slug: string;
   title: string;
+  title_key: string | null;
   description: string | null;
+  description_key: string | null;
   topic_id: string | null;
   difficulty: Difficulty;
   questions: Question[];
@@ -17,17 +20,19 @@ interface QuizRow {
 function mapQuiz(row: QuizRow): Quiz {
   return {
     id: row.id, slug: row.slug, title: row.title,
+    titleKey: row.title_key,
     description: row.description, topicId: row.topic_id,
+    descriptionKey: row.description_key,
     difficulty: row.difficulty,
     questions: Array.isArray(row.questions) ? row.questions : [],
     estimatedMinutes: row.estimated_minutes,
   };
 }
 
-const SELECT = "id,slug,title,description,topic_id,difficulty,questions,estimated_minutes";
+const SELECT = "id,slug,title,title_key,description,description_key,topic_id,difficulty,questions,estimated_minutes";
 
 export async function listQuizzes(): Promise<Quiz[]> {
-  if (isMock) return [...mockQuizzes];
+  if (isMock) return [...mockQuizzes].map(localizeQuiz);
 
   const { data, error } = await supabase
     .from("quizzes")
@@ -35,11 +40,14 @@ export async function listQuizzes(): Promise<Quiz[]> {
     .eq("is_published", true)
     .order("title");
   if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => mapQuiz(row as unknown as QuizRow));
+  return (data ?? []).map((row) => mapQuiz(row as unknown as QuizRow)).map(localizeQuiz);
 }
 
 export async function getQuizBySlug(slug: string): Promise<Quiz | null> {
-  if (isMock) return mockQuizzes.find((q) => q.slug === slug) ?? null;
+  if (isMock) {
+    const quiz = mockQuizzes.find((q) => q.slug === slug);
+    return quiz ? localizeQuiz(quiz) : null;
+  }
 
   const { data, error } = await supabase
     .from("quizzes")
@@ -47,7 +55,7 @@ export async function getQuizBySlug(slug: string): Promise<Quiz | null> {
     .eq("slug", slug)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  return data ? mapQuiz(data as unknown as QuizRow) : null;
+  return data ? localizeQuiz(mapQuiz(data as unknown as QuizRow)) : null;
 }
 
 export async function recordQuizAttempt(input: {

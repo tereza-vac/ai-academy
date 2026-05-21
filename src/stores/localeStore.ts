@@ -15,6 +15,7 @@ const ALL_NAMESPACES: Namespaces[] = [
   "auth",
   "buildLab",
   "common",
+  "content",
   "home",
   "learn",
   "library",

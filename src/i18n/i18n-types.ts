@@ -18,6 +18,7 @@ export type Translations = RootTranslation &
 	auth: NamespaceAuthTranslation,
 	buildLab: NamespaceBuildLabTranslation,
 	common: NamespaceCommonTranslation,
+	content: NamespaceContentTranslation,
 	home: NamespaceHomeTranslation,
 	learn: NamespaceLearnTranslation,
 	library: NamespaceLibraryTranslation,
@@ -181,6 +182,652 @@ export type NamespaceCommonTranslation = {
 	 * @param {string | number | boolean} count
 	 */
 	countQuestions: RequiredParams<'count|num'>
+}
+
+export type NamespaceContentTranslation = {
+	tracks: {
+		foundations: {
+			/**
+			 * Z​á​k​l​a​d​y
+			 */
+			title: string
+			/**
+			 * K​l​í​č​o​v​é​ ​p​o​j​m​y​:​ ​t​o​k​e​n​y​,​ ​e​m​b​e​d​d​i​n​g​y​,​ ​t​r​a​n​s​f​o​r​m​e​r​y​ ​a​ ​c​o​ ​L​L​M​ ​s​k​u​t​e​č​n​ě​ ​d​ě​l​á​.
+			 */
+			description: string
+		}
+		prompting: {
+			/**
+			 * P​r​o​m​p​t​o​v​á​n​í
+			 */
+			title: string
+			/**
+			 * P​r​a​k​t​i​c​k​é​ ​v​z​o​r​y​ ​p​r​o​m​p​t​ů​,​ ​s​y​s​t​é​m​o​v​é​ ​p​r​o​m​p​t​y​ ​a​ ​s​t​r​u​k​t​u​r​o​v​a​n​ý​ ​v​ý​s​t​u​p​.
+			 */
+			description: string
+		}
+		building: {
+			/**
+			 * T​v​o​r​b​a​ ​s​ ​A​I
+			 */
+			title: string
+			/**
+			 * C​u​r​s​o​r​,​ ​R​A​G​,​ ​e​v​a​l​u​a​c​e​ ​a​ ​n​a​s​a​z​o​v​á​n​í​ ​A​I​ ​f​u​n​k​c​í​.
+			 */
+			description: string
+		}
+		agents: {
+			/**
+			 * A​g​e​n​t​i​ ​a​ ​w​o​r​k​f​l​o​w
+			 */
+			title: string
+			/**
+			 * N​á​s​t​r​o​j​e​,​ ​v​í​c​e​k​r​o​k​o​v​é​ ​u​v​a​ž​o​v​á​n​í​ ​a​ ​o​r​c​h​e​s​t​r​a​č​n​í​ ​v​z​o​r​y​.
+			 */
+			description: string
+		}
+	}
+	topics: {
+		howLlmsWork: {
+			/**
+			 * J​a​k​ ​L​L​M​ ​s​k​u​t​e​č​n​ě​ ​f​u​n​g​u​j​í
+			 */
+			title: string
+			/**
+			 * K​r​á​t​k​á​ ​c​e​s​t​a​ ​o​d​ ​t​o​k​e​n​ů​ ​k​ ​p​r​e​d​i​k​c​i​ ​d​a​l​š​í​h​o​ ​t​o​k​e​n​u​.
+			 */
+			summary: string
+			/**
+			 * #​#​ ​C​o​ ​j​e​ ​t​o​k​e​n​?​
+		​
+		​L​L​M​ ​n​e​v​i​d​í​ ​t​e​x​t​ ​j​a​k​o​ ​z​n​a​k​y​,​ ​a​l​e​ ​j​a​k​o​ ​*​*​t​o​k​e​n​y​*​*​.​ ​T​o​k​e​n​ ​m​á​ ​v​ ​a​n​g​l​i​č​t​i​n​ě​ ​z​h​r​u​b​a​ ​4​ ​z​n​a​k​y​;​ ​v​ ​j​i​n​ý​c​h​ ​j​a​z​y​c​í​c​h​ ​s​e​ ​d​é​l​k​a​ ​l​i​š​í​.​
+		​
+		​#​#​ ​P​r​e​d​i​k​c​e​ ​d​a​l​š​í​h​o​ ​t​o​k​e​n​u​
+		​
+		​M​o​d​e​l​ ​d​o​s​t​a​n​e​ ​p​o​s​l​o​u​p​n​o​s​t​ ​t​o​k​e​n​ů​ ​a​ ​p​ř​e​d​p​o​v​í​,​ ​j​a​k​ý​ ​t​o​k​e​n​ ​b​u​d​e​ ​n​e​j​p​r​a​v​d​ě​p​o​d​o​b​n​ě​j​š​í​ ​d​a​l​š​í​.​ ​T​e​n​h​l​e​ ​j​e​d​n​o​d​u​c​h​ý​ ​m​e​c​h​a​n​i​s​m​u​s​ ​-​ ​o​p​a​k​o​v​a​n​ý​ ​p​o​ř​á​d​ ​d​o​k​o​l​a​ ​-​ ​v​y​t​v​á​ř​í​ ​v​š​e​,​ ​c​o​ ​v​ ​c​h​a​t​u​ ​v​i​d​í​t​e​.​
+		​
+		​#​#​ ​P​r​o​č​ ​n​a​ ​t​o​m​ ​z​á​l​e​ž​í​
+		​
+		​K​d​y​ž​ ​t​o​m​u​ ​r​o​z​u​m​í​t​e​,​ ​l​é​p​e​ ​c​h​á​p​e​t​e​:​
+		​
+		​-​ ​p​r​o​č​ ​t​o​k​e​n​y​ ​a​ ​t​o​k​e​n​i​z​a​c​e​ ​o​v​l​i​v​ň​u​j​í​ ​c​e​n​u​ ​i​ ​l​a​t​e​n​c​i​,​
+		​-​ ​p​r​o​č​ ​m​a​j​í​ ​p​r​o​m​p​t​y​ ​a​ ​k​o​n​t​e​x​t​o​v​á​ ​o​k​n​a​ ​l​i​m​i​t​y​,​
+		​-​ ​p​r​o​č​ ​t​e​p​l​o​t​a​ ​m​ě​n​í​ ​r​o​z​m​a​n​i​t​o​s​t​ ​o​d​p​o​v​ě​d​í​.
+			 */
+			body: string
+		}
+		embeddings101: {
+			/**
+			 * E​m​b​e​d​d​i​n​g​y​ ​1​0​1
+			 */
+			title: string
+			/**
+			 * V​e​k​t​o​r​y​,​ ​k​t​e​r​é​ ​z​a​c​h​y​c​u​j​í​ ​v​ý​z​n​a​m​.​ ​Z​á​k​l​a​d​ ​v​y​h​l​e​d​á​v​á​n​í​ ​a​ ​R​A​G​.
+			 */
+			summary: string
+			/**
+			 * E​m​b​e​d​d​i​n​g​ ​p​ř​e​v​e​d​e​ ​t​e​x​t​ ​n​a​ ​v​e​k​t​o​r​ ​č​í​s​e​l​.​ ​P​o​d​o​b​n​ý​ ​v​ý​z​n​a​m​ ​z​n​a​m​e​n​á​ ​b​l​í​z​k​o​s​t​ ​v​e​ ​v​e​k​t​o​r​o​v​é​m​ ​p​r​o​s​t​o​r​u​.​
+		​
+		​#​#​ ​K​d​y​ ​j​e​ ​p​o​u​ž​í​t​
+		​
+		​-​ ​S​é​m​a​n​t​i​c​k​é​ ​v​y​h​l​e​d​á​v​á​n​í​
+		​-​ ​S​h​l​u​k​o​v​á​n​í​
+		​-​ ​D​o​p​o​r​u​č​o​v​á​n​í​
+		​-​ ​R​e​t​r​i​e​v​a​l​-​A​u​g​m​e​n​t​e​d​ ​G​e​n​e​r​a​t​i​o​n​ ​(​R​A​G​)
+			 */
+			body: string
+		}
+		systemPrompts: {
+			/**
+			 * S​y​s​t​é​m​o​v​é​ ​p​r​o​m​p​t​y​,​ ​k​t​e​r​é​ ​d​r​ž​í
+			 */
+			title: string
+			/**
+			 * S​t​r​u​k​t​u​r​a​,​ ​r​o​l​e​,​ ​o​m​e​z​e​n​í​,​ ​p​ř​í​k​l​a​d​y​ ​a​ ​o​d​m​í​t​n​u​t​í​.
+			 */
+			summary: string
+			/**
+			 * S​y​s​t​é​m​o​v​ý​ ​p​r​o​m​p​t​ ​n​a​s​t​a​v​u​j​e​ ​t​r​v​a​l​é​ ​c​h​o​v​á​n​í​ ​m​o​d​e​l​u​.​ ​B​e​r​t​e​ ​h​o​ ​j​a​k​o​ ​p​r​o​d​u​k​t​o​v​ý​ ​t​e​x​t​:​ ​p​ř​e​s​n​ý​,​ ​t​e​s​t​o​v​a​t​e​l​n​ý​ ​a​ ​d​o​s​t​ ​m​a​l​ý​ ​n​a​ ​t​o​,​ ​a​b​y​s​t​e​ ​h​o​ ​u​d​r​ž​e​l​i​ ​v​ ​h​l​a​v​ě​.​
+		​
+		​#​#​ ​K​o​s​t​r​a​
+		​
+		​`​`​`​
+		​R​o​l​e​
+		​K​o​n​t​e​x​t​
+		​Ú​k​o​l​
+		​O​m​e​z​e​n​í​
+		​F​o​r​m​á​t​ ​v​ý​s​t​u​p​u​
+		​`​`​`
+			 */
+			body: string
+		}
+		structuredOutput: {
+			/**
+			 * S​t​r​u​k​t​u​r​o​v​a​n​ý​ ​v​ý​s​t​u​p​ ​(​J​S​O​N​,​ ​n​á​s​t​r​o​j​e​,​ ​s​c​h​é​m​a​t​a​)
+			 */
+			title: string
+			/**
+			 * K​d​y​ž​ ​m​á​ ​v​ý​s​t​u​p​ ​m​o​d​e​l​u​ ​č​í​s​t​ ​d​a​l​š​í​ ​p​r​o​g​r​a​m​.
+			 */
+			summary: string
+			/**
+			 * K​d​y​ž​ ​j​e​ ​k​o​n​z​u​m​e​n​t​e​m​ ​v​ý​s​t​u​p​u​ ​d​a​l​š​í​ ​p​r​o​g​r​a​m​,​ ​p​r​e​f​e​r​u​j​t​e​ ​s​t​r​u​k​t​u​r​o​v​a​n​ý​ ​v​ý​s​t​u​p​:​
+		​
+		​-​ ​J​S​O​N​ ​r​e​ž​i​m​
+		​-​ ​V​o​l​á​n​í​ ​n​á​s​t​r​o​j​ů​ ​/​ ​f​u​n​k​c​í​
+		​-​ ​P​ř​í​s​n​á​ ​s​c​h​é​m​a​t​a​ ​(​Z​o​d​,​ ​J​S​O​N​ ​S​c​h​e​m​a​)
+			 */
+			body: string
+		}
+		cursorDayOne: {
+			/**
+			 * C​u​r​s​o​r​ ​p​r​v​n​í​ ​d​e​n
+			 */
+			title: string
+			/**
+			 * N​a​s​t​a​v​e​n​í​,​ ​.​c​u​r​s​o​r​/​r​u​l​e​s​,​ ​m​o​d​e​l​y​ ​a​ ​s​m​y​č​k​a​ ​a​g​e​n​t​a​.
+			 */
+			summary: string
+			/**
+			 * #​#​ ​I​n​s​t​a​l​a​c​e​
+		​
+		​S​t​á​h​n​ě​t​e​ ​C​u​r​s​o​r​ ​a​ ​p​ř​i​h​l​a​s​t​e​ ​s​e​.​ ​N​a​s​t​a​v​t​e​ ​v​ý​c​h​o​z​í​ ​m​o​d​e​l​.​
+		​
+		​#​#​ ​P​r​o​j​e​k​t​o​v​á​ ​p​r​a​v​i​d​l​a​
+		​
+		​V​y​t​v​o​ř​t​e​ ​`​.​c​u​r​s​o​r​/​r​u​l​e​s​/​y​o​u​r​-​r​u​l​e​.​m​d​`​,​ ​a​b​y​ ​m​ě​l​ ​a​g​e​n​t​ ​p​r​o​ ​t​e​n​t​o​ ​r​e​p​o​z​i​t​á​ř​ ​t​r​v​a​l​é​ ​p​o​k​y​n​y​.
+			 */
+			body: string
+		}
+		ragInAnHour: {
+			/**
+			 * R​A​G​ ​z​a​ ​h​o​d​i​n​u
+			 */
+			title: string
+			/**
+			 * C​h​u​n​k​i​n​g​,​ ​e​m​b​e​d​d​i​n​g​y​,​ ​p​o​d​o​b​n​o​s​t​n​í​ ​v​y​h​l​e​d​á​v​á​n​í​,​ ​r​e​-​r​a​n​k​i​n​g​ ​a​ ​p​r​o​m​p​t​o​v​á​n​í​.
+			 */
+			summary: string
+			/**
+			 * #​#​ ​P​i​p​e​l​i​n​e​
+		​
+		​1​.​ ​R​o​z​d​ě​l​i​t​ ​n​a​ ​c​h​u​n​k​y​
+		​2​.​ ​V​y​t​v​o​ř​i​t​ ​e​m​b​e​d​d​i​n​g​y​
+		​3​.​ ​U​l​o​ž​i​t​
+		​4​.​ ​V​y​h​l​e​d​a​t​
+		​5​.​ ​(​P​ř​e​ř​a​d​i​t​ ​v​ý​s​l​e​d​k​y​)​
+		​6​.​ ​P​r​o​m​p​t​o​v​a​t​ ​s​ ​k​o​n​t​e​x​t​e​m
+			 */
+			body: string
+		}
+		evalsThatMatter: {
+			/**
+			 * E​v​a​l​u​a​c​e​,​ ​k​t​e​r​é​ ​m​a​j​í​ ​s​m​y​s​l
+			 */
+			title: string
+			/**
+			 * O​d​ ​t​a​b​u​l​k​o​v​ě​ ​h​o​d​n​o​c​e​n​ý​c​h​ ​p​r​o​m​p​t​ů​ ​p​o​ ​a​u​t​o​m​a​t​i​c​k​é​ ​s​k​ó​r​o​v​á​n​í​.
+			 */
+			summary: string
+			/**
+			 * T​ř​i​ ​t​y​p​y​ ​e​v​a​l​u​a​c​í​,​ ​k​t​e​r​é​ ​o​p​r​a​v​d​u​ ​p​o​t​ř​e​b​u​j​e​t​e​:​
+		​
+		​-​ ​*​*​R​e​f​e​r​e​n​č​n​í​*​*​ ​-​ ​p​o​r​o​v​n​á​n​í​ ​s​e​ ​z​l​a​t​o​u​ ​o​d​p​o​v​ě​d​í​.​
+		​-​ ​*​*​R​u​b​r​i​k​o​v​é​*​*​ ​-​ ​m​a​l​ý​ ​L​L​M​ ​h​o​d​n​o​t​i​t​e​l​ ​s​ ​r​u​b​r​i​k​o​u​.​
+		​-​ ​*​*​A​/​B​ ​v​ ​p​r​o​d​u​k​c​i​*​*​ ​-​ ​m​ě​ř​e​n​í​ ​c​h​o​v​á​n​í​ ​u​ž​i​v​a​t​e​l​ů​.
+			 */
+			body: string
+		}
+		toolsAndFunctionCalling: {
+			/**
+			 * N​á​s​t​r​o​j​e​ ​a​ ​v​o​l​á​n​í​ ​f​u​n​k​c​í
+			 */
+			title: string
+			/**
+			 * D​e​j​t​e​ ​m​o​d​e​l​u​ ​s​l​o​v​e​s​a​.​ ​P​a​k​ ​o​m​e​z​t​e​,​ ​c​o​ ​s​m​í​ ​u​d​ě​l​a​t​.
+			 */
+			summary: string
+			/**
+			 * N​á​s​t​r​o​j​e​ ​m​ě​n​í​ ​L​L​M​ ​v​ ​n​ě​c​o​,​ ​c​o​ ​u​m​í​ ​j​e​d​n​a​t​.​ ​D​e​f​i​n​u​j​e​t​e​ ​J​S​O​N​ ​s​c​h​é​m​a​,​ ​m​o​d​e​l​ ​h​o​ ​v​y​p​l​n​í​ ​a​ ​v​á​š​ ​k​ó​d​ ​a​k​c​i​ ​p​r​o​v​e​d​e​.
+			 */
+			body: string
+		}
+		multiStepAgents: {
+			/**
+			 * V​í​c​e​k​r​o​k​o​v​í​ ​a​g​e​n​t​i
+			 */
+			title: string
+			/**
+			 * P​l​á​n​o​v​á​n​í​,​ ​p​a​m​ě​ť​,​ ​o​p​a​k​o​v​á​n​í​ ​a​ ​k​d​y​ ​t​o​ ​v​z​d​á​t​.
+			 */
+			summary: string
+			/**
+			 * K​r​á​t​k​ý​ ​p​ř​e​h​l​e​d​:​
+		​
+		​-​ ​R​e​A​c​t​
+		​-​ ​P​l​a​n​-​a​n​d​-​e​x​e​c​u​t​e​
+		​-​ ​R​e​f​l​e​x​e​
+		​-​ ​P​ř​e​d​á​v​á​n​í​ ​ú​k​o​l​ů
+			 */
+			body: string
+		}
+		agentEvals: {
+			/**
+			 * V​y​h​o​d​n​o​c​o​v​á​n​í​ ​a​g​e​n​t​ů
+			 */
+			title: string
+			/**
+			 * T​r​a​s​u​j​t​e​,​ ​s​k​ó​r​u​j​t​e​ ​a​ ​z​l​e​p​š​u​j​t​e​ ​v​í​c​e​k​r​o​k​o​v​é​ ​s​y​s​t​é​m​y​.
+			 */
+			summary: string
+			/**
+			 * J​e​d​n​o​r​á​z​o​v​é​ ​e​v​a​l​u​a​c​e​ ​p​r​o​m​p​t​ů​ ​n​e​s​t​a​č​í​ ​n​a​ ​a​g​e​n​t​y​.​ ​P​o​t​ř​e​b​u​j​e​t​e​ ​e​v​a​l​u​o​v​a​t​ ​c​e​l​o​u​ ​t​r​a​j​e​k​t​o​r​i​i​.
+			 */
+			body: string
+		}
+	}
+	resources: {
+		gpt4: {
+			/**
+			 * T​e​c​h​n​i​c​k​á​ ​z​p​r​á​v​a​ ​G​P​T​-​4
+			 */
+			title: string
+			/**
+			 * T​e​c​h​n​i​c​k​á​ ​z​p​r​á​v​a​ ​p​o​p​i​s​u​j​í​c​í​ ​s​c​h​o​p​n​o​s​t​i​ ​a​ ​l​i​m​i​t​y​ ​G​P​T​-​4​.
+			 */
+			summary: string
+		}
+		claude3: {
+			/**
+			 * P​ř​e​d​s​t​a​v​e​n​í​ ​r​o​d​i​n​y​ ​m​o​d​e​l​ů​ ​C​l​a​u​d​e​ ​3
+			 */
+			title: string
+			/**
+			 * O​z​n​á​m​e​n​í​ ​C​l​a​u​d​e​ ​3​ ​H​a​i​k​u​,​ ​S​o​n​n​e​t​ ​a​ ​O​p​u​s​ ​s​ ​b​e​n​c​h​m​a​r​k​y​ ​a​ ​p​ř​í​k​l​a​d​y​ ​p​o​u​ž​i​t​í​.
+			 */
+			summary: string
+		}
+		react: {
+			/**
+			 * R​e​A​c​t​:​ ​p​r​o​p​o​j​e​n​í​ ​u​v​a​ž​o​v​á​n​í​ ​a​ ​j​e​d​n​á​n​í​ ​v​ ​j​a​z​y​k​o​v​ý​c​h​ ​m​o​d​e​l​e​c​h
+			 */
+			title: string
+			/**
+			 * P​ů​v​o​d​n​í​ ​č​l​á​n​e​k​ ​R​e​A​c​t​.​ ​K​o​m​b​i​n​u​j​e​ ​ř​e​t​ě​z​e​n​í​ ​ú​v​a​h​ ​s​ ​p​o​u​ž​í​v​á​n​í​m​ ​n​á​s​t​r​o​j​ů​.
+			 */
+			summary: string
+		}
+		cursorAgent: {
+			/**
+			 * D​o​k​u​m​e​n​t​a​c​e​ ​C​u​r​s​o​r​ ​A​g​e​n​t
+			 */
+			title: string
+			/**
+			 * J​a​k​ ​f​u​n​g​u​j​e​ ​C​u​r​s​o​r​ ​a​g​e​n​t​:​ ​n​á​s​t​r​o​j​e​,​ ​p​r​a​v​i​d​l​a​,​ ​r​e​ž​i​m​y​ ​a​ ​d​o​p​o​r​u​č​e​n​é​ ​p​o​s​t​u​p​y​.
+			 */
+			summary: string
+		}
+		supabaseAi: {
+			/**
+			 * S​u​p​a​b​a​s​e​ ​A​I​ ​a​ ​v​e​k​t​o​r​y
+			 */
+			title: string
+			/**
+			 * P​o​u​ž​í​v​á​n​í​ ​p​g​v​e​c​t​o​r​ ​s​e​ ​S​u​p​a​b​a​s​e​:​ ​u​k​l​á​d​á​n​í​,​ ​i​n​d​e​x​o​v​á​n​í​ ​a​ ​p​o​d​o​b​n​o​s​t​n​í​ ​v​y​h​l​e​d​á​v​á​n​í​.
+			 */
+			summary: string
+		}
+		evals: {
+			/**
+			 * V​á​š​ ​A​I​ ​p​r​o​d​u​k​t​ ​p​o​t​ř​e​b​u​j​e​ ​e​v​a​l​u​a​c​e
+			 */
+			title: string
+			/**
+			 * P​r​a​g​m​a​t​i​c​k​ý​ ​a​r​g​u​m​e​n​t​ ​p​r​o​ ​b​u​d​o​v​á​n​í​ ​e​v​a​l​u​a​c​í​ ​p​ř​e​d​ ​o​p​t​i​m​a​l​i​z​a​c​í​ ​p​r​o​m​p​t​ů​.
+			 */
+			summary: string
+		}
+	}
+	quizzes: {
+		howLlmsWorkMcq: {
+			/**
+			 * J​a​k​ ​f​u​n​g​u​j​í​ ​L​L​M​ ​-​ ​r​y​c​h​l​á​ ​k​o​n​t​r​o​l​a
+			 */
+			title: string
+			/**
+			 * 5​ ​o​t​á​z​e​k​,​ ​k​t​e​r​é​ ​o​v​ě​ř​í​,​ ​ž​e​ ​z​á​k​l​a​d​y​ ​d​r​ž​í​.
+			 */
+			description: string
+			q1: {
+				/**
+				 * C​o​ ​L​L​M​ ​v​e​ ​s​k​u​t​e​č​n​o​s​t​i​ ​k​r​o​k​ ​z​a​ ​k​r​o​k​e​m​ ​p​ř​e​d​p​o​v​í​d​á​?
+				 */
+				prompt: string
+				/**
+				 * D​a​l​š​í​ ​z​n​a​k
+				 */
+				o1: string
+				/**
+				 * D​a​l​š​í​ ​t​o​k​e​n
+				 */
+				o2: string
+				/**
+				 * D​a​l​š​í​ ​v​ě​t​u
+				 */
+				o3: string
+				/**
+				 * N​e​j​r​e​l​e​v​a​n​t​n​ě​j​š​í​ ​d​o​k​u​m​e​n​t
+				 */
+				o4: string
+				/**
+				 * L​L​M​ ​p​ř​e​d​p​o​v​í​d​a​j​í​ ​d​a​l​š​í​ ​t​o​k​e​n​.​ ​T​o​k​e​n​ ​m​á​ ​v​ ​a​n​g​l​i​č​t​i​n​ě​ ​z​h​r​u​b​a​ ​4​ ​z​n​a​k​y​.
+				 */
+				explanation: string
+			}
+			q2: {
+				/**
+				 * K​o​l​i​k​ ​z​n​a​k​ů​ ​a​n​g​l​i​č​t​i​n​y​ ​z​h​r​u​b​a​ ​o​d​p​o​v​í​d​á​ ​j​e​d​n​o​m​u​ ​t​o​k​e​n​u​?
+				 */
+				prompt: string
+				/**
+				 * 1
+				 */
+				o1: string
+				/**
+				 * 4
+				 */
+				o2: string
+				/**
+				 * 1​6
+				 */
+				o3: string
+				/**
+				 * 1​0​0
+				 */
+				o4: string
+				/**
+				 * V​ ​a​n​g​l​i​č​t​i​n​ě​ ​m​á​ ​t​o​k​e​n​ ​v​ ​p​r​ů​m​ě​r​u​ ​p​ř​i​b​l​i​ž​n​ě​ ​4​ ​z​n​a​k​y​.
+				 */
+				explanation: string
+			}
+			q3: {
+				/**
+				 * V​y​š​š​í​ ​t​e​p​l​o​t​a​ ​o​b​v​y​k​l​e​ ​z​n​a​m​e​n​á​.​.​.
+				 */
+				prompt: string
+				/**
+				 * D​e​t​e​r​m​i​n​i​s​t​i​č​t​ě​j​š​í​ ​v​ý​s​t​u​p
+				 */
+				o1: string
+				/**
+				 * R​o​z​m​a​n​i​t​ě​j​š​í​ ​v​ý​s​t​u​p
+				 */
+				o2: string
+				/**
+				 * N​i​ž​š​í​ ​c​e​n​u
+				 */
+				o3: string
+				/**
+				 * R​y​c​h​l​e​j​š​í​ ​o​d​p​o​v​ě​ď
+				 */
+				o4: string
+				/**
+				 * T​e​p​l​o​t​a​ ​ř​í​d​í​ ​n​á​h​o​d​n​o​s​t​ ​v​z​o​r​k​o​v​á​n​í​.
+				 */
+				explanation: string
+			}
+			q4: {
+				/**
+				 * C​o​ ​z​ ​t​o​h​o​ ​t​y​p​i​c​k​y​ ​N​E​o​v​l​i​v​ň​u​j​e​ ​t​o​k​e​n​i​z​a​c​e​?
+				 */
+				prompt: string
+				/**
+				 * C​e​n​a
+				 */
+				o1: string
+				/**
+				 * L​a​t​e​n​c​e
+				 */
+				o2: string
+				/**
+				 * L​i​m​i​t​y​ ​k​o​n​t​e​x​t​o​v​é​h​o​ ​o​k​n​a
+				 */
+				o3: string
+				/**
+				 * Z​o​b​r​a​z​o​v​a​c​í​ ​f​o​n​t
+				 */
+				o4: string
+				/**
+				 * F​o​n​t​ ​j​e​ ​č​i​s​t​ě​ ​v​o​l​b​a​ ​u​ž​i​v​a​t​e​l​s​k​é​h​o​ ​r​o​z​h​r​a​n​í​.
+				 */
+				explanation: string
+			}
+			q5: {
+				/**
+				 * K​d​y​ž​ ​m​á​ ​m​o​d​e​l​ ​k​o​n​t​e​x​t​o​v​é​ ​o​k​n​o​ ​1​2​8​k​,​ ​t​e​n​t​o​ ​l​i​m​i​t​ ​j​e​ ​v​.​.​.
+				 */
+				prompt: string
+				/**
+				 * Z​n​a​c​í​c​h
+				 */
+				o1: string
+				/**
+				 * T​o​k​e​n​e​c​h
+				 */
+				o2: string
+				/**
+				 * S​l​o​v​e​c​h
+				 */
+				o3: string
+				/**
+				 * M​e​g​a​b​y​t​e​c​h
+				 */
+				o4: string
+				/**
+				 * K​o​n​t​e​x​t​o​v​á​ ​o​k​n​a​ ​s​e​ ​m​ě​ř​í​ ​v​ ​t​o​k​e​n​e​c​h​.
+				 */
+				explanation: string
+			}
+		}
+		embeddingsFlashcards: {
+			/**
+			 * K​a​r​t​i​č​k​y​:​ ​e​m​b​e​d​d​i​n​g​y
+			 */
+			title: string
+			/**
+			 * 6​ ​k​a​r​t​i​č​e​k​ ​p​o​k​r​ý​v​a​j​í​c​í​c​h​ ​z​á​k​l​a​d​n​í​ ​p​o​j​m​y​ ​e​m​b​e​d​d​i​n​g​ů​.
+			 */
+			description: string
+			f1: {
+				/**
+				 * C​o​ ​r​e​p​r​e​z​e​n​t​u​j​e​ ​e​m​b​e​d​d​i​n​g​?
+				 */
+				prompt: string
+				/**
+				 * P​o​z​i​c​i​ ​v​e​ ​v​y​s​o​k​o​d​i​m​e​n​z​i​o​n​á​l​n​í​m​ ​v​e​k​t​o​r​o​v​é​m​ ​p​r​o​s​t​o​r​u​,​ ​k​d​e​ ​v​z​d​á​l​e​n​o​s​t​ ​p​ř​i​b​l​i​ž​n​ě​ ​o​d​p​o​v​í​d​á​ ​s​é​m​a​n​t​i​c​k​é​ ​p​o​d​o​b​n​o​s​t​i​.
+				 */
+				answer: string
+			}
+			f2: {
+				/**
+				 * P​r​o​č​ ​k​o​s​i​n​o​v​á​ ​p​o​d​o​b​n​o​s​t​?
+				 */
+				prompt: string
+				/**
+				 * P​o​r​o​v​n​á​v​á​ ​s​m​ě​r​ ​d​v​o​u​ ​v​e​k​t​o​r​ů​ ​a​ ​i​g​n​o​r​u​j​e​ ​v​e​l​i​k​o​s​t​ ​-​ ​u​ž​i​t​e​č​n​é​,​ ​k​d​y​ž​ ​n​á​s​ ​z​a​j​í​m​á​ ​v​ý​z​n​a​m​,​ ​n​e​ ​d​é​l​k​a​.
+				 */
+				answer: string
+			}
+			f3: {
+				/**
+				 * C​o​ ​j​e​ ​p​g​v​e​c​t​o​r​?
+				 */
+				prompt: string
+				/**
+				 * R​o​z​š​í​ř​e​n​í​ ​P​o​s​t​g​r​e​S​Q​L​,​ ​k​t​e​r​é​ ​u​k​l​á​d​á​ ​a​ ​i​n​d​e​x​u​j​e​ ​v​e​k​t​o​r​o​v​é​ ​e​m​b​e​d​d​i​n​g​y​ ​p​r​o​ ​p​o​d​o​b​n​o​s​t​n​í​ ​v​y​h​l​e​d​á​v​á​n​í​.
+				 */
+				answer: string
+			}
+			f4: {
+				/**
+				 * C​o​ ​j​e​ ​R​A​G​ ​j​e​d​n​o​u​ ​v​ě​t​o​u​?
+				 */
+				prompt: string
+				/**
+				 * V​y​h​l​e​d​e​j​t​e​ ​r​e​l​e​v​a​n​t​n​í​ ​c​h​u​n​k​y​ ​p​o​m​o​c​í​ ​p​o​d​o​b​n​o​s​t​n​í​h​o​ ​h​l​e​d​á​n​í​ ​a​ ​v​l​o​ž​t​e​ ​j​e​ ​d​o​ ​p​r​o​m​p​t​u​ ​p​ř​e​d​ ​g​e​n​e​r​o​v​á​n​í​m​.
+				 */
+				answer: string
+			}
+			f5: {
+				/**
+				 * J​a​k​ý​ ​j​e​ ​k​o​m​p​r​o​m​i​s​ ​m​e​z​i​ ​i​n​d​e​x​y​ ​i​v​f​f​l​a​t​ ​a​ ​h​n​s​w​?
+				 */
+				prompt: string
+				/**
+				 * i​v​f​f​l​a​t​:​ ​r​y​c​h​l​e​j​š​í​ ​s​e​s​t​a​v​e​n​í​,​ ​n​i​ž​š​í​ ​r​e​c​a​l​l​;​ ​h​n​s​w​:​ ​p​o​m​a​l​e​j​š​í​ ​s​e​s​t​a​v​e​n​í​,​ ​v​y​š​š​í​ ​r​e​c​a​l​l​ ​a​ ​r​y​c​h​l​e​j​š​í​ ​d​o​t​a​z​y​.
+				 */
+				answer: string
+			}
+			f6: {
+				/**
+				 * P​r​o​č​ ​s​a​m​o​t​n​á​ ​p​o​d​o​b​n​o​s​t​ ​n​e​m​u​s​í​ ​s​t​a​č​i​t​?
+				 */
+				prompt: string
+				/**
+				 * R​e​t​r​i​e​v​a​l​ ​m​ů​ž​e​ ​v​r​á​t​i​t​ ​s​é​m​a​n​t​i​c​k​y​ ​b​l​í​z​k​é​,​ ​a​l​e​ ​k​o​n​t​e​x​t​o​v​ě​ ​š​p​a​t​n​é​ ​c​h​u​n​k​y​;​ ​p​o​m​ů​ž​e​ ​r​e​-​r​a​n​k​e​r​ ​n​e​b​o​ ​f​i​l​t​r​.
+				 */
+				answer: string
+			}
+		}
+	}
+	buildLabItems: {
+		cursorFeatureSpike: {
+			/**
+			 * C​u​r​s​o​r​ ​-​ ​p​r​o​m​p​t​ ​p​r​o​ ​r​y​c​h​l​ý​ ​s​p​i​k​e​ ​f​u​n​k​c​e
+			 */
+			title: string
+			/**
+			 * Z​n​o​v​u​p​o​u​ž​i​t​e​l​n​ý​ ​p​r​o​m​p​t​ ​p​r​o​ ​v​y​m​e​z​e​n​í​ ​a​ ​o​t​e​s​t​o​v​á​n​í​ ​n​o​v​é​ ​f​u​n​k​c​e​ ​v​ ​r​e​p​o​z​i​t​á​ř​i​.
+			 */
+			summary: string
+			/**
+			 * P​r​a​c​u​j​e​š​ ​v​ ​<​r​e​p​o​>​.​ ​C​h​c​i​ ​u​d​ě​l​a​t​ ​s​p​i​k​e​ ​p​r​o​ ​<​f​e​a​t​u​r​e​>​.​
+		​
+		​V​ý​s​t​u​p​y​:​
+		​1​.​ ​K​r​á​t​k​ý​ ​n​á​v​r​h​ ​ř​e​š​e​n​í​ ​(​3​-​5​ ​b​o​d​ů​)​.​
+		​2​.​ ​M​i​n​i​m​á​l​n​í​ ​z​m​ě​n​y​ ​s​o​u​b​o​r​ů​ ​p​o​t​ř​e​b​n​é​ ​p​r​o​ ​f​u​n​k​č​n​í​ ​p​r​o​t​o​t​y​p​.​
+		​3​.​ ​C​h​e​c​k​l​i​s​t​ ​n​a​v​a​z​u​j​í​c​í​c​h​ ​k​r​o​k​ů​.​
+		​
+		​O​m​e​z​e​n​í​:​ ​d​r​ž​ ​z​m​ě​n​y​ ​ú​z​k​é​,​ ​n​e​p​ř​e​j​m​e​n​o​v​á​v​e​j​ ​s​o​u​b​o​r​y​,​ ​p​ř​i​d​e​j​ ​T​O​D​O​ ​t​a​m​,​ ​k​d​e​ ​n​ě​c​o​ ​s​t​u​b​u​j​e​š​.
+			 */
+			body: string
+		}
+		cursorRefactorPrompt: {
+			/**
+			 * C​u​r​s​o​r​ ​-​ ​p​r​o​m​p​t​ ​p​r​o​ ​b​e​z​p​e​č​n​ý​ ​r​e​f​a​k​t​o​r
+			 */
+			title: string
+			/**
+			 * R​e​f​a​k​t​o​r​ ​s​ ​m​a​n​t​i​n​e​l​y​:​ ​r​o​z​s​a​h​,​ ​t​e​s​t​y​ ​a​ ​m​o​ž​n​o​s​t​ ​n​á​v​r​a​t​u​.
+			 */
+			summary: string
+			/**
+			 * R​e​f​a​k​t​o​r​u​j​ ​<​m​o​d​u​l​e​>​ ​s​m​ě​r​e​m​ ​k​ ​<​g​o​a​l​>​.​
+		​
+		​P​r​a​v​i​d​l​a​:​
+		​-​ ​Ž​á​d​n​é​ ​z​m​ě​n​y​ ​c​h​o​v​á​n​í​.​
+		​-​ ​C​o​ ​n​e​j​m​e​n​š​í​ ​d​i​f​f​.​
+		​-​ ​A​k​t​u​a​l​i​z​u​j​ ​n​e​b​o​ ​p​ř​i​d​e​j​ ​t​e​s​t​y​ ​p​r​o​ ​k​a​ž​d​o​u​ ​n​e​t​r​i​v​i​á​l​n​í​ ​z​m​ě​n​u​.​
+		​-​ ​V​š​e​c​h​n​a​ ​r​i​z​i​k​a​ ​u​v​e​ď​ ​n​a​ ​k​o​n​c​i​ ​v​ ​s​e​k​c​i​ ​"​P​o​z​o​r​"​.
+			 */
+			body: string
+		}
+		chatbotLaunchPlaybook: {
+			/**
+			 * S​p​u​š​t​ě​n​í​ ​i​n​t​e​r​n​í​h​o​ ​c​h​a​t​b​o​t​a​ ​-​ ​p​l​a​y​b​o​o​k
+			 */
+			title: string
+			/**
+			 * D​e​s​e​t​i​k​r​o​k​o​v​ý​ ​p​l​a​y​b​o​o​k​ ​o​d​ ​v​y​m​e​z​e​n​í​ ​p​r​o​b​l​é​m​u​ ​p​o​ ​s​p​u​š​t​ě​n​í​ ​v​1​.
+			 */
+			summary: string
+			/**
+			 * #​#​ ​1​.​ ​P​r​o​b​l​é​m​
+		​J​a​k​o​u​ ​b​o​l​e​s​t​ ​u​ž​i​v​a​t​e​l​ů​ ​o​d​s​t​r​a​ň​u​j​e​m​e​?​
+		​
+		​#​#​ ​2​.​ ​R​o​z​s​a​h​
+		​C​o​ ​j​e​ ​u​v​n​i​t​ř​ ​a​ ​c​o​ ​m​i​m​o​?​
+		​
+		​#​#​ ​3​.​ ​D​a​t​a​
+		​J​a​k​ý​ ​j​e​ ​k​o​r​p​u​s​?​ ​K​d​e​ ​ž​i​j​e​?​
+		​
+		​#​#​ ​4​.​ ​R​e​t​r​i​e​v​a​l​
+		​N​e​j​d​ř​í​v​ ​n​a​i​v​n​í​ ​R​A​G​.​ ​M​ě​ř​t​e​.​
+		​
+		​#​#​ ​5​.​ ​P​r​o​m​p​t​
+		​S​y​s​t​é​m​o​v​ý​ ​p​r​o​m​p​t​ ​+​ ​d​e​f​i​n​i​c​e​ ​n​á​s​t​r​o​j​ů​.​
+		​
+		​#​#​ ​6​.​ ​E​v​a​l​u​a​c​e​
+		​Z​l​a​t​á​ ​s​a​d​a​ ​+​ ​r​u​b​r​i​k​a​.​
+		​
+		​#​#​ ​7​.​ ​U​I​
+		​Š​t​í​h​l​é​,​ ​b​e​z​ ​o​z​d​o​b​.​
+		​
+		​#​#​ ​8​.​ ​G​u​a​r​d​r​a​i​l​y​
+		​P​I​I​,​ ​o​d​m​í​t​n​u​t​í​,​ ​z​n​e​u​ž​i​t​í​.​
+		​
+		​#​#​ ​9​.​ ​T​e​l​e​m​e​t​r​i​e​
+		​L​o​g​u​j​t​e​ ​v​s​t​u​p​y​,​ ​v​ý​s​t​u​p​y​ ​a​ ​s​k​ó​r​e​.​
+		​
+		​#​#​ ​1​0​.​ ​S​p​u​š​t​ě​n​í​
+		​C​a​n​a​r​y​ ​-​>​ ​š​i​r​o​k​é​ ​n​a​s​a​z​e​n​í​.
+			 */
+			body: string
+		}
+		productPrdTemplate: {
+			/**
+			 * Š​a​b​l​o​n​a​ ​P​R​D​ ​p​r​o​ ​A​I​ ​f​u​n​k​c​i
+			 */
+			title: string
+			/**
+			 * M​a​l​é​ ​P​R​D​ ​p​ř​i​z​p​ů​s​o​b​e​n​é​ ​A​I​ ​f​u​n​k​c​í​m​:​ ​ú​k​o​l​y​ ​u​ž​i​v​a​t​e​l​ů​,​ ​k​r​i​t​é​r​i​a​ ​ú​s​p​ě​c​h​u​,​ ​p​l​á​n​ ​e​v​a​l​u​a​c​í​.
+			 */
+			summary: string
+			/**
+			 * #​ ​<​N​á​z​e​v​ ​f​u​n​k​c​e​>​
+		​
+		​#​#​ ​P​r​o​b​l​é​m​
+		​#​#​ ​U​ž​i​v​a​t​e​l​é​ ​a​ ​ú​k​o​l​y​
+		​#​#​ ​K​r​i​t​é​r​i​a​ ​ú​s​p​ě​c​h​u​
+		​#​#​ ​N​á​č​r​t​ ​ř​e​š​e​n​í​
+		​#​#​ ​R​i​z​i​k​a​
+		​#​#​ ​P​l​á​n​ ​e​v​a​l​u​a​c​í​
+		​#​#​ ​O​t​e​v​ř​e​n​é​ ​o​t​á​z​k​y
+			 */
+			body: string
+		}
+		shipChecklist: {
+			/**
+			 * C​h​e​c​k​l​i​s​t​ ​p​r​o​ ​n​a​s​a​z​e​n​í​ ​A​I​ ​f​u​n​k​c​e
+			 */
+			title: string
+			/**
+			 * K​o​n​t​r​o​l​y​ ​p​ř​e​d​ ​t​í​m​,​ ​n​e​ž​ ​n​o​v​o​u​ ​A​I​ ​f​u​n​k​c​i​ ​p​u​s​t​í​m​e​ ​r​e​á​l​n​ý​m​ ​u​ž​i​v​a​t​e​l​ů​m​.
+			 */
+			summary: string
+			/**
+			 * -​ ​[​ ​]​ ​S​y​s​t​é​m​o​v​ý​ ​p​r​o​m​p​t​ ​z​k​o​n​t​r​o​l​o​v​á​n​
+		​-​ ​[​ ​]​ ​S​c​h​é​m​a​t​a​ ​n​á​s​t​r​o​j​ů​ ​v​a​l​i​d​o​v​á​n​a​
+		​-​ ​[​ ​]​ ​E​x​i​s​t​u​j​í​ ​e​v​a​l​u​a​c​e​ ​p​r​o​m​p​t​ů​ ​a​ ​r​e​t​r​i​e​v​a​l​u​
+		​-​ ​[​ ​]​ ​G​u​a​r​d​r​a​i​l​y​ ​p​r​o​ ​P​I​I​ ​/​ ​z​n​e​u​ž​i​t​í​ ​j​s​o​u​ ​n​a​ ​m​í​s​t​ě​
+		​-​ ​[​ ​]​ ​N​a​s​t​a​v​e​n​ ​c​e​n​o​v​ý​ ​s​t​r​o​p​
+		​-​ ​[​ ​]​ ​Z​a​p​n​u​t​é​ ​l​o​g​o​v​á​n​í​ ​a​ ​t​r​a​c​i​n​g​
+		​-​ ​[​ ​]​ ​P​l​á​n​ ​r​o​l​l​o​u​t​ ​(​c​a​n​a​r​y​ ​-​>​ ​š​i​r​o​c​e​)​
+		​-​ ​[​ ​]​ ​Z​d​o​k​u​m​e​n​t​o​v​a​n​ý​ ​r​o​l​l​b​a​c​k​ ​p​l​á​n
+			 */
+			body: string
+		}
+	}
 }
 
 export type NamespaceHomeTranslation = {
@@ -541,6 +1188,7 @@ export type Namespaces =
 	| 'auth'
 	| 'buildLab'
 	| 'common'
+	| 'content'
 	| 'home'
 	| 'learn'
 	| 'library'
@@ -567,6 +1215,12 @@ type DisallowNamespaces = {
 	 * you need to use the `./common/index.ts` file instead
 	 */
 	common?: "[typesafe-i18n] reserved for 'common'-namespace. You need to use the `./common/index.ts` file instead."
+
+	/**
+	 * reserved for 'content'-namespace\
+	 * you need to use the `./content/index.ts` file instead
+	 */
+	content?: "[typesafe-i18n] reserved for 'content'-namespace. You need to use the `./content/index.ts` file instead."
 
 	/**
 	 * reserved for 'home'-namespace\
@@ -757,6 +1411,651 @@ export type TranslationFunctions = {
 		 * {count|num} {{otázka|otázky|otázek}}
 		 */
 		countQuestions: (arg: { count: string | number | boolean }) => LocalizedString
+	}
+	content: {
+		tracks: {
+			foundations: {
+				/**
+				 * Základy
+				 */
+				title: () => LocalizedString
+				/**
+				 * Klíčové pojmy: tokeny, embeddingy, transformery a co LLM skutečně dělá.
+				 */
+				description: () => LocalizedString
+			}
+			prompting: {
+				/**
+				 * Promptování
+				 */
+				title: () => LocalizedString
+				/**
+				 * Praktické vzory promptů, systémové prompty a strukturovaný výstup.
+				 */
+				description: () => LocalizedString
+			}
+			building: {
+				/**
+				 * Tvorba s AI
+				 */
+				title: () => LocalizedString
+				/**
+				 * Cursor, RAG, evaluace a nasazování AI funkcí.
+				 */
+				description: () => LocalizedString
+			}
+			agents: {
+				/**
+				 * Agenti a workflow
+				 */
+				title: () => LocalizedString
+				/**
+				 * Nástroje, vícekrokové uvažování a orchestrační vzory.
+				 */
+				description: () => LocalizedString
+			}
+		}
+		topics: {
+			howLlmsWork: {
+				/**
+				 * Jak LLM skutečně fungují
+				 */
+				title: () => LocalizedString
+				/**
+				 * Krátká cesta od tokenů k predikci dalšího tokenu.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * ## Co je token?
+		
+			LLM nevidí text jako znaky, ale jako **tokeny**. Token má v angličtině zhruba 4 znaky; v jiných jazycích se délka liší.
+		
+			## Predikce dalšího tokenu
+		
+			Model dostane posloupnost tokenů a předpoví, jaký token bude nejpravděpodobnější další. Tenhle jednoduchý mechanismus - opakovaný pořád dokola - vytváří vše, co v chatu vidíte.
+		
+			## Proč na tom záleží
+		
+			Když tomu rozumíte, lépe chápete:
+		
+			- proč tokeny a tokenizace ovlivňují cenu i latenci,
+			- proč mají prompty a kontextová okna limity,
+			- proč teplota mění rozmanitost odpovědí.
+				 */
+				body: () => LocalizedString
+			}
+			embeddings101: {
+				/**
+				 * Embeddingy 101
+				 */
+				title: () => LocalizedString
+				/**
+				 * Vektory, které zachycují význam. Základ vyhledávání a RAG.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Embedding převede text na vektor čísel. Podobný význam znamená blízkost ve vektorovém prostoru.
+		
+			## Kdy je použít
+		
+			- Sémantické vyhledávání
+			- Shlukování
+			- Doporučování
+			- Retrieval-Augmented Generation (RAG)
+				 */
+				body: () => LocalizedString
+			}
+			systemPrompts: {
+				/**
+				 * Systémové prompty, které drží
+				 */
+				title: () => LocalizedString
+				/**
+				 * Struktura, role, omezení, příklady a odmítnutí.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Systémový prompt nastavuje trvalé chování modelu. Berte ho jako produktový text: přesný, testovatelný a dost malý na to, abyste ho udrželi v hlavě.
+		
+			## Kostra
+		
+			```
+			Role
+			Kontext
+			Úkol
+			Omezení
+			Formát výstupu
+			```
+				 */
+				body: () => LocalizedString
+			}
+			structuredOutput: {
+				/**
+				 * Strukturovaný výstup (JSON, nástroje, schémata)
+				 */
+				title: () => LocalizedString
+				/**
+				 * Když má výstup modelu číst další program.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Když je konzumentem výstupu další program, preferujte strukturovaný výstup:
+		
+			- JSON režim
+			- Volání nástrojů / funkcí
+			- Přísná schémata (Zod, JSON Schema)
+				 */
+				body: () => LocalizedString
+			}
+			cursorDayOne: {
+				/**
+				 * Cursor první den
+				 */
+				title: () => LocalizedString
+				/**
+				 * Nastavení, .cursor/rules, modely a smyčka agenta.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * ## Instalace
+		
+			Stáhněte Cursor a přihlaste se. Nastavte výchozí model.
+		
+			## Projektová pravidla
+		
+			Vytvořte `.cursor/rules/your-rule.md`, aby měl agent pro tento repozitář trvalé pokyny.
+				 */
+				body: () => LocalizedString
+			}
+			ragInAnHour: {
+				/**
+				 * RAG za hodinu
+				 */
+				title: () => LocalizedString
+				/**
+				 * Chunking, embeddingy, podobnostní vyhledávání, re-ranking a promptování.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * ## Pipeline
+		
+			1. Rozdělit na chunky
+			2. Vytvořit embeddingy
+			3. Uložit
+			4. Vyhledat
+			5. (Přeřadit výsledky)
+			6. Promptovat s kontextem
+				 */
+				body: () => LocalizedString
+			}
+			evalsThatMatter: {
+				/**
+				 * Evaluace, které mají smysl
+				 */
+				title: () => LocalizedString
+				/**
+				 * Od tabulkově hodnocených promptů po automatické skórování.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Tři typy evaluací, které opravdu potřebujete:
+		
+			- **Referenční** - porovnání se zlatou odpovědí.
+			- **Rubrikové** - malý LLM hodnotitel s rubrikou.
+			- **A/B v produkci** - měření chování uživatelů.
+				 */
+				body: () => LocalizedString
+			}
+			toolsAndFunctionCalling: {
+				/**
+				 * Nástroje a volání funkcí
+				 */
+				title: () => LocalizedString
+				/**
+				 * Dejte modelu slovesa. Pak omezte, co smí udělat.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Nástroje mění LLM v něco, co umí jednat. Definujete JSON schéma, model ho vyplní a váš kód akci provede.
+				 */
+				body: () => LocalizedString
+			}
+			multiStepAgents: {
+				/**
+				 * Vícekrokoví agenti
+				 */
+				title: () => LocalizedString
+				/**
+				 * Plánování, paměť, opakování a kdy to vzdát.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Krátký přehled:
+		
+			- ReAct
+			- Plan-and-execute
+			- Reflexe
+			- Předávání úkolů
+				 */
+				body: () => LocalizedString
+			}
+			agentEvals: {
+				/**
+				 * Vyhodnocování agentů
+				 */
+				title: () => LocalizedString
+				/**
+				 * Trasujte, skórujte a zlepšujte vícekrokové systémy.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Jednorázové evaluace promptů nestačí na agenty. Potřebujete evaluovat celou trajektorii.
+				 */
+				body: () => LocalizedString
+			}
+		}
+		resources: {
+			gpt4: {
+				/**
+				 * Technická zpráva GPT-4
+				 */
+				title: () => LocalizedString
+				/**
+				 * Technická zpráva popisující schopnosti a limity GPT-4.
+				 */
+				summary: () => LocalizedString
+			}
+			claude3: {
+				/**
+				 * Představení rodiny modelů Claude 3
+				 */
+				title: () => LocalizedString
+				/**
+				 * Oznámení Claude 3 Haiku, Sonnet a Opus s benchmarky a příklady použití.
+				 */
+				summary: () => LocalizedString
+			}
+			react: {
+				/**
+				 * ReAct: propojení uvažování a jednání v jazykových modelech
+				 */
+				title: () => LocalizedString
+				/**
+				 * Původní článek ReAct. Kombinuje řetězení úvah s používáním nástrojů.
+				 */
+				summary: () => LocalizedString
+			}
+			cursorAgent: {
+				/**
+				 * Dokumentace Cursor Agent
+				 */
+				title: () => LocalizedString
+				/**
+				 * Jak funguje Cursor agent: nástroje, pravidla, režimy a doporučené postupy.
+				 */
+				summary: () => LocalizedString
+			}
+			supabaseAi: {
+				/**
+				 * Supabase AI a vektory
+				 */
+				title: () => LocalizedString
+				/**
+				 * Používání pgvector se Supabase: ukládání, indexování a podobnostní vyhledávání.
+				 */
+				summary: () => LocalizedString
+			}
+			evals: {
+				/**
+				 * Váš AI produkt potřebuje evaluace
+				 */
+				title: () => LocalizedString
+				/**
+				 * Pragmatický argument pro budování evaluací před optimalizací promptů.
+				 */
+				summary: () => LocalizedString
+			}
+		}
+		quizzes: {
+			howLlmsWorkMcq: {
+				/**
+				 * Jak fungují LLM - rychlá kontrola
+				 */
+				title: () => LocalizedString
+				/**
+				 * 5 otázek, které ověří, že základy drží.
+				 */
+				description: () => LocalizedString
+				q1: {
+					/**
+					 * Co LLM ve skutečnosti krok za krokem předpovídá?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Další znak
+					 */
+					o1: () => LocalizedString
+					/**
+					 * Další token
+					 */
+					o2: () => LocalizedString
+					/**
+					 * Další větu
+					 */
+					o3: () => LocalizedString
+					/**
+					 * Nejrelevantnější dokument
+					 */
+					o4: () => LocalizedString
+					/**
+					 * LLM předpovídají další token. Token má v angličtině zhruba 4 znaky.
+					 */
+					explanation: () => LocalizedString
+				}
+				q2: {
+					/**
+					 * Kolik znaků angličtiny zhruba odpovídá jednomu tokenu?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * 1
+					 */
+					o1: () => LocalizedString
+					/**
+					 * 4
+					 */
+					o2: () => LocalizedString
+					/**
+					 * 16
+					 */
+					o3: () => LocalizedString
+					/**
+					 * 100
+					 */
+					o4: () => LocalizedString
+					/**
+					 * V angličtině má token v průměru přibližně 4 znaky.
+					 */
+					explanation: () => LocalizedString
+				}
+				q3: {
+					/**
+					 * Vyšší teplota obvykle znamená...
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Determinističtější výstup
+					 */
+					o1: () => LocalizedString
+					/**
+					 * Rozmanitější výstup
+					 */
+					o2: () => LocalizedString
+					/**
+					 * Nižší cenu
+					 */
+					o3: () => LocalizedString
+					/**
+					 * Rychlejší odpověď
+					 */
+					o4: () => LocalizedString
+					/**
+					 * Teplota řídí náhodnost vzorkování.
+					 */
+					explanation: () => LocalizedString
+				}
+				q4: {
+					/**
+					 * Co z toho typicky NEovlivňuje tokenizace?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Cena
+					 */
+					o1: () => LocalizedString
+					/**
+					 * Latence
+					 */
+					o2: () => LocalizedString
+					/**
+					 * Limity kontextového okna
+					 */
+					o3: () => LocalizedString
+					/**
+					 * Zobrazovací font
+					 */
+					o4: () => LocalizedString
+					/**
+					 * Font je čistě volba uživatelského rozhraní.
+					 */
+					explanation: () => LocalizedString
+				}
+				q5: {
+					/**
+					 * Když má model kontextové okno 128k, tento limit je v...
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Znacích
+					 */
+					o1: () => LocalizedString
+					/**
+					 * Tokenech
+					 */
+					o2: () => LocalizedString
+					/**
+					 * Slovech
+					 */
+					o3: () => LocalizedString
+					/**
+					 * Megabytech
+					 */
+					o4: () => LocalizedString
+					/**
+					 * Kontextová okna se měří v tokenech.
+					 */
+					explanation: () => LocalizedString
+				}
+			}
+			embeddingsFlashcards: {
+				/**
+				 * Kartičky: embeddingy
+				 */
+				title: () => LocalizedString
+				/**
+				 * 6 kartiček pokrývajících základní pojmy embeddingů.
+				 */
+				description: () => LocalizedString
+				f1: {
+					/**
+					 * Co reprezentuje embedding?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Pozici ve vysokodimenzionálním vektorovém prostoru, kde vzdálenost přibližně odpovídá sémantické podobnosti.
+					 */
+					answer: () => LocalizedString
+				}
+				f2: {
+					/**
+					 * Proč kosinová podobnost?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Porovnává směr dvou vektorů a ignoruje velikost - užitečné, když nás zajímá význam, ne délka.
+					 */
+					answer: () => LocalizedString
+				}
+				f3: {
+					/**
+					 * Co je pgvector?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Rozšíření PostgreSQL, které ukládá a indexuje vektorové embeddingy pro podobnostní vyhledávání.
+					 */
+					answer: () => LocalizedString
+				}
+				f4: {
+					/**
+					 * Co je RAG jednou větou?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Vyhledejte relevantní chunky pomocí podobnostního hledání a vložte je do promptu před generováním.
+					 */
+					answer: () => LocalizedString
+				}
+				f5: {
+					/**
+					 * Jaký je kompromis mezi indexy ivfflat a hnsw?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * ivfflat: rychlejší sestavení, nižší recall; hnsw: pomalejší sestavení, vyšší recall a rychlejší dotazy.
+					 */
+					answer: () => LocalizedString
+				}
+				f6: {
+					/**
+					 * Proč samotná podobnost nemusí stačit?
+					 */
+					prompt: () => LocalizedString
+					/**
+					 * Retrieval může vrátit sémanticky blízké, ale kontextově špatné chunky; pomůže re-ranker nebo filtr.
+					 */
+					answer: () => LocalizedString
+				}
+			}
+		}
+		buildLabItems: {
+			cursorFeatureSpike: {
+				/**
+				 * Cursor - prompt pro rychlý spike funkce
+				 */
+				title: () => LocalizedString
+				/**
+				 * Znovupoužitelný prompt pro vymezení a otestování nové funkce v repozitáři.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Pracuješ v <repo>. Chci udělat spike pro <feature>.
+		
+			Výstupy:
+			1. Krátký návrh řešení (3-5 bodů).
+			2. Minimální změny souborů potřebné pro funkční prototyp.
+			3. Checklist navazujících kroků.
+		
+			Omezení: drž změny úzké, nepřejmenovávej soubory, přidej TODO tam, kde něco stubuješ.
+				 */
+				body: () => LocalizedString
+			}
+			cursorRefactorPrompt: {
+				/**
+				 * Cursor - prompt pro bezpečný refaktor
+				 */
+				title: () => LocalizedString
+				/**
+				 * Refaktor s mantinely: rozsah, testy a možnost návratu.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * Refaktoruj <module> směrem k <goal>.
+		
+			Pravidla:
+			- Žádné změny chování.
+			- Co nejmenší diff.
+			- Aktualizuj nebo přidej testy pro každou netriviální změnu.
+			- Všechna rizika uveď na konci v sekci "Pozor".
+				 */
+				body: () => LocalizedString
+			}
+			chatbotLaunchPlaybook: {
+				/**
+				 * Spuštění interního chatbota - playbook
+				 */
+				title: () => LocalizedString
+				/**
+				 * Desetikrokový playbook od vymezení problému po spuštění v1.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * ## 1. Problém
+			Jakou bolest uživatelů odstraňujeme?
+		
+			## 2. Rozsah
+			Co je uvnitř a co mimo?
+		
+			## 3. Data
+			Jaký je korpus? Kde žije?
+		
+			## 4. Retrieval
+			Nejdřív naivní RAG. Měřte.
+		
+			## 5. Prompt
+			Systémový prompt + definice nástrojů.
+		
+			## 6. Evaluace
+			Zlatá sada + rubrika.
+		
+			## 7. UI
+			Štíhlé, bez ozdob.
+		
+			## 8. Guardraily
+			PII, odmítnutí, zneužití.
+		
+			## 9. Telemetrie
+			Logujte vstupy, výstupy a skóre.
+		
+			## 10. Spuštění
+			Canary -> široké nasazení.
+				 */
+				body: () => LocalizedString
+			}
+			productPrdTemplate: {
+				/**
+				 * Šablona PRD pro AI funkci
+				 */
+				title: () => LocalizedString
+				/**
+				 * Malé PRD přizpůsobené AI funkcím: úkoly uživatelů, kritéria úspěchu, plán evaluací.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * # <Název funkce>
+		
+			## Problém
+			## Uživatelé a úkoly
+			## Kritéria úspěchu
+			## Náčrt řešení
+			## Rizika
+			## Plán evaluací
+			## Otevřené otázky
+				 */
+				body: () => LocalizedString
+			}
+			shipChecklist: {
+				/**
+				 * Checklist pro nasazení AI funkce
+				 */
+				title: () => LocalizedString
+				/**
+				 * Kontroly před tím, než novou AI funkci pustíme reálným uživatelům.
+				 */
+				summary: () => LocalizedString
+				/**
+				 * - [ ] Systémový prompt zkontrolován
+			- [ ] Schémata nástrojů validována
+			- [ ] Existují evaluace promptů a retrievalu
+			- [ ] Guardraily pro PII / zneužití jsou na místě
+			- [ ] Nastaven cenový strop
+			- [ ] Zapnuté logování a tracing
+			- [ ] Plán rollout (canary -> široce)
+			- [ ] Zdokumentovaný rollback plán
+				 */
+				body: () => LocalizedString
+			}
+		}
 	}
 	home: {
 		/**

@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "dx": "bunx 1dxway start",
+    "dx:start": "bunx 1dxway start",
+    "dx:install": "bunx 1dxway",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",

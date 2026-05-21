@@ -147,3 +147,6 @@ supabase/.branches
 supabase/.temp
 supabase/.env
 
+# 1dx runtime scratch (generated batch/shell files per service)
+.1dx/
+

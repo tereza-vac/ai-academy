@@ -138,7 +138,7 @@ src/i18n/
   cs/             base locale (Čeština) — full set of keys, typed `BaseTranslation`
     common/index.ts, nav/index.ts, userMenu/index.ts, auth/index.ts,
     home/index.ts, learn/index.ts, radar/index.ts, library/index.ts,
-    practice/index.ts, buildLab/index.ts
+    practice/index.ts, buildLab/index.ts, content/index.ts
   en/             English — typed `NamespaceXxxTranslation` (forces full coverage)
   sk/             Slovenčina
   pl/             Polski
@@ -176,6 +176,49 @@ an existing folder (e.g. copy `en/` to `de/`), translate the values, then run
 `npm run i18n:build`. The store automatically picks up `locales` from
 `i18n-util.ts`, so the new option appears in the language picker without code
 changes.
+
+### Localized content data
+
+Learning/content data follows the same translation-key idea used in Priprava's
+`Reo` localizer:
+
+- curated database rows store stable keys such as
+  `content.topics.howLlmsWork.title`
+- localized strings live in `src/i18n/*/content/index.ts`
+- `src/lib/contentLocalization.ts` resolves each key for the active locale and
+  falls back to Czech/base text when a key is missing
+
+The migration `20260101000009_content_translations.sql` adds key columns like
+`title_key`, `summary_key`, `body_key` and `description_key` to the content
+tables. It intentionally does **not** use JSONB translation blobs or
+per-entity translation tables.
+
+Question-level quiz content keeps the existing `questions` jsonb payload but
+uses deterministic keys derived from the quiz slug and question id, e.g.
+`content.quizzes.howLlmsWorkMcq.q1.prompt` and
+`content.quizzes.howLlmsWorkMcq.q1.o2`.
+
+### 1dx dev monitor
+
+This repo includes a root `1dx.json`, adapted from `sciobot-next`. It runs the
+same development services from one TUI: Docker/Supabase, Vite frontend and the
+`typesafe-i18n` watcher. The project remains npm-based; the monitor is launched
+with Bun's `bunx`.
+
+```bash
+npm run dx:start
+```
+
+Useful shortcuts inside the monitor:
+
+- `1` run Supabase migrations and regenerate DB types
+- `2` reset the local DB
+- `3` start dead services
+- `5` open Supabase Studio
+- `8` regenerate i18n types
+- `b` run build
+- `l` run lint
+- `f` open frontend
 
 ## Architecture
 

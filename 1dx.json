@@ -1,0 +1,177 @@
+{
+  "variables": {
+    "frontendPort": 8080,
+    "supabaseApiPort": 54321,
+    "supabaseStudioPort": 54323
+  },
+  "project": {
+    "name": "ai-academy",
+    "packageManager": "npm",
+    "frontendUrl": "http://localhost:${frontendPort}",
+    "dependencyInstallCommand": ["npm", "install"]
+  },
+  "startup": {
+    "autoInstallDependencies": true,
+    "autoOpenFrontend": true,
+    "frontendServiceId": "frontend"
+  },
+  "services": [
+    {
+      "id": "docker",
+      "title": "Docker Engine",
+      "color": "white",
+      "ambient": true,
+      "startPolicy": "if-dead",
+      "health": { "type": "ambient", "check": "docker" }
+    },
+    {
+      "id": "backend",
+      "title": "Backend (Supabase)",
+      "color": "magenta",
+      "ambient": false,
+      "health": { "type": "port", "port": "${supabaseApiPort}" },
+      "start": {
+        "shellCommand": "set RETRY_COUNT=0\n:supabase_start_retry\nset /a RETRY_COUNT+=1\nif %RETRY_COUNT% gtr 10 (\n  echo Supabase start failed after 10 attempts. Exiting.\n  exit /b 1\n)\nnpm run supabase:start\nif %errorlevel% neq 0 (\n  echo Retrying in 5 seconds... ^(attempt %RETRY_COUNT% of 10^)\n  timeout /t 5 /nobreak >nul\n  goto supabase_start_retry\n)\nnpm run supabase:functions:serve",
+        "manualCommand": "npm run supabase:functions:serve"
+      },
+      "startPolicy": "always-on-startup",
+      "cleanup": {
+        "commandLineContains": [
+          "supabase functions serve",
+          "supabase:functions:serve"
+        ]
+      }
+    },
+    {
+      "id": "frontend",
+      "title": "Frontend (Vite)",
+      "color": "green",
+      "ambient": false,
+      "health": { "type": "port", "port": "${frontendPort}" },
+      "start": { "shellCommand": "npm run dev" },
+      "startPolicy": "if-dead",
+      "cleanup": {
+        "ports": ["${frontendPort}"],
+        "commandLineContains": ["vite", "npm run dev"]
+      }
+    },
+    {
+      "id": "i18n",
+      "title": "i18n (typesafe-i18n)",
+      "color": "blue",
+      "ambient": false,
+      "health": { "type": "process", "name": "typesafe-i18n" },
+      "start": { "shellCommand": "npm run i18n" },
+      "startPolicy": "if-dead",
+      "cleanup": {
+        "processNames": ["typesafe-i18n"],
+        "commandLineContains": ["typesafe-i18n", "npm run i18n"]
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "up",
+      "label": "Run migrations (up)",
+      "shortcut": "1",
+      "mode": "inline",
+      "command": "npm",
+      "args": ["run", "supabase:up"],
+      "onSuccess": {
+        "command": "npm",
+        "args": ["run", "supabase:types"],
+        "label": "Regenerating types (supabase:types)..."
+      }
+    },
+    {
+      "id": "reset",
+      "label": "Reset DB",
+      "shortcut": "2",
+      "mode": "inline",
+      "command": "npm",
+      "args": ["run", "supabase:reset"]
+    },
+    {
+      "id": "start-dead",
+      "label": "Start dead services",
+      "shortcut": "3",
+      "mode": "internal",
+      "builtIn": "start-dead"
+    },
+    {
+      "id": "stop",
+      "label": "Stop all services",
+      "shortcut": "4",
+      "mode": "internal",
+      "builtIn": "stop-services"
+    },
+    {
+      "id": "studio",
+      "label": "Open Supabase Studio",
+      "shortcut": "5",
+      "mode": "internal",
+      "builtIn": "open-url",
+      "url": "http://127.0.0.1:${supabaseStudioPort}"
+    },
+    {
+      "id": "refresh",
+      "label": "Refresh status",
+      "shortcut": "6",
+      "mode": "internal",
+      "builtIn": "refresh"
+    },
+    {
+      "id": "install-deps",
+      "label": "Install deps",
+      "shortcut": "7",
+      "mode": "inline",
+      "command": "npm",
+      "args": ["install"]
+    },
+    {
+      "id": "i18n-build",
+      "label": "Regenerate i18n types",
+      "shortcut": "8",
+      "mode": "inline",
+      "command": "npm",
+      "args": ["run", "i18n:build"]
+    },
+    {
+      "id": "frontend",
+      "label": "Open frontend in browser",
+      "shortcut": "f",
+      "mode": "internal",
+      "builtIn": "open-frontend"
+    },
+    {
+      "id": "lint",
+      "label": "Run lint",
+      "shortcut": "l",
+      "mode": "external",
+      "command": "npm",
+      "args": ["run", "lint"]
+    },
+    {
+      "id": "build",
+      "label": "Run build",
+      "shortcut": "b",
+      "mode": "external",
+      "command": "npm",
+      "args": ["run", "build"]
+    },
+    {
+      "id": "terminal",
+      "label": "Open new terminal",
+      "shortcut": "t",
+      "mode": "internal",
+      "builtIn": "new-terminal"
+    },
+    {
+      "id": "exit",
+      "label": "Exit monitor",
+      "shortcut": "q",
+      "mode": "internal",
+      "builtIn": "exit"
+    }
+  ]
+}
