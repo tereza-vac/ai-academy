@@ -290,8 +290,20 @@ Trigger the function manually with:
 curl -X POST "$SUPABASE_URL/functions/v1/radar-ingest"
 ```
 
-Configure a Supabase scheduled function (or `pg_cron`) to run it on a cadence
-once you're past MVP.
+#### Hourly ingestion (pick one)
+
+**Inside Supabase (pg_cron + pg_net)** — migration
+`supabase/migrations/20260101000011_radar_cron.sql` enables `pg_cron` +
+`pg_net`, defines `public.trigger_radar_ingest()` and schedules
+`radar-ingest-hourly` at minute 17 of every hour. After the migration is
+applied, run `supabase/setup-cron-secrets.sql` once to populate the two
+Supabase Vault secrets (`supabase_project_url`,
+`supabase_service_role_key`). Re-runs are safe.
+
+**Outside Supabase (GitHub Actions)** — workflow
+`.github/workflows/radar-ingest.yml` POSTs to the function every hour
+using two repo secrets: `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Pick
+this if you want logs in GitHub or don't want to depend on `pg_cron`.
 
 ### Canon (foundational papers)
 
