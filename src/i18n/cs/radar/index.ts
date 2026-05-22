@@ -6,6 +6,32 @@ const cs_radar: BaseTranslation = {
   description: "Souhrn článků, novinek a vědeckých prací z našich důvěryhodných zdrojů.",
   emptyTitle: "Zatím nic nového",
   emptyDescription: "Až dorazí čerstvé položky, objeví se zde.",
+
+  searchPlaceholder: "Hledat v titulku, popisu, štítcích…",
+  refresh: "Obnovit",
+
+  // Sort + tab labels
+  sortRecommended: "Doporučené",
+  sortRecent: "Nejnovější",
+  tabAll: "Vše",
+  tabPapers: "Práce",
+  tabReleases: "Vydání",
+  tabBlogs: "Blogy",
+  tabCommunity: "Komunita",
+  tabTools: "Nástroje",
+
+  // Card metadata
+  upvotesLabel: "{count|num} {{hlas|hlasy|hlasů}} na HF",
+  externalIdLabel: "ID: {id}",
+  scoreLabel: "Skóre: {score}",
+
+  // Save flow
+  savedToast: "Uloženo do Knihovny",
+  removedToast: "Odebráno z Knihovny",
+  saveFailed: "Uložení selhalo",
+  saveAction: "Uložit do Knihovny",
+  unsaveAction: "Odebrat z Knihovny",
+  openExternal: "Otevřít zdroj",
 };
 
 export default cs_radar;

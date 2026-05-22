@@ -23,6 +23,7 @@ export type Translations = RootTranslation &
 	learn: NamespaceLearnTranslation,
 	library: NamespaceLibraryTranslation,
 	nav: NamespaceNavTranslation,
+	paperSearch: NamespacePaperSearchTranslation,
 	practice: NamespacePracticeTranslation,
 	radar: NamespaceRadarTranslation,
 	userMenu: NamespaceUserMenuTranslation
@@ -828,6 +829,148 @@ export type NamespaceContentTranslation = {
 			body: string
 		}
 	}
+	canon: {
+		attentionIsAllYouNeed: {
+			/**
+			 * A​t​t​e​n​t​i​o​n​ ​I​s​ ​A​l​l​ ​Y​o​u​ ​N​e​e​d
+			 */
+			title: string
+			/**
+			 * P​ů​v​o​d​n​í​ ​č​l​á​n​e​k​ ​p​ř​e​d​s​t​a​v​u​j​í​c​í​ ​a​r​c​h​i​t​e​k​t​u​r​u​ ​T​r​a​n​s​f​o​r​m​e​r​.​ ​Z​á​k​l​a​d​ ​m​o​d​e​r​n​í​c​h​ ​L​L​M​.
+			 */
+			summary: string
+		}
+		scalingLaws: {
+			/**
+			 * S​c​a​l​i​n​g​ ​L​a​w​s​ ​f​o​r​ ​N​e​u​r​a​l​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s
+			 */
+			title: string
+			/**
+			 * O​p​e​n​A​I​ ​s​c​a​l​i​n​g​ ​l​a​w​s​:​ ​j​a​k​ ​r​o​s​t​e​ ​v​ý​k​o​n​ ​m​o​d​e​l​u​ ​s​ ​v​e​l​i​k​o​s​t​í​ ​d​a​t​,​ ​p​a​r​a​m​e​t​r​ů​ ​a​ ​v​ý​p​o​č​t​u​.
+			 */
+			summary: string
+		}
+		chinchilla: {
+			/**
+			 * C​h​i​n​c​h​i​l​l​a​:​ ​T​r​a​i​n​i​n​g​ ​C​o​m​p​u​t​e​-​O​p​t​i​m​a​l​ ​L​L​M​s
+			 */
+			title: string
+			/**
+			 * D​e​e​p​M​i​n​d​ ​u​k​a​z​u​j​e​,​ ​ž​e​ ​v​ě​t​š​i​n​a​ ​L​L​M​ ​b​y​l​a​ ​p​o​d​t​r​é​n​o​v​a​n​á​ ​n​a​ ​d​a​t​e​c​h​ ​v​ů​č​i​ ​s​v​é​m​u​ ​v​ý​p​o​č​t​u​.
+			 */
+			summary: string
+		}
+		bert: {
+			/**
+			 * B​E​R​T​:​ ​P​r​e​-​t​r​a​i​n​i​n​g​ ​o​f​ ​D​e​e​p​ ​B​i​d​i​r​e​c​t​i​o​n​a​l​ ​T​r​a​n​s​f​o​r​m​e​r​s
+			 */
+			title: string
+			/**
+			 * E​n​c​o​d​e​r​-​o​n​l​y​ ​m​o​d​e​l​,​ ​k​t​e​r​ý​ ​p​o​p​u​l​a​r​i​z​o​v​a​l​ ​p​r​e​-​t​r​a​i​n​i​n​g​ ​/​ ​f​i​n​e​-​t​u​n​i​n​g​ ​p​a​r​a​d​i​g​m​a​.
+			 */
+			summary: string
+		}
+		gpt3: {
+			/**
+			 * G​P​T​-​3​:​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s​ ​a​r​e​ ​F​e​w​-​S​h​o​t​ ​L​e​a​r​n​e​r​s
+			 */
+			title: string
+			/**
+			 * Č​l​á​n​e​k​,​ ​k​t​e​r​ý​ ​u​k​á​z​a​l​,​ ​ž​e​ ​š​k​á​l​o​v​á​n​í​ ​+​ ​i​n​-​c​o​n​t​e​x​t​ ​l​e​a​r​n​i​n​g​ ​v​e​d​e​ ​k​ ​e​m​e​r​g​e​n​t​n​í​m​ ​s​c​h​o​p​n​o​s​t​e​m​.
+			 */
+			summary: string
+		}
+		llama: {
+			/**
+			 * L​L​a​M​A​:​ ​O​p​e​n​ ​a​n​d​ ​E​f​f​i​c​i​e​n​t​ ​F​o​u​n​d​a​t​i​o​n​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s
+			 */
+			title: string
+			/**
+			 * M​e​t​a​ ​u​v​o​l​ň​u​j​e​ ​s​i​l​n​o​u​ ​r​o​d​i​n​u​ ​o​t​e​v​ř​e​n​ý​c​h​ ​m​o​d​e​l​ů​ ​a​ ​o​d​s​t​a​r​t​u​j​e​ ​o​p​e​n​-​s​o​u​r​c​e​ ​L​L​M​ ​e​k​o​s​y​s​t​é​m​.
+			 */
+			summary: string
+		}
+		mixtral: {
+			/**
+			 * M​i​x​t​r​a​l​ ​o​f​ ​E​x​p​e​r​t​s
+			 */
+			title: string
+			/**
+			 * M​i​s​t​r​a​l​ ​p​o​p​i​s​u​j​e​ ​s​p​a​r​s​e​ ​m​i​x​t​u​r​e​-​o​f​-​e​x​p​e​r​t​s​ ​m​o​d​e​l​ ​8​x​7​B​ ​s​ ​G​P​T​-​3​.​5​ ​v​ý​k​o​n​e​m​ ​z​a​ ​z​l​o​m​e​k​ ​n​á​k​l​a​d​ů​.
+			 */
+			summary: string
+		}
+		instructgpt: {
+			/**
+			 * I​n​s​t​r​u​c​t​G​P​T​:​ ​T​r​a​i​n​i​n​g​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s​ ​t​o​ ​F​o​l​l​o​w​ ​I​n​s​t​r​u​c​t​i​o​n​s​ ​w​i​t​h​ ​H​u​m​a​n​ ​F​e​e​d​b​a​c​k
+			 */
+			title: string
+			/**
+			 * Č​l​á​n​e​k​ ​z​a​ ​C​h​a​t​G​P​T​:​ ​R​L​H​F​,​ ​k​t​e​r​ý​ ​n​a​u​č​i​l​ ​G​P​T​-​3​ ​p​l​n​i​t​ ​i​n​s​t​r​u​k​c​e​.
+			 */
+			summary: string
+		}
+		constitutionalAi: {
+			/**
+			 * C​o​n​s​t​i​t​u​t​i​o​n​a​l​ ​A​I​:​ ​H​a​r​m​l​e​s​s​n​e​s​s​ ​f​r​o​m​ ​A​I​ ​F​e​e​d​b​a​c​k
+			 */
+			title: string
+			/**
+			 * A​n​t​h​r​o​p​i​c​ ​u​k​a​z​u​j​e​ ​R​L​A​I​F​:​ ​A​I​ ​h​o​d​n​o​t​í​ ​v​ý​s​t​u​p​y​ ​p​o​d​l​e​ ​p​s​a​n​é​h​o​ ​s​o​u​b​o​r​u​ ​p​r​i​n​c​i​p​ů​.
+			 */
+			summary: string
+		}
+		dpo: {
+			/**
+			 * D​i​r​e​c​t​ ​P​r​e​f​e​r​e​n​c​e​ ​O​p​t​i​m​i​z​a​t​i​o​n
+			 */
+			title: string
+			/**
+			 * T​r​é​n​i​n​k​ ​L​L​M​ ​p​o​d​l​e​ ​p​r​e​f​e​r​e​n​č​n​í​c​h​ ​p​á​r​ů​ ​b​e​z​ ​e​x​p​l​i​c​i​t​n​í​h​o​ ​r​e​w​a​r​d​ ​m​o​d​e​l​u​ ​—​ ​j​e​d​n​o​d​u​š​š​í​ ​n​e​ž​ ​R​L​H​F​.
+			 */
+			summary: string
+		}
+		cot: {
+			/**
+			 * C​h​a​i​n​-​o​f​-​T​h​o​u​g​h​t​ ​P​r​o​m​p​t​i​n​g
+			 */
+			title: string
+			/**
+			 * U​k​a​z​u​j​e​,​ ​j​a​k​ ​p​r​o​m​p​t​y​ ​s​ ​m​e​z​i​k​r​o​k​y​ ​ú​v​a​h​ ​z​l​e​p​š​u​j​í​ ​v​í​c​e​k​r​o​k​o​v​é​ ​u​v​a​ž​o​v​á​n​í​ ​L​L​M​.
+			 */
+			summary: string
+		}
+		react: {
+			/**
+			 * R​e​A​c​t​:​ ​S​y​n​e​r​g​i​z​i​n​g​ ​R​e​a​s​o​n​i​n​g​ ​a​n​d​ ​A​c​t​i​n​g​ ​i​n​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s
+			 */
+			title: string
+			/**
+			 * K​l​a​s​i​c​k​ý​ ​a​g​e​n​t​n​í​ ​v​z​o​r​:​ ​j​a​z​y​k​o​v​ý​ ​m​o​d​e​l​ ​s​t​ř​í​d​á​ ​k​r​o​k​y​ ​u​v​a​ž​o​v​á​n​í​ ​a​ ​v​o​l​á​n​í​ ​n​á​s​t​r​o​j​ů​.
+			 */
+			summary: string
+		}
+		toolformer: {
+			/**
+			 * T​o​o​l​f​o​r​m​e​r​:​ ​L​a​n​g​u​a​g​e​ ​M​o​d​e​l​s​ ​C​a​n​ ​T​e​a​c​h​ ​T​h​e​m​s​e​l​v​e​s​ ​t​o​ ​U​s​e​ ​T​o​o​l​s
+			 */
+			title: string
+			/**
+			 * M​e​t​a​ ​u​k​a​z​u​j​e​,​ ​j​a​k​ ​L​L​M​ ​s​a​m​o​s​t​a​t​n​ě​ ​z​í​s​k​á​ ​s​c​h​o​p​n​o​s​t​ ​v​o​l​a​t​ ​e​x​t​e​r​n​í​ ​A​P​I​.
+			 */
+			summary: string
+		}
+		rag: {
+			/**
+			 * R​e​t​r​i​e​v​a​l​-​A​u​g​m​e​n​t​e​d​ ​G​e​n​e​r​a​t​i​o​n​ ​f​o​r​ ​K​n​o​w​l​e​d​g​e​-​I​n​t​e​n​s​i​v​e​ ​N​L​P​ ​T​a​s​k​s
+			 */
+			title: string
+			/**
+			 * P​ů​v​o​d​n​í​ ​č​l​á​n​e​k​ ​R​A​G​:​ ​k​o​m​b​i​n​a​c​e​ ​r​e​t​r​i​e​v​e​ ​+​ ​g​e​n​e​r​a​t​e​ ​p​r​o​ ​ú​l​o​h​y​ ​n​a​d​ ​z​n​a​l​o​s​t​m​i​.
+			 */
+			summary: string
+		}
+	}
 }
 
 export type NamespaceHomeTranslation = {
@@ -957,6 +1100,10 @@ export type NamespaceLibraryTranslation = {
 	 */
 	tabNotes: string
 	/**
+	 * K​á​n​o​n
+	 */
+	tabCanon: string
+	/**
 	 * K​n​i​h​o​v​n​a​ ​j​e​ ​z​a​t​í​m​ ​p​r​á​z​d​n​á
 	 */
 	emptyTitle: string
@@ -972,6 +1119,78 @@ export type NamespaceLibraryTranslation = {
 	 * V​y​t​v​o​ř​t​e​ ​s​i​ ​p​o​z​n​á​m​k​u​ ​k​ ​t​é​m​a​t​u​ ​n​e​b​o​ ​z​d​r​o​j​i​.
 	 */
 	notesEmptyDescription: string
+	/**
+	 * K​á​n​o​n
+	 */
+	canonEyebrow: string
+	/**
+	 * Z​á​k​l​a​d​n​í​ ​p​r​á​c​e​,​ ​k​t​e​r​é​ ​s​t​o​j​í​ ​z​a​ ​t​o​ ​z​n​á​t
+	 */
+	canonTitle: string
+	/**
+	 * R​u​č​n​ě​ ​v​y​b​r​a​n​ý​ ​s​e​z​n​a​m​ ​z​a​k​l​á​d​a​j​í​c​í​c​h​ ​č​l​á​n​k​ů​ ​a​ ​p​u​b​l​i​k​a​c​í​ ​o​ ​A​I​ ​s​e​s​k​u​p​e​n​ý​ ​p​o​d​l​e​ ​t​é​m​a​t​u​.
+	 */
+	canonDescription: string
+	/**
+	 * K​á​n​o​n​ ​j​e​ ​z​a​t​í​m​ ​p​r​á​z​d​n​ý
+	 */
+	canonEmptyTitle: string
+	/**
+	 * A​ž​ ​p​ř​i​d​á​m​e​ ​z​á​k​l​a​d​n​í​ ​p​r​á​c​e​,​ ​o​b​j​e​v​í​ ​s​e​ ​z​d​e​.
+	 */
+	canonEmptyDescription: string
+	/**
+	 * Z​á​k​l​a​d​y
+	 */
+	canonCategoryFoundations: string
+	/**
+	 * M​o​d​e​l​y
+	 */
+	canonCategoryModels: string
+	/**
+	 * A​l​i​g​n​m​e​n​t​ ​a​ ​R​L​H​F
+	 */
+	canonCategoryAlignment: string
+	/**
+	 * P​r​o​m​p​t​i​n​g​ ​a​ ​u​v​a​ž​o​v​á​n​í
+	 */
+	canonCategoryPrompting: string
+	/**
+	 * A​g​e​n​t​i​ ​a​ ​n​á​s​t​r​o​j​e
+	 */
+	canonCategoryAgents: string
+	/**
+	 * R​A​G​ ​a​ ​v​y​h​l​e​d​á​v​á​n​í
+	 */
+	canonCategoryRag: string
+	/**
+	 * Š​k​á​l​o​v​á​n​í
+	 */
+	canonCategoryScaling: string
+	/**
+	 * M​u​l​t​i​m​o​d​a​l​i​t​a
+	 */
+	canonCategoryMultimodal: string
+	/**
+	 * U​v​a​ž​o​v​á​n​í
+	 */
+	canonCategoryReasoning: string
+	/**
+	 * O​s​t​a​t​n​í
+	 */
+	canonCategoryOther: string
+	/**
+	 * H​l​e​d​a​t​ ​v​ ​a​k​a​d​e​m​i​c​k​é​ ​l​i​t​e​r​a​t​u​ř​e
+	 */
+	searchCardTitle: string
+	/**
+	 * N​a​j​d​ě​t​e​ ​s​i​ ​s​v​ů​j​ ​p​ř​e​s​n​ý​ ​d​o​t​a​z​ ​n​a​p​ř​í​č​ ​S​e​m​a​n​t​i​c​ ​S​c​h​o​l​a​r​,​ ​O​p​e​n​A​l​e​x​ ​a​ ​a​r​X​i​v​.​ ​U​l​o​ž​e​n​í​ ​j​e​d​n​í​m​ ​k​l​i​k​e​m​.
+	 */
+	searchCardDescription: string
+	/**
+	 * O​t​e​v​ř​í​t​ ​v​y​h​l​e​d​á​v​á​n​í
+	 */
+	searchCardCta: string
 }
 
 export type NamespaceNavTranslation = {
@@ -1007,6 +1226,129 @@ export type NamespaceNavTranslation = {
 	 * S​b​a​l​i​t​ ​p​a​n​e​l
 	 */
 	collapseSidebar: string
+}
+
+export type NamespacePaperSearchTranslation = {
+	/**
+	 * V​y​h​l​e​d​á​v​á​n​í​ ​p​u​b​l​i​k​a​c​í
+	 */
+	eyebrow: string
+	/**
+	 * H​l​e​d​e​j​t​e​ ​o​d​b​o​r​n​o​u​ ​l​i​t​e​r​a​t​u​r​u
+	 */
+	title: string
+	/**
+	 * S​p​o​j​u​j​e​ ​v​ý​s​l​e​d​k​y​ ​z​e​ ​S​e​m​a​n​t​i​c​ ​S​c​h​o​l​a​r​,​ ​O​p​e​n​A​l​e​x​ ​a​ ​a​r​X​i​v​ ​a​ ​d​e​d​u​p​l​i​k​u​j​e​ ​j​e​ ​p​o​d​l​e​ ​D​O​I​ ​a​ ​a​r​X​i​v​ ​I​D​.
+	 */
+	description: string
+	/**
+	 * n​a​p​ř​.​ ​„​c​h​a​i​n​ ​o​f​ ​t​h​o​u​g​h​t​ ​p​r​o​m​p​t​i​n​g​“​ ​n​e​b​o​ ​„​d​i​r​e​c​t​ ​p​r​e​f​e​r​e​n​c​e​ ​o​p​t​i​m​i​z​a​t​i​o​n​“
+	 */
+	searchPlaceholder: string
+	/**
+	 * H​l​e​d​a​t
+	 */
+	searchAction: string
+	/**
+	 * H​l​e​d​á​m​…
+	 */
+	searching: string
+	/**
+	 * F​i​l​t​r​y
+	 */
+	filtersTitle: string
+	/**
+	 * O​d​ ​r​o​k​u
+	 */
+	yearMinLabel: string
+	/**
+	 * D​o​ ​r​o​k​u
+	 */
+	yearMaxLabel: string
+	/**
+	 * M​i​n​.​ ​c​i​t​a​c​í
+	 */
+	minCitationsLabel: string
+	/**
+	 * Ř​a​d​i​t
+	 */
+	sortLabel: string
+	/**
+	 * R​e​l​e​v​a​n​c​e
+	 */
+	sortRelevance: string
+	/**
+	 * N​e​j​v​í​c​ ​c​i​t​o​v​a​n​é
+	 */
+	sortCitations: string
+	/**
+	 * N​e​j​n​o​v​ě​j​š​í
+	 */
+	sortYear: string
+	/**
+	 * V​y​m​a​z​a​t​ ​f​i​l​t​r​y
+	 */
+	reset: string
+	/**
+	 * V​ý​s​l​e​d​k​ů​:​ ​{​c​o​u​n​t​|​n​u​m​}
+	 * @param {unknown} count
+	 */
+	resultsHeader: RequiredParams<'count|num'>
+	/**
+	 * Ž​á​d​n​é​ ​v​ý​s​l​e​d​k​y
+	 */
+	emptyTitle: string
+	/**
+	 * Z​k​u​s​t​e​ ​o​b​e​c​n​ě​j​š​í​ ​d​o​t​a​z​ ​n​e​b​o​ ​u​v​o​l​n​ě​t​e​ ​f​i​l​t​r​y​.
+	 */
+	emptyDescription: string
+	/**
+	 * Z​a​č​n​ě​t​e​ ​p​s​á​t​ ​d​o​t​a​z
+	 */
+	startTitle: string
+	/**
+	 * M​ů​ž​e​t​e​ ​v​y​h​l​e​d​á​v​a​t​ ​k​l​í​č​o​v​á​ ​s​l​o​v​a​,​ ​f​r​á​z​e​,​ ​a​u​t​o​r​y​ ​n​e​b​o​ ​n​á​z​e​v​ ​p​r​á​c​e​.
+	 */
+	startDescription: string
+	/**
+	 * N​ě​k​t​e​r​é​ ​z​d​r​o​j​e​ ​s​e​l​h​a​l​y​:​ ​{​s​o​u​r​c​e​s​}
+	 * @param {unknown} sources
+	 */
+	upstreamWarning: RequiredParams<'sources'>
+	/**
+	 * {​c​o​u​n​t​|​n​u​m​}​ ​{​{​c​i​t​a​c​e​|​c​i​t​a​c​e​|​c​i​t​a​c​í​}​}
+	 * @param {string | number | boolean} count
+	 */
+	citationsLabel: RequiredParams<'count|num'>
+	/**
+	 * {​y​e​a​r​|​n​u​m​}
+	 * @param {unknown} year
+	 */
+	yearLabel: RequiredParams<'year|num'>
+	/**
+	 * P​D​F
+	 */
+	pdfLabel: string
+	/**
+	 * Z​d​r​o​j
+	 */
+	sourceLabel: string
+	/**
+	 * U​l​o​ž​i​t
+	 */
+	saveAction: string
+	/**
+	 * U​l​o​ž​e​n​o
+	 */
+	savedAction: string
+	/**
+	 * U​l​o​ž​e​n​í​ ​s​e​l​h​a​l​o
+	 */
+	saveFailed: string
+	/**
+	 * U​l​o​ž​e​n​o​ ​d​o​ ​K​n​i​h​o​v​n​y
+	 */
+	savedToast: string
 }
 
 export type NamespacePracticeTranslation = {
@@ -1190,6 +1532,85 @@ export type NamespaceRadarTranslation = {
 	 * A​ž​ ​d​o​r​a​z​í​ ​č​e​r​s​t​v​é​ ​p​o​l​o​ž​k​y​,​ ​o​b​j​e​v​í​ ​s​e​ ​z​d​e​.
 	 */
 	emptyDescription: string
+	/**
+	 * H​l​e​d​a​t​ ​v​ ​t​i​t​u​l​k​u​,​ ​p​o​p​i​s​u​,​ ​š​t​í​t​c​í​c​h​…
+	 */
+	searchPlaceholder: string
+	/**
+	 * O​b​n​o​v​i​t
+	 */
+	refresh: string
+	/**
+	 * D​o​p​o​r​u​č​e​n​é
+	 */
+	sortRecommended: string
+	/**
+	 * N​e​j​n​o​v​ě​j​š​í
+	 */
+	sortRecent: string
+	/**
+	 * V​š​e
+	 */
+	tabAll: string
+	/**
+	 * P​r​á​c​e
+	 */
+	tabPapers: string
+	/**
+	 * V​y​d​á​n​í
+	 */
+	tabReleases: string
+	/**
+	 * B​l​o​g​y
+	 */
+	tabBlogs: string
+	/**
+	 * K​o​m​u​n​i​t​a
+	 */
+	tabCommunity: string
+	/**
+	 * N​á​s​t​r​o​j​e
+	 */
+	tabTools: string
+	/**
+	 * {​c​o​u​n​t​|​n​u​m​}​ ​{​{​h​l​a​s​|​h​l​a​s​y​|​h​l​a​s​ů​}​}​ ​n​a​ ​H​F
+	 * @param {string | number | boolean} count
+	 */
+	upvotesLabel: RequiredParams<'count|num'>
+	/**
+	 * I​D​:​ ​{​i​d​}
+	 * @param {unknown} id
+	 */
+	externalIdLabel: RequiredParams<'id'>
+	/**
+	 * S​k​ó​r​e​:​ ​{​s​c​o​r​e​}
+	 * @param {unknown} score
+	 */
+	scoreLabel: RequiredParams<'score'>
+	/**
+	 * U​l​o​ž​e​n​o​ ​d​o​ ​K​n​i​h​o​v​n​y
+	 */
+	savedToast: string
+	/**
+	 * O​d​e​b​r​á​n​o​ ​z​ ​K​n​i​h​o​v​n​y
+	 */
+	removedToast: string
+	/**
+	 * U​l​o​ž​e​n​í​ ​s​e​l​h​a​l​o
+	 */
+	saveFailed: string
+	/**
+	 * U​l​o​ž​i​t​ ​d​o​ ​K​n​i​h​o​v​n​y
+	 */
+	saveAction: string
+	/**
+	 * O​d​e​b​r​a​t​ ​z​ ​K​n​i​h​o​v​n​y
+	 */
+	unsaveAction: string
+	/**
+	 * O​t​e​v​ř​í​t​ ​z​d​r​o​j
+	 */
+	openExternal: string
 }
 
 export type NamespaceUserMenuTranslation = {
@@ -1280,6 +1701,7 @@ export type Namespaces =
 	| 'learn'
 	| 'library'
 	| 'nav'
+	| 'paperSearch'
 	| 'practice'
 	| 'radar'
 	| 'userMenu'
@@ -1332,6 +1754,12 @@ type DisallowNamespaces = {
 	 * you need to use the `./nav/index.ts` file instead
 	 */
 	nav?: "[typesafe-i18n] reserved for 'nav'-namespace. You need to use the `./nav/index.ts` file instead."
+
+	/**
+	 * reserved for 'paperSearch'-namespace\
+	 * you need to use the `./paperSearch/index.ts` file instead
+	 */
+	paperSearch?: "[typesafe-i18n] reserved for 'paperSearch'-namespace. You need to use the `./paperSearch/index.ts` file instead."
 
 	/**
 	 * reserved for 'practice'-namespace\
@@ -2143,6 +2571,148 @@ export type TranslationFunctions = {
 				body: () => LocalizedString
 			}
 		}
+		canon: {
+			attentionIsAllYouNeed: {
+				/**
+				 * Attention Is All You Need
+				 */
+				title: () => LocalizedString
+				/**
+				 * Původní článek představující architekturu Transformer. Základ moderních LLM.
+				 */
+				summary: () => LocalizedString
+			}
+			scalingLaws: {
+				/**
+				 * Scaling Laws for Neural Language Models
+				 */
+				title: () => LocalizedString
+				/**
+				 * OpenAI scaling laws: jak roste výkon modelu s velikostí dat, parametrů a výpočtu.
+				 */
+				summary: () => LocalizedString
+			}
+			chinchilla: {
+				/**
+				 * Chinchilla: Training Compute-Optimal LLMs
+				 */
+				title: () => LocalizedString
+				/**
+				 * DeepMind ukazuje, že většina LLM byla podtrénovaná na datech vůči svému výpočtu.
+				 */
+				summary: () => LocalizedString
+			}
+			bert: {
+				/**
+				 * BERT: Pre-training of Deep Bidirectional Transformers
+				 */
+				title: () => LocalizedString
+				/**
+				 * Encoder-only model, který popularizoval pre-training / fine-tuning paradigma.
+				 */
+				summary: () => LocalizedString
+			}
+			gpt3: {
+				/**
+				 * GPT-3: Language Models are Few-Shot Learners
+				 */
+				title: () => LocalizedString
+				/**
+				 * Článek, který ukázal, že škálování + in-context learning vede k emergentním schopnostem.
+				 */
+				summary: () => LocalizedString
+			}
+			llama: {
+				/**
+				 * LLaMA: Open and Efficient Foundation Language Models
+				 */
+				title: () => LocalizedString
+				/**
+				 * Meta uvolňuje silnou rodinu otevřených modelů a odstartuje open-source LLM ekosystém.
+				 */
+				summary: () => LocalizedString
+			}
+			mixtral: {
+				/**
+				 * Mixtral of Experts
+				 */
+				title: () => LocalizedString
+				/**
+				 * Mistral popisuje sparse mixture-of-experts model 8x7B s GPT-3.5 výkonem za zlomek nákladů.
+				 */
+				summary: () => LocalizedString
+			}
+			instructgpt: {
+				/**
+				 * InstructGPT: Training Language Models to Follow Instructions with Human Feedback
+				 */
+				title: () => LocalizedString
+				/**
+				 * Článek za ChatGPT: RLHF, který naučil GPT-3 plnit instrukce.
+				 */
+				summary: () => LocalizedString
+			}
+			constitutionalAi: {
+				/**
+				 * Constitutional AI: Harmlessness from AI Feedback
+				 */
+				title: () => LocalizedString
+				/**
+				 * Anthropic ukazuje RLAIF: AI hodnotí výstupy podle psaného souboru principů.
+				 */
+				summary: () => LocalizedString
+			}
+			dpo: {
+				/**
+				 * Direct Preference Optimization
+				 */
+				title: () => LocalizedString
+				/**
+				 * Trénink LLM podle preferenčních párů bez explicitního reward modelu — jednodušší než RLHF.
+				 */
+				summary: () => LocalizedString
+			}
+			cot: {
+				/**
+				 * Chain-of-Thought Prompting
+				 */
+				title: () => LocalizedString
+				/**
+				 * Ukazuje, jak prompty s mezikroky úvah zlepšují vícekrokové uvažování LLM.
+				 */
+				summary: () => LocalizedString
+			}
+			react: {
+				/**
+				 * ReAct: Synergizing Reasoning and Acting in Language Models
+				 */
+				title: () => LocalizedString
+				/**
+				 * Klasický agentní vzor: jazykový model střídá kroky uvažování a volání nástrojů.
+				 */
+				summary: () => LocalizedString
+			}
+			toolformer: {
+				/**
+				 * Toolformer: Language Models Can Teach Themselves to Use Tools
+				 */
+				title: () => LocalizedString
+				/**
+				 * Meta ukazuje, jak LLM samostatně získá schopnost volat externí API.
+				 */
+				summary: () => LocalizedString
+			}
+			rag: {
+				/**
+				 * Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+				 */
+				title: () => LocalizedString
+				/**
+				 * Původní článek RAG: kombinace retrieve + generate pro úlohy nad znalostmi.
+				 */
+				summary: () => LocalizedString
+			}
+		}
 	}
 	home: {
 		/**
@@ -2266,6 +2836,10 @@ export type TranslationFunctions = {
 		 */
 		tabNotes: () => LocalizedString
 		/**
+		 * Kánon
+		 */
+		tabCanon: () => LocalizedString
+		/**
 		 * Knihovna je zatím prázdná
 		 */
 		emptyTitle: () => LocalizedString
@@ -2281,6 +2855,78 @@ export type TranslationFunctions = {
 		 * Vytvořte si poznámku k tématu nebo zdroji.
 		 */
 		notesEmptyDescription: () => LocalizedString
+		/**
+		 * Kánon
+		 */
+		canonEyebrow: () => LocalizedString
+		/**
+		 * Základní práce, které stojí za to znát
+		 */
+		canonTitle: () => LocalizedString
+		/**
+		 * Ručně vybraný seznam zakládajících článků a publikací o AI seskupený podle tématu.
+		 */
+		canonDescription: () => LocalizedString
+		/**
+		 * Kánon je zatím prázdný
+		 */
+		canonEmptyTitle: () => LocalizedString
+		/**
+		 * Až přidáme základní práce, objeví se zde.
+		 */
+		canonEmptyDescription: () => LocalizedString
+		/**
+		 * Základy
+		 */
+		canonCategoryFoundations: () => LocalizedString
+		/**
+		 * Modely
+		 */
+		canonCategoryModels: () => LocalizedString
+		/**
+		 * Alignment a RLHF
+		 */
+		canonCategoryAlignment: () => LocalizedString
+		/**
+		 * Prompting a uvažování
+		 */
+		canonCategoryPrompting: () => LocalizedString
+		/**
+		 * Agenti a nástroje
+		 */
+		canonCategoryAgents: () => LocalizedString
+		/**
+		 * RAG a vyhledávání
+		 */
+		canonCategoryRag: () => LocalizedString
+		/**
+		 * Škálování
+		 */
+		canonCategoryScaling: () => LocalizedString
+		/**
+		 * Multimodalita
+		 */
+		canonCategoryMultimodal: () => LocalizedString
+		/**
+		 * Uvažování
+		 */
+		canonCategoryReasoning: () => LocalizedString
+		/**
+		 * Ostatní
+		 */
+		canonCategoryOther: () => LocalizedString
+		/**
+		 * Hledat v akademické literatuře
+		 */
+		searchCardTitle: () => LocalizedString
+		/**
+		 * Najděte si svůj přesný dotaz napříč Semantic Scholar, OpenAlex a arXiv. Uložení jedním klikem.
+		 */
+		searchCardDescription: () => LocalizedString
+		/**
+		 * Otevřít vyhledávání
+		 */
+		searchCardCta: () => LocalizedString
 	}
 	nav: {
 		/**
@@ -2315,6 +2961,124 @@ export type TranslationFunctions = {
 		 * Sbalit panel
 		 */
 		collapseSidebar: () => LocalizedString
+	}
+	paperSearch: {
+		/**
+		 * Vyhledávání publikací
+		 */
+		eyebrow: () => LocalizedString
+		/**
+		 * Hledejte odbornou literaturu
+		 */
+		title: () => LocalizedString
+		/**
+		 * Spojuje výsledky ze Semantic Scholar, OpenAlex a arXiv a deduplikuje je podle DOI a arXiv ID.
+		 */
+		description: () => LocalizedString
+		/**
+		 * např. „chain of thought prompting“ nebo „direct preference optimization“
+		 */
+		searchPlaceholder: () => LocalizedString
+		/**
+		 * Hledat
+		 */
+		searchAction: () => LocalizedString
+		/**
+		 * Hledám…
+		 */
+		searching: () => LocalizedString
+		/**
+		 * Filtry
+		 */
+		filtersTitle: () => LocalizedString
+		/**
+		 * Od roku
+		 */
+		yearMinLabel: () => LocalizedString
+		/**
+		 * Do roku
+		 */
+		yearMaxLabel: () => LocalizedString
+		/**
+		 * Min. citací
+		 */
+		minCitationsLabel: () => LocalizedString
+		/**
+		 * Řadit
+		 */
+		sortLabel: () => LocalizedString
+		/**
+		 * Relevance
+		 */
+		sortRelevance: () => LocalizedString
+		/**
+		 * Nejvíc citované
+		 */
+		sortCitations: () => LocalizedString
+		/**
+		 * Nejnovější
+		 */
+		sortYear: () => LocalizedString
+		/**
+		 * Vymazat filtry
+		 */
+		reset: () => LocalizedString
+		/**
+		 * Výsledků: {count|num}
+		 */
+		resultsHeader: (arg: { count: unknown }) => LocalizedString
+		/**
+		 * Žádné výsledky
+		 */
+		emptyTitle: () => LocalizedString
+		/**
+		 * Zkuste obecnější dotaz nebo uvolněte filtry.
+		 */
+		emptyDescription: () => LocalizedString
+		/**
+		 * Začněte psát dotaz
+		 */
+		startTitle: () => LocalizedString
+		/**
+		 * Můžete vyhledávat klíčová slova, fráze, autory nebo název práce.
+		 */
+		startDescription: () => LocalizedString
+		/**
+		 * Některé zdroje selhaly: {sources}
+		 */
+		upstreamWarning: (arg: { sources: unknown }) => LocalizedString
+		/**
+		 * {count|num} {{citace|citace|citací}}
+		 */
+		citationsLabel: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * {year|num}
+		 */
+		yearLabel: (arg: { year: unknown }) => LocalizedString
+		/**
+		 * PDF
+		 */
+		pdfLabel: () => LocalizedString
+		/**
+		 * Zdroj
+		 */
+		sourceLabel: () => LocalizedString
+		/**
+		 * Uložit
+		 */
+		saveAction: () => LocalizedString
+		/**
+		 * Uloženo
+		 */
+		savedAction: () => LocalizedString
+		/**
+		 * Uložení selhalo
+		 */
+		saveFailed: () => LocalizedString
+		/**
+		 * Uloženo do Knihovny
+		 */
+		savedToast: () => LocalizedString
 	}
 	practice: {
 		/**
@@ -2487,6 +3251,82 @@ export type TranslationFunctions = {
 		 * Až dorazí čerstvé položky, objeví se zde.
 		 */
 		emptyDescription: () => LocalizedString
+		/**
+		 * Hledat v titulku, popisu, štítcích…
+		 */
+		searchPlaceholder: () => LocalizedString
+		/**
+		 * Obnovit
+		 */
+		refresh: () => LocalizedString
+		/**
+		 * Doporučené
+		 */
+		sortRecommended: () => LocalizedString
+		/**
+		 * Nejnovější
+		 */
+		sortRecent: () => LocalizedString
+		/**
+		 * Vše
+		 */
+		tabAll: () => LocalizedString
+		/**
+		 * Práce
+		 */
+		tabPapers: () => LocalizedString
+		/**
+		 * Vydání
+		 */
+		tabReleases: () => LocalizedString
+		/**
+		 * Blogy
+		 */
+		tabBlogs: () => LocalizedString
+		/**
+		 * Komunita
+		 */
+		tabCommunity: () => LocalizedString
+		/**
+		 * Nástroje
+		 */
+		tabTools: () => LocalizedString
+		/**
+		 * {count|num} {{hlas|hlasy|hlasů}} na HF
+		 */
+		upvotesLabel: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * ID: {id}
+		 */
+		externalIdLabel: (arg: { id: unknown }) => LocalizedString
+		/**
+		 * Skóre: {score}
+		 */
+		scoreLabel: (arg: { score: unknown }) => LocalizedString
+		/**
+		 * Uloženo do Knihovny
+		 */
+		savedToast: () => LocalizedString
+		/**
+		 * Odebráno z Knihovny
+		 */
+		removedToast: () => LocalizedString
+		/**
+		 * Uložení selhalo
+		 */
+		saveFailed: () => LocalizedString
+		/**
+		 * Uložit do Knihovny
+		 */
+		saveAction: () => LocalizedString
+		/**
+		 * Odebrat z Knihovny
+		 */
+		unsaveAction: () => LocalizedString
+		/**
+		 * Otevřít zdroj
+		 */
+		openExternal: () => LocalizedString
 	}
 	userMenu: {
 		/**

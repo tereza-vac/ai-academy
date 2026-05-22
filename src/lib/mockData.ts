@@ -7,6 +7,7 @@
 import type {
   BuildLabItem,
   Note,
+  PaperHit,
   Quiz,
   RadarItem,
   Resource,
@@ -236,7 +237,87 @@ export const mockResources: Resource[] = [
   },
 ];
 
-export const mockRadar: RadarItem[] = mockResources.map((r, idx) => ({
+// A small set of canonical / foundational papers, exposed via /library/canon
+// in mock mode. The Supabase seed in `06_canonical_papers.sql` mirrors these.
+const mockCanonicalResources: Resource[] = [
+  {
+    id: id("res-attention-is-all-you-need"),
+    url: "https://arxiv.org/abs/1706.03762",
+    title: "Attention Is All You Need", sourceName: "arXiv", kind: "paper",
+    summary: "Original Transformer paper. The foundation of modern LLMs.",
+    author: "Vaswani et al.", publishedAt: "2017-06-12T00:00:00Z", imageUrl: null,
+    tags: ["transformer", "foundations", "attention"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:1706.03762",
+    isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 1,
+  },
+  {
+    id: id("res-scaling-laws"),
+    url: "https://arxiv.org/abs/2001.08361",
+    title: "Scaling Laws for Neural Language Models", sourceName: "arXiv", kind: "paper",
+    summary: "OpenAI scaling laws: how model performance scales with data, params and compute.",
+    author: "Kaplan et al.", publishedAt: "2020-01-23T00:00:00Z", imageUrl: null,
+    tags: ["scaling", "openai", "foundations"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:2001.08361",
+    isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 2,
+  },
+  {
+    id: id("res-chinchilla"),
+    url: "https://arxiv.org/abs/2203.15556",
+    title: "Chinchilla: Training Compute-Optimal LLMs", sourceName: "arXiv", kind: "paper",
+    summary: "DeepMind shows most LLMs were data-undertrained for their compute budget.",
+    author: "Hoffmann et al.", publishedAt: "2022-03-29T00:00:00Z", imageUrl: null,
+    tags: ["scaling", "deepmind", "training"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:2203.15556",
+    isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 3,
+  },
+  {
+    id: id("res-instructgpt"),
+    url: "https://arxiv.org/abs/2203.02155",
+    title: "InstructGPT: Training LLMs to Follow Instructions",
+    sourceName: "arXiv", kind: "paper",
+    summary: "The paper behind ChatGPT: RLHF that taught GPT-3 to follow instructions.",
+    author: "Ouyang et al.", publishedAt: "2022-03-04T00:00:00Z", imageUrl: null,
+    tags: ["rlhf", "alignment", "openai"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:2203.02155",
+    isCanonical: true, canonicalCategory: "alignment", canonicalPosition: 1,
+  },
+  {
+    id: id("res-cot"),
+    url: "https://arxiv.org/abs/2201.11903",
+    title: "Chain-of-Thought Prompting", sourceName: "arXiv", kind: "paper",
+    summary: "Prompts with intermediate reasoning steps improve multi-step reasoning in LLMs.",
+    author: "Wei et al.", publishedAt: "2022-01-28T00:00:00Z", imageUrl: null,
+    tags: ["prompting", "reasoning", "cot"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:2201.11903",
+    isCanonical: true, canonicalCategory: "prompting", canonicalPosition: 1,
+  },
+  {
+    id: id("res-rag-original"),
+    url: "https://arxiv.org/abs/2005.11401",
+    title: "Retrieval-Augmented Generation for NLP", sourceName: "arXiv", kind: "paper",
+    summary: "The original RAG paper: combine retrieve + generate for knowledge-intensive tasks.",
+    author: "Lewis et al.", publishedAt: "2020-05-22T00:00:00Z", imageUrl: null,
+    tags: ["rag", "retrieval", "nlp"], topicIds: [],
+    enrichmentStatus: "manual",
+    externalId: "arXiv:2005.11401",
+    isCanonical: true, canonicalCategory: "rag", canonicalPosition: 1,
+  },
+];
+
+// Merge canonical papers into the main mock list so save/lookup works.
+mockResources.push(...mockCanonicalResources);
+
+const radarCategories = ["product", "research", "community", "news"] as const;
+const radarKinds: RadarItem["kind"][] = [
+  "release", "paper", "community", "article", "release", "paper",
+];
+
+export const mockRadar: RadarItem[] = mockResources.slice(0, 12).map((r, idx) => ({
   id: `radar-${r.id}`,
   link: r.url,
   title: r.title,
@@ -244,8 +325,47 @@ export const mockRadar: RadarItem[] = mockResources.map((r, idx) => ({
   author: r.author,
   publishedAt: r.publishedAt,
   sourceName: r.sourceName,
-  sourceCategory: idx % 2 === 0 ? "product" : "research",
+  sourceCategory: radarCategories[idx % radarCategories.length],
+  sourceType: r.kind === "paper" ? "arxiv" : "rss",
+  kind: radarKinds[idx % radarKinds.length],
+  tags: r.tags,
+  hfUpvotes: idx === 0 ? 142 : idx === 1 ? 87 : null,
+  externalId: r.externalId ?? null,
+  // Higher score = ranks earlier in "Recommended"; deterministic for tests.
+  score: Number((1.4 - idx * 0.07).toFixed(3)),
+  resourceId: r.id,
 }));
+
+// Canned results for the Scholar-like search page in mock mode.
+export const mockPaperHits: PaperHit[] = [
+  {
+    externalId: "arXiv:1706.03762", doi: null, arxivId: "1706.03762",
+    source: "arxiv", url: "https://arxiv.org/abs/1706.03762",
+    title: "Attention Is All You Need",
+    abstract: "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms…",
+    authors: ["Ashish Vaswani", "Noam Shazeer", "Niki Parmar"],
+    year: 2017, venue: "NeurIPS", citationCount: 120000,
+    pdfUrl: "https://arxiv.org/pdf/1706.03762",
+  },
+  {
+    externalId: "DOI:10.1145/3580305.3599835", doi: "10.1145/3580305.3599835", arxivId: null,
+    source: "openalex", url: "https://doi.org/10.1145/3580305.3599835",
+    title: "Toolformer: Language Models Can Teach Themselves to Use Tools",
+    abstract: "Toolformer is a model trained to decide which APIs to call, when to call them and how…",
+    authors: ["Timo Schick", "Jane Dwivedi-Yu"],
+    year: 2023, venue: "ICML", citationCount: 1800,
+    pdfUrl: null,
+  },
+  {
+    externalId: "arXiv:2305.18290", doi: null, arxivId: "2305.18290",
+    source: "semanticScholar", url: "https://arxiv.org/abs/2305.18290",
+    title: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+    abstract: "DPO reparameterizes RLHF as a simple classification loss over preference pairs…",
+    authors: ["Rafael Rafailov", "Archit Sharma"],
+    year: 2023, venue: "NeurIPS", citationCount: 2200,
+    pdfUrl: "https://arxiv.org/pdf/2305.18290",
+  },
+];
 
 export const mockQuizzes: Quiz[] = [
   {

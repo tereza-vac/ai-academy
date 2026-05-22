@@ -198,6 +198,64 @@ const sk_content: NamespaceContentTranslation = {
       body: "- [ ] Systémový prompt skontrolovaný\n- [ ] Schémy nástrojov validované\n- [ ] Existujú evaluácie promptov a retrievalu\n- [ ] Guardraily pre PII / zneužitie sú na mieste\n- [ ] Nastavený cenový strop\n- [ ] Zapnuté logovanie a tracing\n- [ ] Plán rollout (canary -> široko)\n- [ ] Zdokumentovaný rollback plán",
     },
   },
+  canon: {
+    attentionIsAllYouNeed: {
+      title: "Attention Is All You Need",
+      summary: "Pôvodný článok predstavujúci architektúru Transformer. Základ moderných LLM.",
+    },
+    scalingLaws: {
+      title: "Scaling Laws for Neural Language Models",
+      summary: "OpenAI scaling laws: ako rastie výkon modelu s veľkosťou dát, parametrov a výpočtu.",
+    },
+    chinchilla: {
+      title: "Chinchilla: Training Compute-Optimal LLMs",
+      summary: "DeepMind ukazuje, že väčšina LLM bola nedostatočne trénovaná na dátach vzhľadom na svoj výpočet.",
+    },
+    bert: {
+      title: "BERT: Pre-training of Deep Bidirectional Transformers",
+      summary: "Encoder-only model, ktorý popularizoval paradigmu pre-training / fine-tuning.",
+    },
+    gpt3: {
+      title: "GPT-3: Language Models are Few-Shot Learners",
+      summary: "Článok, ktorý ukázal, že škálovanie + in-context learning vedie k emergentným schopnostiam.",
+    },
+    llama: {
+      title: "LLaMA: Open and Efficient Foundation Language Models",
+      summary: "Meta uvoľňuje silnú rodinu otvorených modelov a odštartuje open-source LLM ekosystém.",
+    },
+    mixtral: {
+      title: "Mixtral of Experts",
+      summary: "Mistral popisuje sparse mixture-of-experts model 8x7B s GPT-3.5 výkonom za zlomok nákladov.",
+    },
+    instructgpt: {
+      title: "InstructGPT: Training Language Models to Follow Instructions with Human Feedback",
+      summary: "Článok za ChatGPT: RLHF, ktorý naučil GPT-3 plniť inštrukcie.",
+    },
+    constitutionalAi: {
+      title: "Constitutional AI: Harmlessness from AI Feedback",
+      summary: "Anthropic ukazuje RLAIF: AI hodnotí výstupy podľa písaného súboru princípov.",
+    },
+    dpo: {
+      title: "Direct Preference Optimization",
+      summary: "Tréning LLM podľa preferenčných párov bez explicitného reward modelu — jednoduchšie než RLHF.",
+    },
+    cot: {
+      title: "Chain-of-Thought Prompting",
+      summary: "Ukazuje, ako prompty s medzikrokmi úvah zlepšujú viackrokové uvažovanie LLM.",
+    },
+    react: {
+      title: "ReAct: Synergizing Reasoning and Acting in Language Models",
+      summary: "Klasický agentný vzor: jazykový model strieda kroky uvažovania a volania nástrojov.",
+    },
+    toolformer: {
+      title: "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      summary: "Meta ukazuje, ako LLM samostatne získa schopnosť volať externé API.",
+    },
+    rag: {
+      title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      summary: "Pôvodný článok RAG: kombinácia retrieve + generate pre úlohy nad znalosťami.",
+    },
+  },
 };
 
 export default sk_content;

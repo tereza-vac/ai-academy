@@ -62,7 +62,22 @@ export interface Resource {
   tags: string[];
   topicIds: string[];
   enrichmentStatus: "pending" | "enriched" | "failed" | "manual";
+  externalId?: string | null;
+  isCanonical?: boolean;
+  canonicalCategory?: string | null;
+  canonicalPosition?: number | null;
 }
+
+export type CanonicalCategory =
+  | "foundations"
+  | "models"
+  | "alignment"
+  | "prompting"
+  | "agents"
+  | "rag"
+  | "scaling"
+  | "multimodal"
+  | "reasoning";
 
 export interface SavedItem {
   id: string;
@@ -139,6 +154,19 @@ export interface BuildLabItem {
   position: number;
 }
 
+export type RadarSourceType = "rss" | "arxiv" | "hf_daily_papers";
+
+export type RadarKind =
+  | "article"
+  | "paper"
+  | "release"
+  | "video"
+  | "podcast"
+  | "tool"
+  | "tweet"
+  | "community"
+  | "other";
+
 export interface RadarItem {
   id: string;
   link: string;
@@ -148,4 +176,46 @@ export interface RadarItem {
   publishedAt: string | null;
   sourceName: string | null;
   sourceCategory: string | null;
+  sourceType: RadarSourceType | null;
+  kind: RadarKind | null;
+  tags: string[];
+  hfUpvotes: number | null;
+  externalId: string | null;
+  score: number | null;
+  resourceId: string | null;
+}
+
+/**
+ * Result row returned by the `papers-search` Edge Function. Mirrors the
+ * server-side `PaperHit` shape.
+ */
+export interface PaperHit {
+  externalId: string;
+  doi: string | null;
+  arxivId: string | null;
+  source: "semanticScholar" | "openalex" | "arxiv";
+  url: string;
+  title: string;
+  abstract: string | null;
+  authors: string[];
+  year: number | null;
+  venue: string | null;
+  citationCount: number | null;
+  pdfUrl: string | null;
+}
+
+/**
+ * Common metadata used by `upsertExternalResource` to mint a `resources` row
+ * from any external item (radar pick, Scholar hit, manual entry).
+ */
+export interface ExternalResourceInput {
+  url: string;
+  title: string;
+  summary?: string | null;
+  sourceName?: string | null;
+  kind?: ResourceKind;
+  author?: string | null;
+  publishedAt?: string | null;
+  tags?: string[];
+  externalId?: string | null;
 }

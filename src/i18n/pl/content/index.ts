@@ -198,6 +198,64 @@ const pl_content: NamespaceContentTranslation = {
       body: "- [ ] Prompt systemowy sprawdzony\n- [ ] Schematy narzędzi zwalidowane\n- [ ] Istnieją ewaluacje promptu i retrievalu\n- [ ] Guardraile PII / nadużyć są gotowe\n- [ ] Ustawiony limit kosztów\n- [ ] Włączone logowanie i tracing\n- [ ] Plan rollout (canary -> szeroko)\n- [ ] Udokumentowany plan rollbacku",
     },
   },
+  canon: {
+    attentionIsAllYouNeed: {
+      title: "Attention Is All You Need",
+      summary: "Oryginalny artykuł o architekturze Transformer. Fundament współczesnych LLM.",
+    },
+    scalingLaws: {
+      title: "Scaling Laws for Neural Language Models",
+      summary: "Prawa skalowania OpenAI: jak wzrasta wydajność modelu z danymi, parametrami i obliczeniami.",
+    },
+    chinchilla: {
+      title: "Chinchilla: Training Compute-Optimal LLMs",
+      summary: "DeepMind pokazuje, że większość LLM była niedotrenowana na danych w stosunku do swojego budżetu obliczeniowego.",
+    },
+    bert: {
+      title: "BERT: Pre-training of Deep Bidirectional Transformers",
+      summary: "Model encoder-only, który spopularyzował paradygmat pre-training / fine-tuning.",
+    },
+    gpt3: {
+      title: "GPT-3: Language Models are Few-Shot Learners",
+      summary: "Artykuł, który pokazał, że skalowanie + in-context learning prowadzi do emergentnych zdolności.",
+    },
+    llama: {
+      title: "LLaMA: Open and Efficient Foundation Language Models",
+      summary: "Meta udostępnia silną rodzinę otwartych modeli i daje początek ekosystemowi open-source LLM.",
+    },
+    mixtral: {
+      title: "Mixtral of Experts",
+      summary: "Mistral opisuje rzadki model mixture-of-experts 8x7B o jakości GPT-3.5 przy ułamku kosztu.",
+    },
+    instructgpt: {
+      title: "InstructGPT: Training Language Models to Follow Instructions with Human Feedback",
+      summary: "Artykuł stojący za ChatGPT: RLHF, który nauczył GPT-3 wykonywać instrukcje.",
+    },
+    constitutionalAi: {
+      title: "Constitutional AI: Harmlessness from AI Feedback",
+      summary: "Anthropic pokazuje RLAIF: AI ocenia wyniki na podstawie spisanego zestawu zasad.",
+    },
+    dpo: {
+      title: "Direct Preference Optimization",
+      summary: "Trenuj LLM z par preferencji bez jawnego modelu nagrody — prościej niż RLHF.",
+    },
+    cot: {
+      title: "Chain-of-Thought Prompting",
+      summary: "Pokazuje, jak prompty z pośrednimi krokami rozumowania poprawiają wielokrokowe rozumowanie LLM.",
+    },
+    react: {
+      title: "ReAct: Synergizing Reasoning and Acting in Language Models",
+      summary: "Kanoniczny wzorzec agenta: model językowy przeplata kroki rozumowania i wywołania narzędzi.",
+    },
+    toolformer: {
+      title: "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      summary: "Meta pokazuje, jak LLM może samodzielnie nauczyć się wywoływania zewnętrznych API.",
+    },
+    rag: {
+      title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      summary: "Oryginalny artykuł RAG: kombinacja retrieve + generate dla zadań intensywnych w wiedzę.",
+    },
+  },
 };
 
 export default pl_content;

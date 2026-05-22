@@ -18,6 +18,7 @@ import cs_home from './cs/home'
 import cs_learn from './cs/learn'
 import cs_library from './cs/library'
 import cs_nav from './cs/nav'
+import cs_paperSearch from './cs/paperSearch'
 import cs_practice from './cs/practice'
 import cs_radar from './cs/radar'
 import cs_userMenu from './cs/userMenu'
@@ -29,6 +30,7 @@ import en_home from './en/home'
 import en_learn from './en/learn'
 import en_library from './en/library'
 import en_nav from './en/nav'
+import en_paperSearch from './en/paperSearch'
 import en_practice from './en/practice'
 import en_radar from './en/radar'
 import en_userMenu from './en/userMenu'
@@ -40,6 +42,7 @@ import pl_home from './pl/home'
 import pl_learn from './pl/learn'
 import pl_library from './pl/library'
 import pl_nav from './pl/nav'
+import pl_paperSearch from './pl/paperSearch'
 import pl_practice from './pl/practice'
 import pl_radar from './pl/radar'
 import pl_userMenu from './pl/userMenu'
@@ -51,6 +54,7 @@ import sk_home from './sk/home'
 import sk_learn from './sk/learn'
 import sk_library from './sk/library'
 import sk_nav from './sk/nav'
+import sk_paperSearch from './sk/paperSearch'
 import sk_practice from './sk/practice'
 import sk_radar from './sk/radar'
 import sk_userMenu from './sk/userMenu'
@@ -66,6 +70,7 @@ const localeTranslations = {
 		learn: cs_learn,
 		library: cs_library,
 		nav: cs_nav,
+		paperSearch: cs_paperSearch,
 		practice: cs_practice,
 		radar: cs_radar,
 		userMenu: cs_userMenu
@@ -80,6 +85,7 @@ const localeTranslations = {
 		learn: en_learn,
 		library: en_library,
 		nav: en_nav,
+		paperSearch: en_paperSearch,
 		practice: en_practice,
 		radar: en_radar,
 		userMenu: en_userMenu
@@ -94,6 +100,7 @@ const localeTranslations = {
 		learn: pl_learn,
 		library: pl_library,
 		nav: pl_nav,
+		paperSearch: pl_paperSearch,
 		practice: pl_practice,
 		radar: pl_radar,
 		userMenu: pl_userMenu
@@ -108,6 +115,7 @@ const localeTranslations = {
 		learn: sk_learn,
 		library: sk_library,
 		nav: sk_nav,
+		paperSearch: sk_paperSearch,
 		practice: sk_practice,
 		radar: sk_radar,
 		userMenu: sk_userMenu

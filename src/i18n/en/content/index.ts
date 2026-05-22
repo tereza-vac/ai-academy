@@ -198,6 +198,64 @@ const en_content: NamespaceContentTranslation = {
       body: "- [ ] System prompt reviewed\n- [ ] Tool schemas validated\n- [ ] Prompt + retrieval evals exist\n- [ ] PII / abuse guardrails in place\n- [ ] Cost ceiling configured\n- [ ] Logging + tracing on\n- [ ] Rollout plan (canary -> broad)\n- [ ] Rollback plan documented",
     },
   },
+  canon: {
+    attentionIsAllYouNeed: {
+      title: "Attention Is All You Need",
+      summary: "The original Transformer paper. The foundation of modern LLMs.",
+    },
+    scalingLaws: {
+      title: "Scaling Laws for Neural Language Models",
+      summary: "OpenAI scaling laws: how model performance scales with data, parameters and compute.",
+    },
+    chinchilla: {
+      title: "Chinchilla: Training Compute-Optimal LLMs",
+      summary: "DeepMind shows most LLMs were data-undertrained for their compute budget.",
+    },
+    bert: {
+      title: "BERT: Pre-training of Deep Bidirectional Transformers",
+      summary: "Encoder-only model that popularized the pre-training / fine-tuning paradigm.",
+    },
+    gpt3: {
+      title: "GPT-3: Language Models are Few-Shot Learners",
+      summary: "Showed that scaling plus in-context learning unlocks emergent capabilities.",
+    },
+    llama: {
+      title: "LLaMA: Open and Efficient Foundation Language Models",
+      summary: "Meta releases a strong family of open models, kick-starting the open-source LLM ecosystem.",
+    },
+    mixtral: {
+      title: "Mixtral of Experts",
+      summary: "Mistral describes a sparse 8x7B mixture-of-experts model at GPT-3.5 quality for a fraction of the cost.",
+    },
+    instructgpt: {
+      title: "InstructGPT: Training Language Models to Follow Instructions with Human Feedback",
+      summary: "The paper behind ChatGPT: RLHF that taught GPT-3 to follow instructions.",
+    },
+    constitutionalAi: {
+      title: "Constitutional AI: Harmlessness from AI Feedback",
+      summary: "Anthropic demonstrates RLAIF: AI judges outputs against a written set of principles.",
+    },
+    dpo: {
+      title: "Direct Preference Optimization",
+      summary: "Train LLMs from preference pairs without an explicit reward model — simpler than RLHF.",
+    },
+    cot: {
+      title: "Chain-of-Thought Prompting",
+      summary: "Shows how prompts with intermediate reasoning steps improve multi-step reasoning in LLMs.",
+    },
+    react: {
+      title: "ReAct: Synergizing Reasoning and Acting in Language Models",
+      summary: "A canonical agent pattern: a language model alternates reasoning steps and tool calls.",
+    },
+    toolformer: {
+      title: "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      summary: "Meta shows how an LLM can self-acquire the ability to call external APIs.",
+    },
+    rag: {
+      title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      summary: "The original RAG paper: combine retrieve + generate for knowledge-intensive tasks.",
+    },
+  },
 };
 
 export default en_content;

@@ -20,6 +20,7 @@ const ALL_NAMESPACES: Namespaces[] = [
   "learn",
   "library",
   "nav",
+  "paperSearch",
   "practice",
   "radar",
   "userMenu",

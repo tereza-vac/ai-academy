@@ -18,4 +18,5 @@ export const API_CONFIG = {
 
   RADAR_INGEST_URL: `${SUPABASE_URL}/functions/v1/radar-ingest`,
   AI_ENRICH_URL: `${SUPABASE_URL}/functions/v1/ai-enrich`,
+  PAPERS_SEARCH_URL: `${SUPABASE_URL}/functions/v1/papers-search`,
 } as const;

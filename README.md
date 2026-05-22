@@ -240,12 +240,15 @@ src/
 
 supabase/
   migrations/      SQL migrations: profiles, topics, resources (pgvector), saved_items,
-                    notes, quizzes, rss sources/items
+                    notes, quizzes, rss sources/items, content translation keys,
+                    canon / radar score columns
   functions/       Deno edge functions
-    _shared/         cors + handler + ai helpers (Vercel AI SDK)
-    radar-ingest/    RSS ingestion
+    _shared/         cors + handler + rss parser + ai helpers (Vercel AI SDK)
+    radar-ingest/    RSS / arXiv / HF Daily Papers ingestion + ranking
+    papers-search/   Scholar-like fan-out (Semantic Scholar + OpenAlex + arXiv)
     ai-enrich/       summarize / embed / generateQuiz (OpenAI when configured)
-  seed/            mock topics, resources, quizzes, prompts
+  seed/            tracks, topics, resources, quizzes, build-lab,
+                    rss_sources (weighted), canonical papers
 ```
 
 ### Mock data first, real data later
@@ -261,8 +264,51 @@ in `src/lib/dataMode.ts`.
 `embedText`, `generateQuiz`) and exports `defaultEnrichment`, which picks `remoteEnrichment`
 (the `ai-enrich` edge function) when Supabase is configured and `mockEnrichment` otherwise.
 
-### RSS ingestion
+### RSS / arXiv / HF Daily Papers ingestion
 
-`supabase/functions/radar-ingest/index.ts` fetches, parses and upserts items from
-`public.rss_sources` into `public.radar_items`. The parser is intentionally minimal so it
-can be swapped for a hardened library later.
+`supabase/functions/radar-ingest/index.ts` polls every active `public.rss_sources` row
+and dispatches based on `source_type`:
+
+- `rss` — generic RSS/Atom via the shared XML parser
+- `arxiv` — arXiv API (Atom + extra metadata: arXiv id, category tags)
+- `hf_daily_papers` — Hugging Face Daily Papers JSON (includes upvote counts)
+
+Every upsert recomputes a deterministic global ranking score on the row:
+
+```
+score = source.weight * (recency_decay + 0.3 * log10(1 + hf_upvotes))
+recency_decay = exp(-age_ms / half_life), half_life = 7 days
+```
+
+The Radar page sorts by this score for the "Recommended" tab and falls back to
+`published_at` for "Recent". Per-user pgvector ranking is a deferred Phase E
+(an `embedding vector(1536)` column is already reserved on `radar_items`).
+
+Trigger the function manually with:
+
+```bash
+curl -X POST "$SUPABASE_URL/functions/v1/radar-ingest"
+```
+
+Configure a Supabase scheduled function (or `pg_cron`) to run it on a cadence
+once you're past MVP.
+
+### Canon (foundational papers)
+
+`supabase/seed/06_canonical_papers.sql` seeds ~14 foundational AI papers as
+regular `public.resources` rows tagged with `is_canonical = true` and a
+`canonical_category` (foundations, models, alignment, prompting, agents, rag).
+They surface on the Library page under the **Canon** tab and reuse the same
+save flow as any other resource.
+
+### Scholar-like search
+
+`supabase/functions/papers-search/index.ts` fans out to Semantic Scholar and
+OpenAlex (with arXiv as a last-resort fallback), normalizes hits into a single
+`PaperHit` shape and dedupes by DOI → arXiv id → normalized title. No upstream
+API keys are required.
+
+The client side at `src/pages/PaperSearchPage.tsx` (route `/library/search`)
+exposes a search box with year / min-citations / sort filters; clicking
+**Save** upserts the hit into `public.resources` and saves it to the user's
+library via the existing `saved_items` flow.

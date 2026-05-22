@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { isMock } from "@/lib/dataMode";
 import { localizeResource } from "@/lib/contentLocalization";
 import { mockResources } from "@/lib/mockData";
-import type { Resource, ResourceKind } from "@/types/domain";
+import type { ExternalResourceInput, Resource, ResourceKind } from "@/types/domain";
 
 interface ResourceRow {
   id: string;
@@ -19,6 +19,10 @@ interface ResourceRow {
   tags: string[];
   topic_ids: string[];
   enrichment_status: Resource["enrichmentStatus"];
+  external_id?: string | null;
+  is_canonical?: boolean | null;
+  canonical_category?: string | null;
+  canonical_position?: number | null;
 }
 
 function mapResource(row: ResourceRow): Resource {
@@ -31,11 +35,15 @@ function mapResource(row: ResourceRow): Resource {
     publishedAt: row.published_at, imageUrl: row.image_url,
     tags: row.tags ?? [], topicIds: row.topic_ids ?? [],
     enrichmentStatus: row.enrichment_status,
+    externalId: row.external_id ?? null,
+    isCanonical: Boolean(row.is_canonical),
+    canonicalCategory: row.canonical_category ?? null,
+    canonicalPosition: row.canonical_position ?? null,
   };
 }
 
 const SELECT =
-  "id,url,title,title_key,source_name,kind,summary,summary_key,author,published_at,image_url,tags,topic_ids,enrichment_status";
+  "id,url,title,title_key,source_name,kind,summary,summary_key,author,published_at,image_url,tags,topic_ids,enrichment_status,external_id,is_canonical,canonical_category,canonical_position";
 
 export async function listResources(opts?: { topicId?: string; limit?: number }): Promise<Resource[]> {
   if (isMock) {
@@ -71,4 +79,87 @@ export async function getResourceById(id: string): Promise<Resource | null> {
     .maybeSingle();
   if (error) throw new Error(error.message);
   return data ? localizeResource(mapResource(data)) : null;
+}
+
+/**
+ * List canonical / foundational resources, ordered by category then position.
+ * In mock mode this returns whichever mock resources opted into the flag.
+ */
+export async function listCanonicalResources(): Promise<Resource[]> {
+  if (isMock) {
+    return mockResources
+      .filter((r) => r.isCanonical)
+      .sort((a, b) => {
+        const cat = (a.canonicalCategory ?? "").localeCompare(b.canonicalCategory ?? "");
+        if (cat !== 0) return cat;
+        return (a.canonicalPosition ?? 999) - (b.canonicalPosition ?? 999);
+      })
+      .map(localizeResource);
+  }
+
+  const { data, error } = await supabase
+    .from("resources")
+    .select(SELECT)
+    .eq("is_canonical", true)
+    .order("canonical_category", { ascending: true, nullsFirst: false })
+    .order("canonical_position", { ascending: true, nullsFirst: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(mapResource).map(localizeResource);
+}
+
+/**
+ * Mint or refresh a `resources` row from any external item (Radar pick,
+ * Scholar hit, manual entry). Idempotent by `url`. Resources upserted this
+ * way carry `enrichment_status='pending'` so the `ai-enrich` worker can
+ * fill summary/tags/embedding later.
+ */
+export async function upsertExternalResource(input: ExternalResourceInput): Promise<Resource> {
+  if (isMock) {
+    const existing = mockResources.find((r) => r.url === input.url);
+    if (existing) return localizeResource(existing);
+    const minted: Resource = {
+      id: `mock-resource-${input.url}`,
+      url: input.url,
+      title: input.title,
+      titleKey: null,
+      sourceName: input.sourceName ?? null,
+      kind: input.kind ?? "article",
+      summary: input.summary ?? null,
+      summaryKey: null,
+      author: input.author ?? null,
+      publishedAt: input.publishedAt ?? null,
+      imageUrl: null,
+      tags: input.tags ?? [],
+      topicIds: [],
+      enrichmentStatus: "pending",
+      externalId: input.externalId ?? null,
+      isCanonical: false,
+      canonicalCategory: null,
+      canonicalPosition: null,
+    };
+    mockResources.push(minted);
+    return localizeResource(minted);
+  }
+
+  const { data, error } = await supabase
+    .from("resources")
+    .upsert(
+      {
+        url: input.url,
+        title: input.title,
+        source_name: input.sourceName ?? null,
+        kind: input.kind ?? "article",
+        summary: input.summary ?? null,
+        author: input.author ?? null,
+        published_at: input.publishedAt ?? null,
+        tags: input.tags ?? [],
+        external_id: input.externalId ?? null,
+        enrichment_status: "pending",
+      },
+      { onConflict: "url" },
+    )
+    .select(SELECT)
+    .single();
+  if (error) throw new Error(error.message);
+  return localizeResource(mapResource(data as ResourceRow));
 }

@@ -58,10 +58,18 @@ deno_version = 2
 [edge_runtime.secrets]
 OPENAI_API_KEY = "env(OPENAI_API_KEY)"
 RSS_USER_AGENT = "env(RSS_USER_AGENT)"
+PAPERS_SEARCH_USER_AGENT = "env(PAPERS_SEARCH_USER_AGENT)"
 
 # Public endpoints (no auth required) — fine for a small internal MVP.
 [functions.radar-ingest]
 verify_jwt = false
 
 [functions.ai-enrich]
+verify_jwt = false
+
+# Scholar-like search. JWT verification is left off so the function is callable
+# from the browser with just the publishable key; the client still attaches the
+# user's access token for future per-user rate-limiting. Flip to `true` once
+# you add a per-user quota in code.
+[functions.papers-search]
 verify_jwt = false
