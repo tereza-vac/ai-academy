@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getQuizBySlug, recordQuizAttempt } from "@/services/practiceApi";
 import { queryKeys } from "@/lib/queryKeys";
-import { useQuizRunnerStore, selectScore } from "@/stores/quizRunnerStore";
+import { useQuizRunnerStore } from "@/stores/quizRunnerStore";
 import { useI18nContext } from "@/i18n/i18n-react";
 import { selectLocale, useLocaleStore } from "@/stores/localeStore";
 
@@ -28,6 +28,7 @@ export function Component() {
   const locale = useLocaleStore(selectLocale);
   const { slug = "" } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const appliedQuizKeyRef = useRef<string | null>(null);
 
   const quizQuery = useQuery({
     queryKey: [...queryKeys.quizBySlug(slug), locale],
@@ -47,16 +48,27 @@ export function Component() {
   const answerMCQ = useQuizRunnerStore((s) => s.answerMCQ);
   const showFlashcardAnswer = useQuizRunnerStore((s) => s.showFlashcardAnswer);
   const rateFlashcard = useQuizRunnerStore((s) => s.rateFlashcard);
-  const score = useQuizRunnerStore(selectScore);
+  const score = useMemo(() => {
+    const total = quiz?.questions.length ?? 0;
+    return {
+      score: Object.values(answers).filter((a) => a.correct === true).length,
+      total,
+    };
+  }, [answers, quiz?.questions.length]);
 
   useEffect(() => {
     if (!quizQuery.data) return;
-    if (quiz?.id !== quizQuery.data.id) {
+    const appliedQuizKey = `${locale}:${quizQuery.data.id}`;
+    if (appliedQuizKeyRef.current === appliedQuizKey) return;
+
+    appliedQuizKeyRef.current = appliedQuizKey;
+    const currentQuiz = useQuizRunnerStore.getState().quiz;
+    if (currentQuiz?.id !== quizQuery.data.id) {
       start(quizQuery.data);
-    } else if (quiz !== quizQuery.data) {
+    } else {
       replaceQuizContent(quizQuery.data);
     }
-  }, [quiz, quizQuery.data, replaceQuizContent, start]);
+  }, [locale, quizQuery.data, replaceQuizContent, start]);
 
   useEffect(() => {
     if (!completed || !quizQuery.data) return;
