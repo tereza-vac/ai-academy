@@ -6,6 +6,7 @@ const sk_radar: NamespaceRadarTranslation = {
   description: "Súhrn článkov, noviniek a vedeckých prác z našich dôveryhodných zdrojov.",
   emptyTitle: "Zatiaľ nič nové",
   emptyDescription: "Keď dorazia čerstvé položky, objavia sa tu.",
+  errorTitle: "Nepodarilo sa načítať Radar",
 
   searchPlaceholder: "Hľadať v titulku, popise, štítkoch…",
   refresh: "Obnoviť",

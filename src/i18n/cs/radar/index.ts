@@ -6,6 +6,7 @@ const cs_radar: BaseTranslation = {
   description: "Souhrn článků, novinek a vědeckých prací z našich důvěryhodných zdrojů.",
   emptyTitle: "Zatím nic nového",
   emptyDescription: "Až dorazí čerstvé položky, objeví se zde.",
+  errorTitle: "Nepodařilo se načíst Radar",
 
   searchPlaceholder: "Hledat v titulku, popisu, štítcích…",
   refresh: "Obnovit",

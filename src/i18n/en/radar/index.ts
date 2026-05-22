@@ -6,6 +6,7 @@ const en_radar: NamespaceRadarTranslation = {
   description: "A digest of articles, news and papers from our trusted sources.",
   emptyTitle: "Nothing new yet",
   emptyDescription: "Fresh items will appear here once they arrive.",
+  errorTitle: "Could not load Radar",
 
   searchPlaceholder: "Search title, summary, tags…",
   refresh: "Refresh",

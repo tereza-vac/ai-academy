@@ -1533,6 +1533,10 @@ export type NamespaceRadarTranslation = {
 	 */
 	emptyDescription: string
 	/**
+	 * N​e​p​o​d​a​ř​i​l​o​ ​s​e​ ​n​a​č​í​s​t​ ​R​a​d​a​r
+	 */
+	errorTitle: string
+	/**
 	 * H​l​e​d​a​t​ ​v​ ​t​i​t​u​l​k​u​,​ ​p​o​p​i​s​u​,​ ​š​t​í​t​c​í​c​h​…
 	 */
 	searchPlaceholder: string
@@ -3251,6 +3255,10 @@ export type TranslationFunctions = {
 		 * Až dorazí čerstvé položky, objeví se zde.
 		 */
 		emptyDescription: () => LocalizedString
+		/**
+		 * Nepodařilo se načíst Radar
+		 */
+		errorTitle: () => LocalizedString
 		/**
 		 * Hledat v titulku, popisu, štítcích…
 		 */

@@ -150,27 +150,38 @@ export function Component() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {radarQuery.isLoading
-          ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)
-          : filtered.length === 0
-            ? (
-                <div className="md:col-span-2">
-                  <EmptyState
-                    title={LL.radar.emptyTitle()}
-                    description={LL.radar.emptyDescription()}
-                  />
-                </div>
-              )
-            : filtered.map((item) => (
-                <RadarItemCard
-                  key={item.id}
-                  item={item}
-                  isSaving={saveMutation.isPending && saveMutation.variables?.id === item.id}
-                  isSaved={justSaved.has(item.id)}
-                  onSave={() => saveMutation.mutate(item)}
-                  LL={LL}
-                />
-              ))}
+        {radarQuery.isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40 rounded-xl" />)
+        ) : radarQuery.isError ? (
+          <div className="md:col-span-2">
+            <EmptyState
+              title={LL.radar.errorTitle()}
+              description={
+                radarQuery.error instanceof Error
+                  ? radarQuery.error.message
+                  : String(radarQuery.error)
+              }
+            />
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="md:col-span-2">
+            <EmptyState
+              title={LL.radar.emptyTitle()}
+              description={LL.radar.emptyDescription()}
+            />
+          </div>
+        ) : (
+          filtered.map((item) => (
+            <RadarItemCard
+              key={item.id}
+              item={item}
+              isSaving={saveMutation.isPending && saveMutation.variables?.id === item.id}
+              isSaved={justSaved.has(item.id)}
+              onSave={() => saveMutation.mutate(item)}
+              LL={LL}
+            />
+          ))
+        )}
       </div>
     </div>
   );
