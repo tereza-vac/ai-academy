@@ -1027,6 +1027,10 @@ export type NamespacePracticeTranslation = {
 	 */
 	startQuiz: string
 	/**
+	 * S​t​a​r​t
+	 */
+	start: string
+	/**
 	 * Z​a​t​í​m​ ​ž​á​d​n​é​ ​k​v​í​z​y
 	 */
 	emptyTitle: string
@@ -1034,6 +1038,89 @@ export type NamespacePracticeTranslation = {
 	 * T​é​m​a​t​ů​m​ ​z​a​t​í​m​ ​n​e​b​y​l​y​ ​p​ř​i​ř​a​z​e​n​y​ ​ž​á​d​n​é​ ​k​v​í​z​y​.
 	 */
 	emptyDescription: string
+	/**
+	 * T​é​m​a
+	 */
+	topicLabel: string
+	/**
+	 * {​c​o​u​n​t​|​n​u​m​}​ ​{​{​o​t​á​z​k​a​|​o​t​á​z​k​y​|​o​t​á​z​e​k​}​}
+	 * @param {string | number | boolean} count
+	 */
+	questionCount: RequiredParams<'count|num'>
+	/**
+	 * {​c​o​u​n​t​|​n​u​m​}​ ​{​{​v​ý​b​ě​r​o​v​á​ ​o​t​á​z​k​a​|​v​ý​b​ě​r​o​v​é​ ​o​t​á​z​k​y​|​v​ý​b​ě​r​o​v​ý​c​h​ ​o​t​á​z​e​k​}​}
+	 * @param {string | number | boolean} count
+	 */
+	mcqCount: RequiredParams<'count|num'>
+	/**
+	 * {​c​o​u​n​t​|​n​u​m​}​ ​{​{​k​a​r​t​i​č​k​a​|​k​a​r​t​i​č​k​y​|​k​a​r​t​i​č​e​k​}​}
+	 * @param {string | number | boolean} count
+	 */
+	flashcardCount: RequiredParams<'count|num'>
+	/**
+	 * K​v​í​z​ ​n​e​n​a​l​e​z​e​n
+	 */
+	quizNotFoundTitle: string
+	/**
+	 * M​o​ž​n​á​ ​b​y​l​ ​o​d​s​t​r​a​n​ě​n​ ​n​e​b​o​ ​j​e​š​t​ě​ ​n​e​n​í​ ​p​u​b​l​i​k​o​v​a​n​ý​.
+	 */
+	quizNotFoundDescription: string
+	/**
+	 * Z​p​ě​t​ ​n​a​ ​p​r​o​c​v​i​č​o​v​á​n​í
+	 */
+	backToPractice: string
+	/**
+	 * O​t​á​z​k​a​ ​{​c​u​r​r​e​n​t​|​n​u​m​}​ ​z​ ​{​t​o​t​a​l​|​n​u​m​}
+	 * @param {unknown} current
+	 * @param {unknown} total
+	 */
+	questionProgress: RequiredParams<'current|num' | 'total|num'>
+	/**
+	 * P​ř​e​d​c​h​o​z​í
+	 */
+	previous: string
+	/**
+	 * D​a​l​š​í
+	 */
+	next: string
+	/**
+	 * D​o​k​o​n​č​i​t
+	 */
+	finish: string
+	/**
+	 * U​k​á​z​a​t​ ​o​d​p​o​v​ě​ď
+	 */
+	showAnswer: string
+	/**
+	 * J​a​k​ ​v​á​m​ ​t​o​ ​š​l​o​?
+	 */
+	selfRatePrompt: string
+	/**
+	 * N​e​v​ě​d​ě​l​/​a​ ​j​s​e​m
+	 */
+	missedIt: string
+	/**
+	 * V​ě​d​ě​l​/​a​ ​j​s​e​m
+	 */
+	gotIt: string
+	/**
+	 * S​k​v​ě​l​á​ ​p​r​á​c​e
+	 */
+	niceWork: string
+	/**
+	 * D​o​b​r​ý​ ​p​o​k​u​s
+	 */
+	goodAttempt: string
+	/**
+	 * V​a​š​e​ ​s​k​ó​r​e​:​ ​{​s​c​o​r​e​|​n​u​m​}​ ​z​ ​{​t​o​t​a​l​|​n​u​m​}​.
+	 * @param {unknown} score
+	 * @param {unknown} total
+	 */
+	scoreSummary: RequiredParams<'score|num' | 'total|num'>
+	/**
+	 * Z​k​u​s​i​t​ ​z​n​o​v​u
+	 */
+	tryAgain: string
 	/**
 	 * P​r​o​c​v​i​č​o​v​á​n​í​ ​s​ ​A​I
 	 */
@@ -2247,6 +2334,10 @@ export type TranslationFunctions = {
 		 */
 		startQuiz: () => LocalizedString
 		/**
+		 * Start
+		 */
+		start: () => LocalizedString
+		/**
 		 * Zatím žádné kvízy
 		 */
 		emptyTitle: () => LocalizedString
@@ -2254,6 +2345,82 @@ export type TranslationFunctions = {
 		 * Tématům zatím nebyly přiřazeny žádné kvízy.
 		 */
 		emptyDescription: () => LocalizedString
+		/**
+		 * Téma
+		 */
+		topicLabel: () => LocalizedString
+		/**
+		 * {count|num} {{otázka|otázky|otázek}}
+		 */
+		questionCount: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * {count|num} {{výběrová otázka|výběrové otázky|výběrových otázek}}
+		 */
+		mcqCount: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * {count|num} {{kartička|kartičky|kartiček}}
+		 */
+		flashcardCount: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * Kvíz nenalezen
+		 */
+		quizNotFoundTitle: () => LocalizedString
+		/**
+		 * Možná byl odstraněn nebo ještě není publikovaný.
+		 */
+		quizNotFoundDescription: () => LocalizedString
+		/**
+		 * Zpět na procvičování
+		 */
+		backToPractice: () => LocalizedString
+		/**
+		 * Otázka {current|num} z {total|num}
+		 */
+		questionProgress: (arg: { current: unknown, total: unknown }) => LocalizedString
+		/**
+		 * Předchozí
+		 */
+		previous: () => LocalizedString
+		/**
+		 * Další
+		 */
+		next: () => LocalizedString
+		/**
+		 * Dokončit
+		 */
+		finish: () => LocalizedString
+		/**
+		 * Ukázat odpověď
+		 */
+		showAnswer: () => LocalizedString
+		/**
+		 * Jak vám to šlo?
+		 */
+		selfRatePrompt: () => LocalizedString
+		/**
+		 * Nevěděl/a jsem
+		 */
+		missedIt: () => LocalizedString
+		/**
+		 * Věděl/a jsem
+		 */
+		gotIt: () => LocalizedString
+		/**
+		 * Skvělá práce
+		 */
+		niceWork: () => LocalizedString
+		/**
+		 * Dobrý pokus
+		 */
+		goodAttempt: () => LocalizedString
+		/**
+		 * Vaše skóre: {score|num} z {total|num}.
+		 */
+		scoreSummary: (arg: { score: unknown, total: unknown }) => LocalizedString
+		/**
+		 * Zkusit znovu
+		 */
+		tryAgain: () => LocalizedString
 		/**
 		 * Procvičování s AI
 		 */

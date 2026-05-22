@@ -5,7 +5,7 @@ interface AnswerRecord {
   questionId: string;
   answerIndex?: number;
   answer?: string;
-  correct: boolean;
+  correct?: boolean;
   revealed: boolean;
 }
 
@@ -16,11 +16,13 @@ interface QuizRunnerState {
   completed: boolean;
 
   start: (quiz: Quiz) => void;
+  replaceQuizContent: (quiz: Quiz) => void;
   reset: () => void;
   next: () => void;
   prev: () => void;
   answerMCQ: (questionId: string, answerIndex: number, correct: boolean) => void;
-  revealFlashcard: (questionId: string, correct: boolean) => void;
+  showFlashcardAnswer: (questionId: string) => void;
+  rateFlashcard: (questionId: string, correct: boolean) => void;
   complete: () => void;
 }
 
@@ -32,6 +34,12 @@ export const useQuizRunnerStore = create<QuizRunnerState>((set, get) => ({
 
   start: (quiz) =>
     set({ quiz, currentIndex: 0, answers: {}, completed: false }),
+
+  replaceQuizContent: (quiz) =>
+    set((state) => ({
+      quiz,
+      currentIndex: Math.min(state.currentIndex, Math.max(quiz.questions.length - 1, 0)),
+    })),
 
   reset: () => set({ quiz: null, currentIndex: 0, answers: {}, completed: false }),
 
@@ -56,11 +64,28 @@ export const useQuizRunnerStore = create<QuizRunnerState>((set, get) => ({
       },
     })),
 
-  revealFlashcard: (questionId, correct) =>
+  showFlashcardAnswer: (questionId) =>
     set((state) => ({
       answers: {
         ...state.answers,
-        [questionId]: { questionId, correct, revealed: true },
+        [questionId]: {
+          ...state.answers[questionId],
+          questionId,
+          revealed: true,
+        },
+      },
+    })),
+
+  rateFlashcard: (questionId, correct) =>
+    set((state) => ({
+      answers: {
+        ...state.answers,
+        [questionId]: {
+          ...state.answers[questionId],
+          questionId,
+          correct,
+          revealed: true,
+        },
       },
     })),
 
@@ -69,6 +94,6 @@ export const useQuizRunnerStore = create<QuizRunnerState>((set, get) => ({
 
 export const selectScore = (s: QuizRunnerState) => {
   const total = s.quiz?.questions.length ?? 0;
-  const score = Object.values(s.answers).filter((a) => a.correct).length;
+  const score = Object.values(s.answers).filter((a) => a.correct === true).length;
   return { score, total };
 };

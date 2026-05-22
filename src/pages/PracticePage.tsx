@@ -11,11 +11,19 @@ import { listQuizzes } from "@/services/practiceApi";
 import { listTopics } from "@/services/topicsApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { useI18nContext } from "@/i18n/i18n-react";
+import { selectLocale, useLocaleStore } from "@/stores/localeStore";
 
 export function Component() {
   const { LL } = useI18nContext();
-  const quizzesQuery = useQuery({ queryKey: queryKeys.quizzes, queryFn: listQuizzes });
-  const topicsQuery = useQuery({ queryKey: queryKeys.topics, queryFn: listTopics });
+  const locale = useLocaleStore(selectLocale);
+  const quizzesQuery = useQuery({
+    queryKey: [...queryKeys.quizzes, locale],
+    queryFn: listQuizzes,
+  });
+  const topicsQuery = useQuery({
+    queryKey: [...queryKeys.topics, locale],
+    queryFn: listTopics,
+  });
 
   const topicById = new Map((topicsQuery.data ?? []).map((t) => [t.id, t]));
 
@@ -62,13 +70,13 @@ export function Component() {
                     </Badge>
                     <Badge variant="outline">
                       <Layers className="h-3 w-3" />
-                      {q.questions.length} {q.questions.length === 1 ? "question" : "questions"}
+                      {LL.practice.questionCount({ count: q.questions.length })}
                     </Badge>
                   </div>
                   <CardTitle>{q.title}</CardTitle>
                   {topic ? (
                     <div className="text-caption-xs text-content-tertiary">
-                      Topic ·{" "}
+                      {LL.practice.topicLabel()} ·{" "}
                       <Link to={`/learn/${topic.slug}`} className="hover:text-primary">
                         {topic.title}
                       </Link>
@@ -78,12 +86,13 @@ export function Component() {
                 <CardContent className="space-y-3">
                   <p className="text-body-md text-content-secondary">{q.description}</p>
                   <div className="text-caption-xs text-content-tertiary">
-                    {counts.mcq} MCQ{counts.mcq === 1 ? "" : "s"} · {counts.fc} flashcard{counts.fc === 1 ? "" : "s"}
+                    {LL.practice.mcqCount({ count: counts.mcq })} ·{" "}
+                    {LL.practice.flashcardCount({ count: counts.fc })}
                   </div>
                   <Button asChild className="w-full">
                     <Link to={`/practice/${q.slug}`}>
                       <Brain className="h-4 w-4" />
-                      Start
+                      {LL.practice.start()}
                     </Link>
                   </Button>
                 </CardContent>

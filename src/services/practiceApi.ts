@@ -68,7 +68,12 @@ export async function recordQuizAttempt(input: {
     // No-op in mock mode; the runner keeps state in Zustand.
     return;
   }
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth.user?.id;
+  if (!userId) throw new Error("You must be signed in to record quiz attempts.");
+
   const { error } = await supabase.from("quiz_attempts").insert({
+    user_id: userId,
     quiz_id: input.quizId,
     answers: input.answers,
     score: input.score,
