@@ -147,6 +147,10 @@ supabase/.branches
 supabase/.temp
 supabase/.env
 
+# Auto-generated single-file bundles posted to the Supabase Management API
+# (regenerate via supabase/.bundled/bundle.ps1)
+supabase/.bundled/*.bundle.ts
+
 # 1dx runtime scratch (generated batch/shell files per service)
 .1dx/
 
