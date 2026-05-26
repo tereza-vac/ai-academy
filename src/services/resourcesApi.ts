@@ -141,24 +141,30 @@ export async function upsertExternalResource(input: ExternalResourceInput): Prom
     return localizeResource(minted);
   }
 
+  // Route through the SECURITY DEFINER RPC so regular users can mint external
+  // resources without needing editor/admin RLS. See migration
+  // 20260101000012_external_resource_rpc.sql for the policy rationale.
+  const { data: newId, error: rpcError } = await supabase.rpc(
+    "upsert_external_resource",
+    {
+      p_url: input.url,
+      p_title: input.title,
+      p_source_name: input.sourceName ?? null,
+      p_kind: input.kind ?? "article",
+      p_summary: input.summary ?? null,
+      p_author: input.author ?? null,
+      p_published_at: input.publishedAt ?? null,
+      p_tags: input.tags ?? [],
+      p_external_id: input.externalId ?? null,
+    },
+  );
+  if (rpcError) throw new Error(rpcError.message);
+  if (!newId) throw new Error("upsert_external_resource returned no id");
+
   const { data, error } = await supabase
     .from("resources")
-    .upsert(
-      {
-        url: input.url,
-        title: input.title,
-        source_name: input.sourceName ?? null,
-        kind: input.kind ?? "article",
-        summary: input.summary ?? null,
-        author: input.author ?? null,
-        published_at: input.publishedAt ?? null,
-        tags: input.tags ?? [],
-        external_id: input.externalId ?? null,
-        enrichment_status: "pending",
-      },
-      { onConflict: "url" },
-    )
     .select(SELECT)
+    .eq("id", newId as string)
     .single();
   if (error) throw new Error(error.message);
   return localizeResource(mapResource(data as ResourceRow));
