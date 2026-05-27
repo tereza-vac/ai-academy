@@ -4,6 +4,7 @@ const pl_nav: NamespaceNavTranslation = {
   homeLink: "Start",
   learnLink: "Nauka",
   mapLink: "Mapa AI",
+  teamLink: "Zespół",
   radarLink: "Radar",
   libraryLink: "Biblioteka",
   practiceLink: "Ćwiczenia",

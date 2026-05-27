@@ -4,6 +4,7 @@ const en_nav: NamespaceNavTranslation = {
   homeLink: "Home",
   learnLink: "Learn",
   mapLink: "AI Map",
+  teamLink: "Team",
   radarLink: "Radar",
   libraryLink: "Library",
   practiceLink: "Practice",

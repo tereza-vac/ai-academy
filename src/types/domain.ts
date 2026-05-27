@@ -234,3 +234,56 @@ export interface ExternalResourceInput {
   tags?: string[];
   externalId?: string | null;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Basecamp integration                                                        */
+/* -------------------------------------------------------------------------- */
+
+export type BasecampManualVisibility = "show" | "hide" | null;
+
+export type BasecampRecordingKind =
+  | "message"
+  | "comment"
+  | "todo"
+  | "todolist"
+  | "schedule_entry"
+  | "document"
+  | "question_answer"
+  | "cloud_file"
+  | "upload"
+  | "vault"
+  | string;
+
+export interface BasecampProject {
+  id: string;
+  basecampId: number;
+  name: string;
+  description: string | null;
+  purpose: string | null;
+  status: string | null;
+  url: string;
+  appUrl: string | null;
+  isAiRelevant: boolean;
+  manualVisibility: BasecampManualVisibility;
+  lastActiveAt: string | null;
+  ingestedAt: string;
+}
+
+export interface BasecampRecording {
+  id: string;
+  projectId: string;
+  kind: BasecampRecordingKind;
+  title: string | null;
+  excerpt: string | null;
+  contentHtml: string | null;
+  authorName: string | null;
+  authorAvatarUrl: string | null;
+  url: string | null;
+  postedAt: string | null;
+  editedAt: string | null;
+}
+
+/** Project + last-N recordings, the shape used by the Team page tiles. */
+export interface BasecampProjectWithActivity extends BasecampProject {
+  recentActivity: BasecampRecording[];
+}

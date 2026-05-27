@@ -7,6 +7,8 @@ projects.
 ## Sections
 
 - **Learn** — a structured AI learning map and topic detail pages.
+- **AI Map** — interactive radial knowledge graph of AI pillars and concepts.
+- **Team** — a synced view of Basecamp projects, focused on the AI-related ones.
 - **Radar** — a feed of AI news, articles, papers and releases.
 - **Library** — saved resources from Radar and Learn, plus personal notes.
 - **Practice** — quizzes and flashcards generated from topics.
@@ -126,6 +128,72 @@ in Supabase mode.
 > Want multi-provider routing like sciobot-next? Swap `createOpenAI(...)` in
 > `supabase/functions/_shared/ai.ts` for `gateway(...)` from `npm:ai@6` and set
 > `AI_GATEWAY_API_KEY`. The `AIEnrichmentService` surface stays identical.
+
+### 4. Basecamp integration (optional)
+
+The **Team** section pulls projects, messages, to-dos, comments and documents
+from Basecamp 4 via the [official 37signals OAuth API](https://github.com/basecamp/bc3-api).
+Without setup the page renders mock data so the UI still works.
+
+Setup steps (run once per environment):
+
+1. **Register a Basecamp integration** at
+   [Launchpad → Integrations](https://launchpad.37signals.com/integrations).
+   - Name: `AI Academy`
+   - Redirect URI: `<supabase-project-url>/functions/v1/basecamp-auth`
+   - Note the **Client ID** and **Client Secret**.
+
+2. **Apply the migrations** (`20260101000017_basecamp_integration.sql` and
+   `20260101000018_basecamp_cron.sql`) and run `supabase/setup-basecamp.sql`
+   in the SQL Editor — it installs the vault helper RPCs the edge functions
+   call.
+
+3. **Set the edge function secrets** so both functions can find their config:
+
+   ```bash
+   supabase secrets set BASECAMP_CLIENT_ID=...
+   supabase secrets set BASECAMP_CLIENT_SECRET=...
+   supabase secrets set BASECAMP_REDIRECT_URI=https://<project>.supabase.co/functions/v1/basecamp-auth
+   supabase secrets set BASECAMP_USER_AGENT="AI Academy (your-email@scio.cz)"
+   supabase functions deploy basecamp-auth basecamp-sync
+   ```
+
+4. **Authorise the integration** by opening (in a browser, signed in to
+   Basecamp as the admin whose projects you want to surface):
+
+   `https://<project>.supabase.co/functions/v1/basecamp-auth?action=start`
+
+   You'll be redirected to Launchpad, click *Authorise*, and bounced back to
+   a success page. The refresh token is encrypted into Supabase Vault under
+   the secret name `basecamp_refresh_token` — never in client code.
+
+5. **Trigger the first sync** (the hourly cron at `:37` will do this on its
+   own next tick):
+
+   ```bash
+   curl -X POST -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
+     https://<project>.supabase.co/functions/v1/basecamp-sync
+   ```
+
+What gets synced:
+
+- Active and archived projects → `public.basecamp_projects`
+  (with an `is_ai_relevant` flag computed against the `ai_keywords` column
+  on `basecamp_workspaces`).
+- Recent recordings (Message, Comment, Todo, Todolist, Schedule::Entry,
+  Document, Question::Answer) → `public.basecamp_recordings`.
+- Bodies are stored as Basecamp's HTML; the frontend currently shows only
+  the auto-extracted excerpt + a link to the source. Full HTML rendering
+  is one render component away when we want it.
+
+Tuning:
+
+- Edit the `ai_keywords` array on `basecamp_workspaces` to broaden or narrow
+  what counts as AI-related.
+- Editors can flip a project's `manual_visibility` (`'show'`/`'hide'`) via
+  the `set_basecamp_project_visibility` RPC to override the keyword filter.
+- Increase `BASECAMP_RECORDINGS_MAX_PAGES` (default `5` × ~15 items per
+  page) if you want deeper history. Mind the 50 req / 10 s rate limit.
 
 ## i18n & localization
 

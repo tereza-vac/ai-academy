@@ -5,6 +5,8 @@
  * IDs are stable strings (not UUIDs) so they're easy to read in URLs.
  */
 import type {
+  BasecampProject,
+  BasecampRecording,
   BuildLabItem,
   Note,
   PaperHit,
@@ -647,5 +649,177 @@ export const mockResourceBlocks: ContentBlock[] = [
       ],
     },
     textHash: "mock-hash-6",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Basecamp integration                                                        */
+/* -------------------------------------------------------------------------- */
+// Modeled after the screenshot the user shared: two AI-tagged projects sit
+// alongside a few non-AI ones so the "AI only" filter has something to do.
+
+const _bcDay = (offsetDays: number) =>
+  new Date(Date.now() - offsetDays * 24 * 60 * 60 * 1000).toISOString();
+
+export const mockBasecampProjects: BasecampProject[] = [
+  {
+    id: "bc-project-ai-grammar",
+    basecampId: 41001001,
+    name: "Umělá inteligence, jak s ní žít — AI gramotnost",
+    description:
+      "*** Jak pro svět s AI připravovat děti. *** Obavy, rizika a strachy kolem AI a jak s nimi pracovat ve školách.",
+    purpose: "topic",
+    status: "active",
+    url: "https://3.basecamp.com/4111111/projects/41001001",
+    appUrl: "https://3.basecamp.com/4111111/buckets/41001001",
+    isAiRelevant: true,
+    manualVisibility: null,
+    lastActiveAt: _bcDay(0.5),
+    ingestedAt: _bcDay(0),
+  },
+  {
+    id: "bc-project-ai-work",
+    basecampId: 41001002,
+    name: "Umělá inteligence AI a práce s ní",
+    description:
+      "Toto je místo pro všechny, kdo chtějí prakticky používat AI v denní práci. Sdílíme tipy, prompty a postřehy z praxe.",
+    purpose: "topic",
+    status: "active",
+    url: "https://3.basecamp.com/4111111/projects/41001002",
+    appUrl: "https://3.basecamp.com/4111111/buckets/41001002",
+    isAiRelevant: true,
+    manualVisibility: null,
+    lastActiveAt: _bcDay(1.1),
+    ingestedAt: _bcDay(0),
+  },
+  {
+    id: "bc-project-sciopolis",
+    basecampId: 41001003,
+    name: "ScioPolis nepracovní",
+    description:
+      "Toto je místo pro cokoli nepracovního. Hledáte parťáky na běh, výlet, kafe nebo lyže? Sem s tím.",
+    purpose: "topic",
+    status: "active",
+    url: "https://3.basecamp.com/4111111/projects/41001003",
+    appUrl: "https://3.basecamp.com/4111111/buckets/41001003",
+    isAiRelevant: false,
+    manualVisibility: null,
+    lastActiveAt: _bcDay(0.3),
+    ingestedAt: _bcDay(0),
+  },
+  {
+    id: "bc-project-studia",
+    basecampId: 41001004,
+    name: "Studia",
+    description:
+      "Hlavní komunikační kanál Studií pro zápisy z porad, informace o BR a další provozní věci.",
+    purpose: "topic",
+    status: "active",
+    url: "https://3.basecamp.com/4111111/projects/41001004",
+    appUrl: "https://3.basecamp.com/4111111/buckets/41001004",
+    isAiRelevant: false,
+    manualVisibility: null,
+    lastActiveAt: _bcDay(2.0),
+    ingestedAt: _bcDay(0),
+  },
+];
+
+export const mockBasecampRecordings: BasecampRecording[] = [
+  {
+    id: "bc-rec-1",
+    projectId: "bc-project-ai-work",
+    kind: "message",
+    title: "Týdenní AI tipy — týden 22",
+    excerpt:
+      "Pět nejzajímavějších promptů z minulého týdne, plus krátký návod, jak je upravit pro vaši doménu.",
+    contentHtml: null,
+    authorName: "Linda F.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001002/messages/9001",
+    postedAt: _bcDay(0.5),
+    editedAt: _bcDay(0.5),
+  },
+  {
+    id: "bc-rec-2",
+    projectId: "bc-project-ai-work",
+    kind: "comment",
+    title: null,
+    excerpt:
+      "Souhlas, ten poslední prompt na shrnutí mailů funguje skvěle i v češtině. Přihazuju jednu úpravu pro Outlook.",
+    contentHtml: null,
+    authorName: "Jan K.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001002/comments/9002",
+    postedAt: _bcDay(0.7),
+    editedAt: _bcDay(0.7),
+  },
+  {
+    id: "bc-rec-3",
+    projectId: "bc-project-ai-work",
+    kind: "todo",
+    title: "Zveřejnit playbook „AI pro psaní e-mailů“",
+    excerpt: "Doplnit screenshoty a publikovat v Knihovně do pátku.",
+    contentHtml: null,
+    authorName: "Tereza H.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001002/todos/9003",
+    postedAt: _bcDay(1.5),
+    editedAt: _bcDay(1.5),
+  },
+  {
+    id: "bc-rec-4",
+    projectId: "bc-project-ai-grammar",
+    kind: "message",
+    title: "Pozvánka — Outdoor tábor a Teen Outdoor",
+    excerpt:
+      "Workshop „Jak učit AI gramotnost na ZŠ“. Termín, cílovka, pomůcky a krátký draft osnovy.",
+    contentHtml: null,
+    authorName: "Tereza H.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001001/messages/9004",
+    postedAt: _bcDay(0.45),
+    editedAt: _bcDay(0.45),
+  },
+  {
+    id: "bc-rec-5",
+    projectId: "bc-project-ai-grammar",
+    kind: "todo",
+    title: "Připravit pracovní list o halucinacích",
+    excerpt:
+      "Pro 8.–9. třídu, 45 min, s cvičením „rozpoznej halucinaci v odpovědi modelu“.",
+    contentHtml: null,
+    authorName: "Michael L.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001001/todos/9005",
+    postedAt: _bcDay(2.2),
+    editedAt: _bcDay(2.2),
+  },
+  {
+    id: "bc-rec-6",
+    projectId: "bc-project-sciopolis",
+    kind: "message",
+    title: "Páteční oběd — kdo jde?",
+    excerpt:
+      "Tradiční páteční výpadek do bistra na rohu. Sraz v 12:30 ve foyer.",
+    contentHtml: null,
+    authorName: "Zuzana H.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001003/messages/9006",
+    postedAt: _bcDay(0.35),
+    editedAt: _bcDay(0.35),
+  },
+  {
+    id: "bc-rec-7",
+    projectId: "bc-project-studia",
+    kind: "document",
+    title: "Zápis z porady — 26. 5.",
+    excerpt:
+      "Hlavní body: rozpočet H2, plán pilotů, AI v testování. Plné znění v dokumentu.",
+    contentHtml: null,
+    authorName: "Michael L.",
+    authorAvatarUrl: null,
+    url: "https://3.basecamp.com/4111111/buckets/41001004/documents/9007",
+    postedAt: _bcDay(2.0),
+    editedAt: _bcDay(2.0),
   },
 ];

@@ -6,6 +6,7 @@ import {
   Wrench,
   LayoutDashboard,
   Network,
+  Users,
 } from "lucide-react";
 import type { TranslationFunctions } from "@/i18n/i18n-types";
 
@@ -20,6 +21,7 @@ export const sidebarNavigation: NavItem[] = [
   { labelKey: "homeLink",     href: "/",          icon: LayoutDashboard },
   { labelKey: "learnLink",    href: "/learn",     icon: BookOpen },
   { labelKey: "mapLink",      href: "/map",       icon: Network },
+  { labelKey: "teamLink",     href: "/team",      icon: Users },
   { labelKey: "radarLink",    href: "/radar",     icon: RadarIcon },
   { labelKey: "libraryLink",  href: "/library",   icon: Library },
   { labelKey: "practiceLink", href: "/practice",  icon: Brain },

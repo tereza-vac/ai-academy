@@ -10,6 +10,7 @@ const cs_nav: BaseTranslation = {
   homeLink: "Domů",
   learnLink: "Učení",
   mapLink: "Mapa AI",
+  teamLink: "Tým",
   radarLink: "Radar",
   libraryLink: "Knihovna",
   practiceLink: "Procvičování",

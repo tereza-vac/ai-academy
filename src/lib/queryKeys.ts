@@ -30,4 +30,10 @@ export const queryKeys = {
 
   buildLab: (kind?: string) =>
     kind ? (["build-lab", { kind }] as const) : (["build-lab"] as const),
+
+  basecampProjects: (opts?: { aiOnly?: boolean }) =>
+    opts?.aiOnly ? (["basecamp", "projects", { aiOnly: true }] as const) : (["basecamp", "projects"] as const),
+  basecampActivity: (opts?: { aiOnly?: boolean; limit?: number }) =>
+    opts ? (["basecamp", "activity", opts] as const) : (["basecamp", "activity"] as const),
+  basecampWorkspace: ["basecamp", "workspace"] as const,
 } as const;

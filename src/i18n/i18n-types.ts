@@ -1208,6 +1208,10 @@ export type NamespaceNavTranslation = {
 	 */
 	mapLink: string
 	/**
+	 * T​ý​m
+	 */
+	teamLink: string
+	/**
 	 * R​a​d​a​r
 	 */
 	radarLink: string
@@ -3067,6 +3071,10 @@ export type TranslationFunctions = {
 		 * Mapa AI
 		 */
 		mapLink: () => LocalizedString
+		/**
+		 * Tým
+		 */
+		teamLink: () => LocalizedString
 		/**
 		 * Radar
 		 */

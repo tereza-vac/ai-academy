@@ -60,6 +60,12 @@ OPENAI_API_KEY = "env(OPENAI_API_KEY)"
 RSS_USER_AGENT = "env(RSS_USER_AGENT)"
 PAPERS_SEARCH_USER_AGENT = "env(PAPERS_SEARCH_USER_AGENT)"
 UNPAYWALL_EMAIL = "env(UNPAYWALL_EMAIL)"
+BASECAMP_CLIENT_ID = "env(BASECAMP_CLIENT_ID)"
+BASECAMP_CLIENT_SECRET = "env(BASECAMP_CLIENT_SECRET)"
+BASECAMP_REDIRECT_URI = "env(BASECAMP_REDIRECT_URI)"
+BASECAMP_USER_AGENT = "env(BASECAMP_USER_AGENT)"
+BASECAMP_VAULT_SECRET_NAME = "env(BASECAMP_VAULT_SECRET_NAME)"
+BASECAMP_RECORDINGS_MAX_PAGES = "env(BASECAMP_RECORDINGS_MAX_PAGES)"
 
 # Public endpoints (no auth required) — fine for a small internal MVP.
 [functions.radar-ingest]
@@ -83,3 +89,14 @@ verify_jwt = true
 
 [functions.resource-translate]
 verify_jwt = true
+
+# Basecamp OAuth landing URL — must be reachable without an Academy session
+# (the admin starts the OAuth dance signed-out of Supabase).
+[functions.basecamp-auth]
+verify_jwt = false
+
+# Service-role-only sync: the cron trigger and any manual curl call already
+# attach the service role key, so JWT verification stays off here too. RLS on
+# the underlying tables enforces who can read the result.
+[functions.basecamp-sync]
+verify_jwt = false
