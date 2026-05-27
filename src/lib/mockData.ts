@@ -15,6 +15,10 @@ import type {
   Topic,
   Track,
 } from "@/types/domain";
+import type {
+  ContentBlock,
+  ResourceContent,
+} from "@/types/blocks";
 
 const id = (slug: string) => slug;
 
@@ -190,7 +194,7 @@ export const mockResources: Resource[] = [
     summary: "Technical report describing GPT-4's capabilities and limitations.",
     author: "OpenAI", publishedAt: "2023-03-14T00:00:00Z", imageUrl: null,
     tags: ["llm", "gpt-4", "foundations"], topicIds: [id("how-llms-work")],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
   {
     id: id("res-claude-3"), url: "https://www.anthropic.com/news/claude-3-family",
@@ -198,7 +202,7 @@ export const mockResources: Resource[] = [
     summary: "Announcement of Claude 3 Haiku, Sonnet and Opus, with benchmarks and use-cases.",
     author: "Anthropic", publishedAt: "2024-03-04T00:00:00Z", imageUrl: null,
     tags: ["claude", "anthropic", "models"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
   {
     id: id("res-react"), url: "https://arxiv.org/abs/2210.03629",
@@ -208,7 +212,7 @@ export const mockResources: Resource[] = [
     author: "Yao et al.", publishedAt: "2022-10-06T00:00:00Z", imageUrl: null,
     tags: ["agents", "react", "tools"],
     topicIds: [id("tools-and-function-calling"), id("multi-step-agents")],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
   {
     id: id("res-cursor-agent"), url: "https://docs.cursor.com/agent",
@@ -216,7 +220,7 @@ export const mockResources: Resource[] = [
     summary: "How the Cursor agent works: tools, rules, modes and best practices.",
     author: "Cursor", publishedAt: "2025-01-15T00:00:00Z", imageUrl: null,
     tags: ["cursor", "agents", "docs"], topicIds: [id("cursor-day-one")],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
   {
     id: id("res-supabase-ai"), url: "https://supabase.com/docs/guides/ai",
@@ -225,7 +229,7 @@ export const mockResources: Resource[] = [
     author: "Supabase", publishedAt: "2024-08-01T00:00:00Z", imageUrl: null,
     tags: ["pgvector", "supabase", "rag"],
     topicIds: [id("rag-in-an-hour"), id("embeddings-101")],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
   {
     id: id("res-evals"), url: "https://hamel.dev/blog/posts/evals/",
@@ -233,7 +237,7 @@ export const mockResources: Resource[] = [
     summary: "A pragmatic case for building evals before optimising prompts.",
     author: "Hamel Husain", publishedAt: "2024-03-21T00:00:00Z", imageUrl: null,
     tags: ["evals", "quality", "blog"], topicIds: [id("evals-that-matter")],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
   },
 ];
 
@@ -247,7 +251,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "Original Transformer paper. The foundation of modern LLMs.",
     author: "Vaswani et al.", publishedAt: "2017-06-12T00:00:00Z", imageUrl: null,
     tags: ["transformer", "foundations", "attention"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:1706.03762",
     isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 1,
   },
@@ -258,7 +262,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "OpenAI scaling laws: how model performance scales with data, params and compute.",
     author: "Kaplan et al.", publishedAt: "2020-01-23T00:00:00Z", imageUrl: null,
     tags: ["scaling", "openai", "foundations"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:2001.08361",
     isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 2,
   },
@@ -269,7 +273,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "DeepMind shows most LLMs were data-undertrained for their compute budget.",
     author: "Hoffmann et al.", publishedAt: "2022-03-29T00:00:00Z", imageUrl: null,
     tags: ["scaling", "deepmind", "training"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:2203.15556",
     isCanonical: true, canonicalCategory: "foundations", canonicalPosition: 3,
   },
@@ -281,7 +285,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "The paper behind ChatGPT: RLHF that taught GPT-3 to follow instructions.",
     author: "Ouyang et al.", publishedAt: "2022-03-04T00:00:00Z", imageUrl: null,
     tags: ["rlhf", "alignment", "openai"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:2203.02155",
     isCanonical: true, canonicalCategory: "alignment", canonicalPosition: 1,
   },
@@ -292,7 +296,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "Prompts with intermediate reasoning steps improve multi-step reasoning in LLMs.",
     author: "Wei et al.", publishedAt: "2022-01-28T00:00:00Z", imageUrl: null,
     tags: ["prompting", "reasoning", "cot"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:2201.11903",
     isCanonical: true, canonicalCategory: "prompting", canonicalPosition: 1,
   },
@@ -303,7 +307,7 @@ const mockCanonicalResources: Resource[] = [
     summary: "The original RAG paper: combine retrieve + generate for knowledge-intensive tasks.",
     author: "Lewis et al.", publishedAt: "2020-05-22T00:00:00Z", imageUrl: null,
     tags: ["rag", "retrieval", "nlp"], topicIds: [],
-    enrichmentStatus: "manual",
+    enrichmentStatus: "manual", availability: "metadata_only", sourceLang: "en",
     externalId: "arXiv:2005.11401",
     isCanonical: true, canonicalCategory: "rag", canonicalPosition: 1,
   },
@@ -533,3 +537,115 @@ Canary → broad rollout.`,
 // Library + notes are user-scoped; the mock implementation keeps these in-memory.
 export const mockSavedItems: SavedItem[] = [];
 export const mockNotes: Note[] = [];
+
+// ---------------------------------------------------------------------------
+// Internal reader fixtures
+//
+// One canonical paper gets a fully-imported block list so the reader page can
+// be opened in mock mode end-to-end. The rest stay at `metadata_only` (their
+// default) so cards show only [Save] [Original].
+// ---------------------------------------------------------------------------
+const _attentionId = id("res-attention-is-all-you-need");
+
+// Bump the canonical Attention paper to full_text_api so its card surfaces
+// the "Read in AI Academy" button in mock mode.
+{
+  const r = mockResources.find((x) => x.id === _attentionId);
+  if (r) {
+    r.availability = "full_text_api";
+    r.sourceLang = "en";
+  }
+}
+
+export const mockResourceContents: ResourceContent[] = [
+  {
+    resourceId: _attentionId,
+    sourceUrl: "https://ar5iv.org/abs/1706.03762",
+    sourceLang: "en",
+    license: "arxiv-nonexclusive",
+    importer: "arxiv-ar5iv",
+    importerVersion: 1,
+    wordCount: 412,
+    hasEquations: true,
+    hasTables: false,
+    lastImportedAt: "2026-05-20T10:00:00Z",
+    rawMeta: { arxivId: "1706.03762" },
+  },
+];
+
+export const mockResourceBlocks: ContentBlock[] = [
+  {
+    id: "mock-block-1",
+    resourceId: _attentionId,
+    blockUid: "h1-1",
+    position: 0,
+    type: "heading",
+    payload: { type: "heading", level: 1, text: "Attention Is All You Need" },
+    textHash: "mock-hash-1",
+  },
+  {
+    id: "mock-block-2",
+    resourceId: _attentionId,
+    blockUid: "p-abstract",
+    position: 1,
+    type: "paragraph",
+    payload: {
+      type: "paragraph",
+      text:
+        "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.",
+    },
+    textHash: "mock-hash-2",
+  },
+  {
+    id: "mock-block-3",
+    resourceId: _attentionId,
+    blockUid: "h2-1",
+    position: 2,
+    type: "heading",
+    payload: { type: "heading", level: 2, text: "Scaled dot-product attention" },
+    textHash: "mock-hash-3",
+  },
+  {
+    id: "mock-block-4",
+    resourceId: _attentionId,
+    blockUid: "eq-1",
+    position: 3,
+    type: "equation",
+    payload: {
+      type: "equation",
+      tex: "\\text{Attention}(Q, K, V) = \\text{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right) V",
+      display: true,
+    },
+    textHash: "mock-hash-4",
+  },
+  {
+    id: "mock-block-5",
+    resourceId: _attentionId,
+    blockUid: "p-attn-explanation",
+    position: 4,
+    type: "paragraph",
+    payload: {
+      type: "paragraph",
+      text:
+        "The two most commonly used attention functions are additive attention and dot-product (multiplicative) attention. Dot-product attention is much faster and more space-efficient in practice, since it can be implemented using highly optimized matrix multiplication code.",
+    },
+    textHash: "mock-hash-5",
+  },
+  {
+    id: "mock-block-6",
+    resourceId: _attentionId,
+    blockUid: "list-1",
+    position: 5,
+    type: "list",
+    payload: {
+      type: "list",
+      ordered: false,
+      items: [
+        "Multi-head attention lets the model jointly attend to information from different representation subspaces.",
+        "Positional encodings add information about token order, since the model has no recurrence.",
+        "The Transformer trains significantly faster than recurrent or convolutional architectures.",
+      ],
+    },
+    textHash: "mock-hash-6",
+  },
+];

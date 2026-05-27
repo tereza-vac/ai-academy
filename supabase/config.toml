@@ -59,6 +59,7 @@ deno_version = 2
 OPENAI_API_KEY = "env(OPENAI_API_KEY)"
 RSS_USER_AGENT = "env(RSS_USER_AGENT)"
 PAPERS_SEARCH_USER_AGENT = "env(PAPERS_SEARCH_USER_AGENT)"
+UNPAYWALL_EMAIL = "env(UNPAYWALL_EMAIL)"
 
 # Public endpoints (no auth required) — fine for a small internal MVP.
 [functions.radar-ingest]
@@ -73,3 +74,12 @@ verify_jwt = false
 # you add a per-user quota in code.
 [functions.papers-search]
 verify_jwt = false
+
+# Internal reader content pipeline. Both functions require a signed-in caller
+# (verify_jwt = true) — they call SECURITY DEFINER RPCs and we don't want to
+# leak free imports / translations to anonymous traffic.
+[functions.resource-import]
+verify_jwt = true
+
+[functions.resource-translate]
+verify_jwt = true

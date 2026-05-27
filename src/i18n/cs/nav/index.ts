@@ -9,6 +9,7 @@ import type { BaseTranslation } from "../../i18n-types";
 const cs_nav: BaseTranslation = {
   homeLink: "Domů",
   learnLink: "Učení",
+  mapLink: "Mapa AI",
   radarLink: "Radar",
   libraryLink: "Knihovna",
   practiceLink: "Procvičování",

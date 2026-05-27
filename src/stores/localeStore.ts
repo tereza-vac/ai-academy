@@ -23,6 +23,7 @@ const ALL_NAMESPACES: Namespaces[] = [
   "paperSearch",
   "practice",
   "radar",
+  "reader",
   "userMenu",
 ];
 

@@ -3,6 +3,7 @@ import type { NamespaceNavTranslation } from "../../i18n-types";
 const pl_nav: NamespaceNavTranslation = {
   homeLink: "Start",
   learnLink: "Nauka",
+  mapLink: "Mapa AI",
   radarLink: "Radar",
   libraryLink: "Biblioteka",
   practiceLink: "Ćwiczenia",

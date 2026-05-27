@@ -2,7 +2,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { isMock } from "@/lib/dataMode";
 import { localizeResource } from "@/lib/contentLocalization";
 import { mockResources } from "@/lib/mockData";
-import type { ExternalResourceInput, Resource, ResourceKind } from "@/types/domain";
+import type {
+  ExternalResourceInput,
+  Resource,
+  ResourceAvailability,
+  ResourceKind,
+} from "@/types/domain";
 
 interface ResourceRow {
   id: string;
@@ -23,6 +28,8 @@ interface ResourceRow {
   is_canonical?: boolean | null;
   canonical_category?: string | null;
   canonical_position?: number | null;
+  availability?: ResourceAvailability | null;
+  source_lang?: string | null;
 }
 
 function mapResource(row: ResourceRow): Resource {
@@ -39,11 +46,13 @@ function mapResource(row: ResourceRow): Resource {
     isCanonical: Boolean(row.is_canonical),
     canonicalCategory: row.canonical_category ?? null,
     canonicalPosition: row.canonical_position ?? null,
+    availability: row.availability ?? "metadata_only",
+    sourceLang: row.source_lang ?? null,
   };
 }
 
 const SELECT =
-  "id,url,title,title_key,source_name,kind,summary,summary_key,author,published_at,image_url,tags,topic_ids,enrichment_status,external_id,is_canonical,canonical_category,canonical_position";
+  "id,url,title,title_key,source_name,kind,summary,summary_key,author,published_at,image_url,tags,topic_ids,enrichment_status,external_id,is_canonical,canonical_category,canonical_position,availability,source_lang";
 
 export async function listResources(opts?: { topicId?: string; limit?: number }): Promise<Resource[]> {
   if (isMock) {
@@ -136,6 +145,10 @@ export async function upsertExternalResource(input: ExternalResourceInput): Prom
       isCanonical: false,
       canonicalCategory: null,
       canonicalPosition: null,
+      // In mock mode we don't run the import pipeline; cards will show
+      // only [Save] [Original] until a real Supabase project + edge fn lands.
+      availability: "metadata_only",
+      sourceLang: null,
     };
     mockResources.push(minted);
     return localizeResource(minted);

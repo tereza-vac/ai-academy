@@ -19,6 +19,12 @@ export const queryKeys = {
   notes: ["library", "notes"] as const,
   paperSearch: (input: PapersSearchInput) => ["paperSearch", input] as const,
 
+  /** A specific resource by id — used by the reader. */
+  resourceById: (id: string) => ["resources", "by-id", id] as const,
+  /** Resolved reader content (manifest + ordered blocks + translation for locale). */
+  resourceContent: (resourceId: string, locale: string) =>
+    ["reader", resourceId, locale] as const,
+
   quizzes: ["practice", "quizzes"] as const,
   quizBySlug: (slug: string) => ["practice", "quizzes", "by-slug", slug] as const,
 

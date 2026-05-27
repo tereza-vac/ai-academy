@@ -25,6 +25,7 @@ const localeNamespaceLoaders = {
 		paperSearch: () => import('./cs/paperSearch'),
 		practice: () => import('./cs/practice'),
 		radar: () => import('./cs/radar'),
+		reader: () => import('./cs/reader'),
 		userMenu: () => import('./cs/userMenu')
 	},
 	en: {
@@ -39,6 +40,7 @@ const localeNamespaceLoaders = {
 		paperSearch: () => import('./en/paperSearch'),
 		practice: () => import('./en/practice'),
 		radar: () => import('./en/radar'),
+		reader: () => import('./en/reader'),
 		userMenu: () => import('./en/userMenu')
 	},
 	pl: {
@@ -53,6 +55,7 @@ const localeNamespaceLoaders = {
 		paperSearch: () => import('./pl/paperSearch'),
 		practice: () => import('./pl/practice'),
 		radar: () => import('./pl/radar'),
+		reader: () => import('./pl/reader'),
 		userMenu: () => import('./pl/userMenu')
 	},
 	sk: {
@@ -67,6 +70,7 @@ const localeNamespaceLoaders = {
 		paperSearch: () => import('./sk/paperSearch'),
 		practice: () => import('./sk/practice'),
 		radar: () => import('./sk/radar'),
+		reader: () => import('./sk/reader'),
 		userMenu: () => import('./sk/userMenu')
 	}
 }

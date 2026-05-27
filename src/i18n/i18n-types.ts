@@ -26,6 +26,7 @@ export type Translations = RootTranslation &
 	paperSearch: NamespacePaperSearchTranslation,
 	practice: NamespacePracticeTranslation,
 	radar: NamespaceRadarTranslation,
+	reader: NamespaceReaderTranslation,
 	userMenu: NamespaceUserMenuTranslation
 }
 
@@ -1203,6 +1204,10 @@ export type NamespaceNavTranslation = {
 	 */
 	learnLink: string
 	/**
+	 * M​a​p​a​ ​A​I
+	 */
+	mapLink: string
+	/**
 	 * R​a​d​a​r
 	 */
 	radarLink: string
@@ -1617,6 +1622,116 @@ export type NamespaceRadarTranslation = {
 	openExternal: string
 }
 
+export type NamespaceReaderTranslation = {
+	/**
+	 * Č​t​e​n​á​ř
+	 */
+	eyebrow: string
+	/**
+	 * Č​í​s​t​ ​v​ ​A​I​ ​A​c​a​d​e​m​y
+	 */
+	openInternal: string
+	/**
+	 * P​ů​v​o​d​n​í​ ​z​d​r​o​j
+	 */
+	openOriginal: string
+	/**
+	 * O​t​e​v​ř​í​t​ ​p​ů​v​o​d​n​í​ ​z​d​r​o​j​ ​v​ ​n​o​v​é​m​ ​o​k​n​ě
+	 */
+	openOriginalAria: string
+	/**
+	 * Z​p​ě​t
+	 */
+	back: string
+	/**
+	 * Z​d​r​o​j​:​ ​{​n​a​m​e​}
+	 * @param {unknown} name
+	 */
+	sourceLabel: RequiredParams<'name'>
+	/**
+	 * P​u​b​l​i​k​o​v​á​n​o​ ​{​d​a​t​e​}
+	 * @param {unknown} date
+	 */
+	publishedLabel: RequiredParams<'date'>
+	/**
+	 * A​u​t​o​r​:​ ​{​a​u​t​h​o​r​}
+	 * @param {unknown} author
+	 */
+	authorLabel: RequiredParams<'author'>
+	/**
+	 * L​i​c​e​n​c​e​:​ ​{​l​i​c​e​n​s​e​}
+	 * @param {unknown} license
+	 */
+	licenseLabel: RequiredParams<'license'>
+	/**
+	 * P​ř​e​l​o​ž​i​t​ ​d​o​ ​{​l​o​c​a​l​e​}
+	 * @param {unknown} locale
+	 */
+	translateAction: RequiredParams<'locale'>
+	/**
+	 * P​ř​e​k​l​á​d​á​m​…
+	 */
+	translatingNow: string
+	/**
+	 * P​ř​e​k​l​a​d​ ​s​e​ ​n​e​z​d​a​ř​i​l
+	 */
+	translateFailed: string
+	/**
+	 * P​ř​e​l​o​ž​i​l​ ​{​p​r​o​v​i​d​e​r​}
+	 * @param {unknown} provider
+	 */
+	translatedBy: RequiredParams<'provider'>
+	/**
+	 * P​ř​e​l​o​ž​e​n​o​ ​z​ ​j​a​z​y​k​a​ ​{​s​o​u​r​c​e​L​a​n​g​}
+	 * @param {unknown} sourceLang
+	 */
+	translatedFromSource: RequiredParams<'sourceLang'>
+	/**
+	 * Z​o​b​r​a​z​i​t​ ​p​ů​v​o​d​n​í​ ​j​a​z​y​k
+	 */
+	showSource: string
+	/**
+	 * N​a​č​í​t​á​m​ ​č​l​á​n​e​k​…
+	 */
+	loading: string
+	/**
+	 * T​e​n​t​o​ ​č​l​á​n​e​k​ ​j​e​š​t​ě​ ​n​e​n​í​ ​p​ř​i​p​r​a​v​e​n​ ​k​e​ ​č​t​e​n​í
+	 */
+	notReadyTitle: string
+	/**
+	 * P​r​a​c​u​j​e​m​e​ ​n​a​ ​j​e​h​o​ ​i​m​p​o​r​t​u​.​ ​M​e​z​i​t​í​m​ ​m​ů​ž​e​t​e​ ​o​t​e​v​ř​í​t​ ​p​ů​v​o​d​n​í​ ​z​d​r​o​j​.
+	 */
+	notReadyDescription: string
+	/**
+	 * N​e​p​o​d​a​ř​i​l​o​ ​s​e​ ​i​m​p​o​r​t​o​v​a​t​ ​č​l​á​n​e​k
+	 */
+	importFailedTitle: string
+	/**
+	 * Z​k​u​s​í​m​e​ ​t​o​ ​z​n​o​v​u​ ​p​o​z​d​ě​j​i​.​ ​P​ů​v​o​d​n​í​ ​z​d​r​o​j​ ​j​e​ ​s​t​á​l​e​ ​d​o​s​t​u​p​n​ý​.
+	 */
+	importFailedDescription: string
+	/**
+	 * Č​l​á​n​e​k​ ​n​e​b​y​l​ ​n​a​l​e​z​e​n
+	 */
+	notFoundTitle: string
+	/**
+	 * Z​d​r​o​j​ ​m​o​h​l​ ​b​ý​t​ ​o​d​s​t​r​a​n​ě​n​.
+	 */
+	notFoundDescription: string
+	/**
+	 * P​o​u​z​e​ ​m​e​t​a​d​a​t​a
+	 */
+	availabilityMetadataOnly: string
+	/**
+	 * P​o​u​z​e​ ​ú​r​y​v​e​k
+	 */
+	availabilityExcerptOnly: string
+	/**
+	 * P​l​n​ý​ ​t​e​x​t​ ​n​e​n​í​ ​d​o​s​t​u​p​n​ý
+	 */
+	availabilityUnavailable: string
+}
+
 export type NamespaceUserMenuTranslation = {
 	/**
 	 * N​a​b​í​d​k​a​ ​u​ž​i​v​a​t​e​l​e
@@ -1708,6 +1823,7 @@ export type Namespaces =
 	| 'paperSearch'
 	| 'practice'
 	| 'radar'
+	| 'reader'
 	| 'userMenu'
 
 type DisallowNamespaces = {
@@ -1776,6 +1892,12 @@ type DisallowNamespaces = {
 	 * you need to use the `./radar/index.ts` file instead
 	 */
 	radar?: "[typesafe-i18n] reserved for 'radar'-namespace. You need to use the `./radar/index.ts` file instead."
+
+	/**
+	 * reserved for 'reader'-namespace\
+	 * you need to use the `./reader/index.ts` file instead
+	 */
+	reader?: "[typesafe-i18n] reserved for 'reader'-namespace. You need to use the `./reader/index.ts` file instead."
 
 	/**
 	 * reserved for 'userMenu'-namespace\
@@ -2942,6 +3064,10 @@ export type TranslationFunctions = {
 		 */
 		learnLink: () => LocalizedString
 		/**
+		 * Mapa AI
+		 */
+		mapLink: () => LocalizedString
+		/**
 		 * Radar
 		 */
 		radarLink: () => LocalizedString
@@ -3335,6 +3461,108 @@ export type TranslationFunctions = {
 		 * Otevřít zdroj
 		 */
 		openExternal: () => LocalizedString
+	}
+	reader: {
+		/**
+		 * Čtenář
+		 */
+		eyebrow: () => LocalizedString
+		/**
+		 * Číst v AI Academy
+		 */
+		openInternal: () => LocalizedString
+		/**
+		 * Původní zdroj
+		 */
+		openOriginal: () => LocalizedString
+		/**
+		 * Otevřít původní zdroj v novém okně
+		 */
+		openOriginalAria: () => LocalizedString
+		/**
+		 * Zpět
+		 */
+		back: () => LocalizedString
+		/**
+		 * Zdroj: {name}
+		 */
+		sourceLabel: (arg: { name: unknown }) => LocalizedString
+		/**
+		 * Publikováno {date}
+		 */
+		publishedLabel: (arg: { date: unknown }) => LocalizedString
+		/**
+		 * Autor: {author}
+		 */
+		authorLabel: (arg: { author: unknown }) => LocalizedString
+		/**
+		 * Licence: {license}
+		 */
+		licenseLabel: (arg: { license: unknown }) => LocalizedString
+		/**
+		 * Přeložit do {locale}
+		 */
+		translateAction: (arg: { locale: unknown }) => LocalizedString
+		/**
+		 * Překládám…
+		 */
+		translatingNow: () => LocalizedString
+		/**
+		 * Překlad se nezdařil
+		 */
+		translateFailed: () => LocalizedString
+		/**
+		 * Přeložil {provider}
+		 */
+		translatedBy: (arg: { provider: unknown }) => LocalizedString
+		/**
+		 * Přeloženo z jazyka {sourceLang}
+		 */
+		translatedFromSource: (arg: { sourceLang: unknown }) => LocalizedString
+		/**
+		 * Zobrazit původní jazyk
+		 */
+		showSource: () => LocalizedString
+		/**
+		 * Načítám článek…
+		 */
+		loading: () => LocalizedString
+		/**
+		 * Tento článek ještě není připraven ke čtení
+		 */
+		notReadyTitle: () => LocalizedString
+		/**
+		 * Pracujeme na jeho importu. Mezitím můžete otevřít původní zdroj.
+		 */
+		notReadyDescription: () => LocalizedString
+		/**
+		 * Nepodařilo se importovat článek
+		 */
+		importFailedTitle: () => LocalizedString
+		/**
+		 * Zkusíme to znovu později. Původní zdroj je stále dostupný.
+		 */
+		importFailedDescription: () => LocalizedString
+		/**
+		 * Článek nebyl nalezen
+		 */
+		notFoundTitle: () => LocalizedString
+		/**
+		 * Zdroj mohl být odstraněn.
+		 */
+		notFoundDescription: () => LocalizedString
+		/**
+		 * Pouze metadata
+		 */
+		availabilityMetadataOnly: () => LocalizedString
+		/**
+		 * Pouze úryvek
+		 */
+		availabilityExcerptOnly: () => LocalizedString
+		/**
+		 * Plný text není dostupný
+		 */
+		availabilityUnavailable: () => LocalizedString
 	}
 	userMenu: {
 		/**

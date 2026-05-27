@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bookmark,
   BookmarkCheck,
-  ExternalLink,
   RefreshCw,
   Search,
   Sparkles,
@@ -20,11 +19,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { listRadarItems, saveRadarItem } from "@/services/radarApi";
+import { getResourceById } from "@/services/resourcesApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { normalizeString, cn } from "@/lib/utils";
 import { useI18nContext } from "@/i18n/i18n-react";
 import { selectLocale, useLocaleStore } from "@/stores/localeStore";
-import type { RadarItem, RadarKind } from "@/types/domain";
+import { ResourceActions } from "@/components/reader/ResourceActions";
+import type { RadarItem, RadarKind, ResourceAvailability } from "@/types/domain";
 import type { TranslationFunctions } from "@/i18n/i18n-types";
 
 type Tab = "all" | "paper" | "release" | "article" | "community";
@@ -204,58 +205,76 @@ function RadarItemCard({
     ? safeFormat(item.publishedAt)
     : null;
 
+  // Resources for radar items aren't denormalized into radar_items — fetch
+  // the resource lazily on hover-or-mount so the Reader button can light up
+  // for already-imported items. Falls back to availability=undefined → button
+  // hidden, which is fine.
+  const resourceQuery = useQuery({
+    queryKey: queryKeys.resourceById(item.resourceId ?? ""),
+    queryFn: () => getResourceById(item.resourceId!),
+    enabled: Boolean(item.resourceId),
+    staleTime: 60_000,
+  });
+  const availability: ResourceAvailability | undefined =
+    resourceQuery.data?.availability;
+
   return (
     <Card variant="elevated" interactive className="p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
-            {item.kind ? <Badge variant={kindToVariant(item.kind)}>{kindLabel(item.kind)}</Badge> : null}
-            {item.sourceName ? (
-              <span className="font-medium text-content-secondary">{item.sourceName}</span>
-            ) : null}
-            {published ? (
-              <>
-                <span>·</span>
-                <span>{published}</span>
-              </>
-            ) : null}
-            {item.hfUpvotes && item.hfUpvotes > 0 ? (
-              <>
-                <span>·</span>
-                <span>{LL.radar.upvotesLabel({ count: item.hfUpvotes })}</span>
-              </>
-            ) : null}
-          </div>
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-start gap-1.5 text-body-lg font-semibold tracking-tight text-content-primary hover:text-primary"
-          >
-            <span className="leading-snug">{item.title}</span>
-            <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-content-tertiary" />
-          </a>
-          {item.summary ? (
-            <p className="line-clamp-3 text-body-md text-content-secondary">{item.summary}</p>
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
+          {item.kind ? <Badge variant={kindToVariant(item.kind)}>{kindLabel(item.kind)}</Badge> : null}
+          {item.sourceName ? (
+            <span className="font-medium text-content-secondary">{item.sourceName}</span>
           ) : null}
-          {item.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {item.tags.slice(0, 5).map((tag) => (
-                <Badge key={tag} variant="outline">#{tag}</Badge>
-              ))}
-            </div>
+          {published ? (
+            <>
+              <span>·</span>
+              <span>{published}</span>
+            </>
+          ) : null}
+          {item.hfUpvotes && item.hfUpvotes > 0 ? (
+            <>
+              <span>·</span>
+              <span>{LL.radar.upvotesLabel({ count: item.hfUpvotes })}</span>
+            </>
           ) : null}
         </div>
 
-        <Button
-          variant={isSaved ? "secondary" : "ghost"}
-          size="icon-sm"
-          onClick={onSave}
-          disabled={isSaving || isSaved}
-          aria-label={isSaved ? LL.radar.unsaveAction() : LL.radar.saveAction()}
-        >
-          {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-        </Button>
+        <h3 className="text-body-lg font-semibold leading-snug tracking-tight text-content-primary">
+          {item.title}
+        </h3>
+
+        {item.summary ? (
+          <p className="line-clamp-3 text-body-md text-content-secondary">{item.summary}</p>
+        ) : null}
+
+        {item.tags.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {item.tags.slice(0, 5).map((tag) => (
+              <Badge key={tag} variant="outline">#{tag}</Badge>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="pt-1">
+          <ResourceActions
+            originalUrl={item.link}
+            resourceId={item.resourceId}
+            availability={availability}
+            saveSlot={
+              <Button
+                variant={isSaved ? "secondary" : "ghost"}
+                size="sm"
+                onClick={onSave}
+                disabled={isSaving || isSaved}
+                aria-label={isSaved ? LL.radar.unsaveAction() : LL.radar.saveAction()}
+              >
+                {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                {isSaved ? LL.radar.unsaveAction() : LL.radar.saveAction()}
+              </Button>
+            }
+          />
+        </div>
       </div>
     </Card>
   );

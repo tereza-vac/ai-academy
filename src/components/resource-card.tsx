@@ -1,10 +1,12 @@
 import { useMemo } from "react";
-import { ExternalLink, Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useI18nContext } from "@/i18n/i18n-react";
+import { ResourceActions } from "@/components/reader/ResourceActions";
 import type { Resource } from "@/types/domain";
 
 interface ResourceCardProps {
@@ -37,6 +39,7 @@ const kindVariant: Record<Resource["kind"], "default" | "muted" | "success" | "p
 };
 
 export function ResourceCard({ resource, isSaved, onToggleSave, className }: ResourceCardProps) {
+  const { LL } = useI18nContext();
   const published = useMemo(() => {
     if (!resource.publishedAt) return null;
     try {
@@ -48,55 +51,58 @@ export function ResourceCard({ resource, isSaved, onToggleSave, className }: Res
 
   return (
     <Card variant="elevated" interactive className={cn("p-5", className)}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
-            <Badge variant={kindVariant[resource.kind]}>{kindLabel[resource.kind]}</Badge>
-            {resource.sourceName ? (
-              <span className="font-medium text-content-secondary">{resource.sourceName}</span>
-            ) : null}
-            {published ? (
-              <>
-                <span>·</span>
-                <span>{published}</span>
-              </>
-            ) : null}
-          </div>
-          <a
-            href={resource.url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-start gap-1.5 text-body-lg font-semibold tracking-tight text-content-primary hover:text-primary"
-          >
-            <span className="leading-snug">{resource.title}</span>
-            <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-content-tertiary" />
-          </a>
-          {resource.summary ? (
-            <p className="line-clamp-3 text-body-md text-content-secondary">
-              {resource.summary}
-            </p>
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
+          <Badge variant={kindVariant[resource.kind]}>{kindLabel[resource.kind]}</Badge>
+          {resource.sourceName ? (
+            <span className="font-medium text-content-secondary">{resource.sourceName}</span>
           ) : null}
-          {resource.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {resource.tags.slice(0, 5).map((tag) => (
-                <Badge key={tag} variant="outline">
-                  #{tag}
-                </Badge>
-              ))}
-            </div>
+          {published ? (
+            <>
+              <span>·</span>
+              <span>{published}</span>
+            </>
           ) : null}
         </div>
 
-        {onToggleSave ? (
-          <Button
-            variant={isSaved ? "secondary" : "ghost"}
-            size="icon-sm"
-            onClick={onToggleSave}
-            aria-label={isSaved ? "Remove from library" : "Save to library"}
-          >
-            {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-          </Button>
+        <h3 className="text-body-lg font-semibold leading-snug tracking-tight text-content-primary">
+          {resource.title}
+        </h3>
+
+        {resource.summary ? (
+          <p className="line-clamp-3 text-body-md text-content-secondary">{resource.summary}</p>
         ) : null}
+
+        {resource.tags.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {resource.tags.slice(0, 5).map((tag) => (
+              <Badge key={tag} variant="outline">
+                #{tag}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="pt-1">
+          <ResourceActions
+            originalUrl={resource.url}
+            resourceId={resource.id}
+            availability={resource.availability}
+            saveSlot={
+              onToggleSave ? (
+                <Button
+                  variant={isSaved ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={onToggleSave}
+                  aria-label={isSaved ? LL.radar.unsaveAction() : LL.radar.saveAction()}
+                >
+                  {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                  {isSaved ? LL.radar.unsaveAction() : LL.radar.saveAction()}
+                </Button>
+              ) : undefined
+            }
+          />
+        </div>
       </div>
     </Card>
   );

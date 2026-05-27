@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Bookmark,
   BookmarkCheck,
-  ExternalLink,
   Search as SearchIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -25,6 +24,7 @@ import {
   savePaperHit,
   searchPapers,
 } from "@/services/papersSearchApi";
+import { ResourceActions } from "@/components/reader/ResourceActions";
 import type { PaperHit } from "@/types/domain";
 
 type Sort = NonNullable<PapersSearchInput["sort"]>;
@@ -289,49 +289,56 @@ function PaperHitCard({
 }) {
   return (
     <Card variant="elevated" className="p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1 space-y-2">
-          <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
-            <Badge variant="premium">{hit.source}</Badge>
-            {hit.year ? <span>{LL.paperSearch.yearLabel({ year: hit.year })}</span> : null}
-            {hit.venue ? <span>· {hit.venue}</span> : null}
-            {typeof hit.citationCount === "number" && hit.citationCount > 0 ? (
-              <span>· {LL.paperSearch.citationsLabel({ count: hit.citationCount })}</span>
-            ) : null}
-          </div>
-          <a
-            href={hit.url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-start gap-1.5 text-body-lg font-semibold tracking-tight text-content-primary hover:text-primary"
-          >
-            <span className="leading-snug">{hit.title}</span>
-            <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-content-tertiary" />
-          </a>
-          {hit.abstract ? (
-            <p className="line-clamp-3 text-body-md text-content-secondary">{hit.abstract}</p>
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
+          <Badge variant="premium">{hit.source}</Badge>
+          {hit.year ? <span>{LL.paperSearch.yearLabel({ year: hit.year })}</span> : null}
+          {hit.venue ? <span>· {hit.venue}</span> : null}
+          {typeof hit.citationCount === "number" && hit.citationCount > 0 ? (
+            <span>· {LL.paperSearch.citationsLabel({ count: hit.citationCount })}</span>
           ) : null}
-          <div className="flex flex-wrap items-center gap-2 pt-1 text-caption-xs text-content-tertiary">
-            {hit.authors.length > 0 ? (
-              <span className="line-clamp-1">{hit.authors.slice(0, 6).join(", ")}</span>
-            ) : null}
-            {hit.pdfUrl ? (
-              <a href={hit.pdfUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">
-                {LL.paperSearch.pdfLabel()}
-              </a>
-            ) : null}
-          </div>
         </div>
 
-        <Button
-          variant={isSaved ? "secondary" : "outline"}
-          size="sm"
-          onClick={onSave}
-          disabled={isSaved || isSaving}
-        >
-          {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
-          {isSaved ? LL.paperSearch.savedAction() : LL.paperSearch.saveAction()}
-        </Button>
+        <h3 className="text-body-lg font-semibold leading-snug tracking-tight text-content-primary">
+          {hit.title}
+        </h3>
+
+        {hit.abstract ? (
+          <p className="line-clamp-3 text-body-md text-content-secondary">{hit.abstract}</p>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-2 text-caption-xs text-content-tertiary">
+          {hit.authors.length > 0 ? (
+            <span className="line-clamp-1">{hit.authors.slice(0, 6).join(", ")}</span>
+          ) : null}
+          {hit.pdfUrl ? (
+            <a href={hit.pdfUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+              {LL.paperSearch.pdfLabel()}
+            </a>
+          ) : null}
+        </div>
+
+        <div className="pt-1">
+          {/* PaperHit has no resourceId until saved, so the "Read in AI Academy"
+              button stays hidden pre-save. After save the result is re-rendered
+              with a real Resource (and its availability) by the parent surface. */}
+          <ResourceActions
+            originalUrl={hit.url}
+            resourceId={null}
+            availability={null}
+            saveSlot={
+              <Button
+                variant={isSaved ? "secondary" : "default"}
+                size="sm"
+                onClick={onSave}
+                disabled={isSaved || isSaving}
+              >
+                {isSaved ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                {isSaved ? LL.paperSearch.savedAction() : LL.paperSearch.saveAction()}
+              </Button>
+            }
+          />
+        </div>
       </div>
     </Card>
   );

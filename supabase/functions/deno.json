@@ -3,6 +3,9 @@
     "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
     "ai": "npm:ai@6",
     "@ai-sdk/openai": "npm:@ai-sdk/openai@3",
-    "zod": "npm:zod@4"
+    "zod": "npm:zod@4",
+    "linkedom": "npm:linkedom@0.18.5",
+    "@mozilla/readability": "npm:@mozilla/readability@0.5.0",
+    "pdfjs-dist": "npm:pdfjs-dist@4.7.76/legacy/build/pdf.mjs"
   }
 }

@@ -29,6 +29,7 @@ export const namespaces: Namespaces[] = [
 	'paperSearch',
 	'practice',
 	'radar',
+	'reader',
 	'userMenu'
 ]
 

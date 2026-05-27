@@ -15,6 +15,13 @@ export type ResourceKind =
   | "tweet"
   | "other";
 
+export type ResourceAvailability =
+  | "metadata_only"
+  | "excerpt_only"
+  | "full_text_api"
+  | "full_text_scraped"
+  | "full_text_unavailable";
+
 export type BuildLabKind = "prompt" | "playbook" | "template" | "checklist";
 
 export type QuestionKind = "mcq" | "flashcard";
@@ -66,6 +73,14 @@ export interface Resource {
   isCanonical?: boolean;
   canonicalCategory?: string | null;
   canonicalPosition?: number | null;
+  /**
+   * How much of this resource is available to render inside AI Academy.
+   * Set by the resource-import edge function. Drives whether the
+   * "Read in AI Academy" button appears on cards.
+   */
+  availability: ResourceAvailability;
+  /** ISO 639-1 of the imported source content, or null if not yet imported. */
+  sourceLang: string | null;
 }
 
 export type CanonicalCategory =

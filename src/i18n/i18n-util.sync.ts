@@ -21,6 +21,7 @@ import cs_nav from './cs/nav'
 import cs_paperSearch from './cs/paperSearch'
 import cs_practice from './cs/practice'
 import cs_radar from './cs/radar'
+import cs_reader from './cs/reader'
 import cs_userMenu from './cs/userMenu'
 import en_auth from './en/auth'
 import en_buildLab from './en/buildLab'
@@ -33,6 +34,7 @@ import en_nav from './en/nav'
 import en_paperSearch from './en/paperSearch'
 import en_practice from './en/practice'
 import en_radar from './en/radar'
+import en_reader from './en/reader'
 import en_userMenu from './en/userMenu'
 import pl_auth from './pl/auth'
 import pl_buildLab from './pl/buildLab'
@@ -45,6 +47,7 @@ import pl_nav from './pl/nav'
 import pl_paperSearch from './pl/paperSearch'
 import pl_practice from './pl/practice'
 import pl_radar from './pl/radar'
+import pl_reader from './pl/reader'
 import pl_userMenu from './pl/userMenu'
 import sk_auth from './sk/auth'
 import sk_buildLab from './sk/buildLab'
@@ -57,6 +60,7 @@ import sk_nav from './sk/nav'
 import sk_paperSearch from './sk/paperSearch'
 import sk_practice from './sk/practice'
 import sk_radar from './sk/radar'
+import sk_reader from './sk/reader'
 import sk_userMenu from './sk/userMenu'
 
 const localeTranslations = {
@@ -73,6 +77,7 @@ const localeTranslations = {
 		paperSearch: cs_paperSearch,
 		practice: cs_practice,
 		radar: cs_radar,
+		reader: cs_reader,
 		userMenu: cs_userMenu
 	},
 	en: {
@@ -88,6 +93,7 @@ const localeTranslations = {
 		paperSearch: en_paperSearch,
 		practice: en_practice,
 		radar: en_radar,
+		reader: en_reader,
 		userMenu: en_userMenu
 	},
 	pl: {
@@ -103,6 +109,7 @@ const localeTranslations = {
 		paperSearch: pl_paperSearch,
 		practice: pl_practice,
 		radar: pl_radar,
+		reader: pl_reader,
 		userMenu: pl_userMenu
 	},
 	sk: {
@@ -118,6 +125,7 @@ const localeTranslations = {
 		paperSearch: sk_paperSearch,
 		practice: sk_practice,
 		radar: sk_radar,
+		reader: sk_reader,
 		userMenu: sk_userMenu
 	},
 }

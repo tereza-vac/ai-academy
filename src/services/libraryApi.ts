@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { isMock } from "@/lib/dataMode";
 import { mockSavedItems } from "@/lib/mockData";
+import { triggerImport } from "@/services/resourceContentApi";
 import type { SavedItem } from "@/types/domain";
 
 interface SavedRow {
@@ -74,6 +75,12 @@ export async function saveResource(input: {
     .select("id,user_id,resource_id,note,tags,created_at")
     .single();
   if (error) throw new Error(error.message);
+
+  // Fire-and-forget: kick off the import pipeline so the reader becomes
+  // available next time the user views this resource. Silently no-ops in
+  // PR-1 (edge function not deployed yet) and on any transient failure.
+  void triggerImport(input.resourceId);
+
   return mapSaved(data as SavedRow);
 }
 
