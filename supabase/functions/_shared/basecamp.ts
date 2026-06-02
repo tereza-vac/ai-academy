@@ -39,7 +39,7 @@ export interface OAuthTokenResponse {
 export interface AuthorizationInfo {
   identity: { id: number; first_name: string; last_name: string; email_address: string };
   accounts: Array<{
-    product: string; // e.g. "bcx" for Basecamp 4
+    product: string; // "bc3"/"bc4"/"bc5" for modern Basecamp; "bcx" = Basecamp 2
     id: number;
     name: string;
     href: string;

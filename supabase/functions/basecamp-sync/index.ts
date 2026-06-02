@@ -39,6 +39,9 @@ const CLIENT_SECRET = Deno.env.get("BASECAMP_CLIENT_SECRET") ?? "";
 const REDIRECT_URI = Deno.env.get("BASECAMP_REDIRECT_URI") ?? "";
 const USER_AGENT = Deno.env.get("BASECAMP_USER_AGENT") ?? "AI-Academy/0.1";
 
+// Basecamp's /projects/recordings.json endpoint accepts exactly ONE `type`
+// per request — a comma-separated list returns 400. We fetch each type
+// separately and merge the results.
 const RECORDING_TYPES = [
   "Message",
   "Comment",
@@ -47,7 +50,7 @@ const RECORDING_TYPES = [
   "Schedule::Entry",
   "Document",
   "Question::Answer",
-].join(",");
+];
 
 const RECORDINGS_MAX_PAGES = Number(
   Deno.env.get("BASECAMP_RECORDINGS_MAX_PAGES") ?? "5",
@@ -147,16 +150,27 @@ async function syncWorkspace(workspace: WorkspaceRow, summary: SyncSummary): Pro
   }
 
   // ---------- Recordings (cross-project unified feed) --------------------
-  // Basecamp returns the "everything" feed in one paginated call; cheaper
-  // than per-project + per-tool walking, especially on small accounts.
-  const recordings = await client.getAllPages<BasecampRecording>(
-    BasecampEndpoints.recordings({
-      type: RECORDING_TYPES,
-      sort: "updated_at",
-      direction: "desc",
-    }),
-    { maxPages: RECORDINGS_MAX_PAGES },
-  );
+  // One paginated call per recording type (the endpoint rejects multi-type
+  // queries). A failure on one type is recorded but doesn't abort the others.
+  const recordings: BasecampRecording[] = [];
+  for (const recType of RECORDING_TYPES) {
+    try {
+      const page = await client.getAllPages<BasecampRecording>(
+        BasecampEndpoints.recordings({
+          type: recType,
+          sort: "updated_at",
+          direction: "desc",
+        }),
+        { maxPages: RECORDINGS_MAX_PAGES },
+      );
+      recordings.push(...page);
+    } catch (e) {
+      summary.errors.push({
+        workspace: workspace.account_name ?? workspace.account_id,
+        message: `recordings ${recType}: ${e instanceof Error ? e.message : String(e)}`,
+      });
+    }
+  }
 
   const recordingRows: Array<Record<string, unknown>> = [];
   for (const r of recordings) {

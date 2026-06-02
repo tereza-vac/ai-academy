@@ -80,10 +80,16 @@ async function persistRefreshToken(refreshToken: string): Promise<void> {
   // update path; the simplest portable shape is "delete by name, then create".
   const description = "Basecamp 4 OAuth refresh token (used by basecamp-sync)";
 
-  // Best-effort delete: ignore failures if the secret doesn't exist.
-  await supabase.rpc("vault_delete_secret_by_name", {
-    p_name: VAULT_SECRET_NAME,
-  }).catch(() => undefined);
+  // Best-effort delete: ignore failures if the secret doesn't exist. Note:
+  // supabase-js `.rpc()` returns a thenable PostgrestBuilder, NOT a real
+  // Promise — it has no `.catch`. Await it inside try/catch instead.
+  try {
+    await supabase.rpc("vault_delete_secret_by_name", {
+      p_name: VAULT_SECRET_NAME,
+    });
+  } catch (_) {
+    // ignore — the secret simply may not exist yet
+  }
 
   const { error } = await supabase.rpc("vault_create_secret", {
     p_secret: refreshToken,
@@ -159,11 +165,20 @@ serve(async (req) => {
     const tokens = await exchangeCodeForToken(cfg, code);
     const auth = await fetchAuthorization(cfg, tokens.access_token);
 
-    // We expect exactly one Basecamp 4 ("bcx") account. If the admin owns
-    // multiple, we just take the first — multi-account is a Phase-2 nicety.
-    const account = auth.accounts.find((a) => a.product === "bcx") ?? auth.accounts[0];
+    // Pick the modern Basecamp account (Basecamp 3/4/5 all share the
+    // `3.basecampapi.com` surface and report product ids like "bc3"/"bc4"/
+    // "bc5"). We explicitly skip "bcx" (Basecamp 2) and "basecamp" (Classic),
+    // whose APIs live elsewhere and aren't compatible with this integration.
+    const isModernBasecamp = (p: string) => /^bc\d+$/i.test(p);
+    const account =
+      auth.accounts.find((a) => a.href?.includes("3.basecampapi.com")) ??
+      auth.accounts.find((a) => isModernBasecamp(a.product)) ??
+      auth.accounts.find((a) => a.product !== "bcx" && a.product !== "basecamp");
     if (!account) {
-      throw new Error("No Basecamp 4 account is reachable for the authorising user.");
+      throw new Error(
+        "No modern Basecamp (3/4/5) account is reachable for the authorising user. " +
+        `Accounts seen: ${auth.accounts.map((a) => `${a.name} (${a.product})`).join(", ") || "none"}.`,
+      );
     }
 
     await persistRefreshToken(tokens.refresh_token);
