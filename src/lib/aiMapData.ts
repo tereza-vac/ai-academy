@@ -5,14 +5,19 @@
  * on the pedagogical narrative — short parables, "why it matters" hooks,
  * neighbours — without paying for a backend round-trip.
  *
+ * Shape:
+ *   The graph is a tree, not a two-level domain/concept split. Every node
+ *   has a `parentId` (or `null` for the synthetic `ai-root`). The original
+ *   "domain" name is kept so each subtree can carry its own colour, but the
+ *   page traverses children via {@link childrenOf}, so any sub-concept can
+ *   itself have children all the way down — no schema change needed.
+ *
  * Strings are kept inline in CS + EN. The locale is resolved at render time
  * from {@link useLocaleStore}; falling back to EN for `pl`/`sk` until proper
  * translations land. Centralising the data here also keeps the SVG rendering
  * code in `MapPage.tsx` free of content concerns.
  */
 import type { Locales } from "@/i18n/i18n-types";
-
-export type ConceptLevel = "domain" | "concept";
 
 export interface Bilingual {
   cs: string;
@@ -22,9 +27,13 @@ export interface Bilingual {
 export interface ConceptNode {
   /** Stable slug — used for routing, edges and as a React key. */
   id: string;
-  /** Whether this is a top-level pillar (`domain`) or a sub-topic (`concept`). */
-  level: ConceptLevel;
-  /** Owning domain. For domains, this equals `id`. */
+  /** Parent in the tree. `null` only for the synthetic `ai-root`. */
+  parentId: string | null;
+  /**
+   * Top-level ancestor id — used for colour theming. Equals `id` for the
+   * top-level pillars (LLMs, RAG, …) and `'ai-root'` for the central core.
+   * Inherited by sub-concepts so the whole subtree shares one colour.
+   */
   domain: string;
   /** Display label. */
   label: Bilingual;
@@ -53,13 +62,41 @@ export function pickLocaleText(value: Bilingual, locale: Locales): string {
 }
 
 /* ------------------------------------------------------------------ */
+/* Root + top-level pillars                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Synthetic root node. Lives at the centre of the radial graph and acts as
+ * the parent of every top-level domain. Having a real node here means the
+ * chat panel and breadcrumb behave the same at depth 0 as anywhere else.
+ */
+export const ROOT_NODE: ConceptNode = {
+  id: "ai-root",
+  parentId: null,
+  domain: "ai-root",
+  label: { cs: "AI", en: "AI" },
+  tagline: {
+    cs: "Mapa konceptů kolem moderní AI.",
+    en: "A map of the concepts that make modern AI tick.",
+  },
+  parable: {
+    cs: "Představte si AI jako hvězdokupu — uprostřed pár jasných základů, na okrajích konkrétní aplikace. Mezi nimi cesty, kterými teče poznání. Tahle mapa je atlas tý hvězdokupy: klikem se zoomujete do galaxie, pak do hvězdy, pak do planety.",
+    en: "Think of AI as a star cluster — a few bright fundamentals at the centre, concrete applications at the edges, and trade routes of ideas in between. This map is your atlas: each click zooms from a galaxy into a star, then into a planet.",
+  },
+  whyItMatters: {
+    cs: "Bez mapy se snadno utopíte v termínech. S mapou víte, kde jste, co je vedle a kam dál se vyplatí jít.",
+    en: "Without a map it's easy to drown in jargon. With one you know where you are, what's next door, and where to go next.",
+  },
+};
+
+/* ------------------------------------------------------------------ */
 /* Domains (top-level pillars, arranged on the outer ring)             */
 /* ------------------------------------------------------------------ */
 
 export const DOMAINS: ConceptNode[] = [
   {
     id: "ai-basics",
-    level: "domain",
+    parentId: "ai-root",
     domain: "ai-basics",
     label: { cs: "Základy AI", en: "AI Basics" },
     tagline: {
@@ -77,7 +114,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "machine-learning",
-    level: "domain",
+    parentId: "ai-root",
     domain: "machine-learning",
     label: { cs: "Strojové učení", en: "Machine Learning" },
     tagline: {
@@ -95,7 +132,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "neural-networks",
-    level: "domain",
+    parentId: "ai-root",
     domain: "neural-networks",
     label: { cs: "Neuronové sítě", en: "Neural Networks" },
     tagline: {
@@ -113,7 +150,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "generative-ai",
-    level: "domain",
+    parentId: "ai-root",
     domain: "generative-ai",
     label: { cs: "Generativní AI", en: "Generative AI" },
     tagline: {
@@ -131,7 +168,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "llms",
-    level: "domain",
+    parentId: "ai-root",
     domain: "llms",
     label: { cs: "LLM", en: "LLMs" },
     tagline: {
@@ -149,7 +186,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "rag",
-    level: "domain",
+    parentId: "ai-root",
     domain: "rag",
     label: { cs: "RAG", en: "RAG" },
     tagline: {
@@ -167,7 +204,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "agents",
-    level: "domain",
+    parentId: "ai-root",
     domain: "agents",
     label: { cs: "Agenti", en: "Agents" },
     tagline: {
@@ -185,7 +222,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "evaluation",
-    level: "domain",
+    parentId: "ai-root",
     domain: "evaluation",
     label: { cs: "Vyhodnocování", en: "Evaluation" },
     tagline: {
@@ -203,7 +240,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "ai-safety",
-    level: "domain",
+    parentId: "ai-root",
     domain: "ai-safety",
     label: { cs: "AI bezpečnost", en: "AI Safety" },
     tagline: {
@@ -221,7 +258,7 @@ export const DOMAINS: ConceptNode[] = [
   },
   {
     id: "business-use-cases",
-    level: "domain",
+    parentId: "ai-root",
     domain: "business-use-cases",
     label: { cs: "Byznys využití", en: "Business Use Cases" },
     tagline: {
@@ -247,7 +284,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- AI Basics ---- */
   {
     id: "symbolic-vs-statistical",
-    level: "concept",
+    parentId: "ai-basics",
     domain: "ai-basics",
     label: { cs: "Symbolická vs. statistická AI", en: "Symbolic vs. statistical AI" },
     tagline: {
@@ -265,7 +302,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "search-planning",
-    level: "concept",
+    parentId: "ai-basics",
     domain: "ai-basics",
     label: { cs: "Vyhledávání a plánování", en: "Search & planning" },
     tagline: { cs: "Najít nejlepší cestu ze startu do cíle.", en: "Find the best path from start to goal." },
@@ -280,7 +317,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "optimization",
-    level: "concept",
+    parentId: "ai-basics",
     domain: "ai-basics",
     label: { cs: "Optimalizace", en: "Optimization" },
     tagline: { cs: "Najít minimum / maximum funkce.", en: "Find the min / max of a function." },
@@ -297,7 +334,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Machine Learning ---- */
   {
     id: "supervised-learning",
-    level: "concept",
+    parentId: "machine-learning",
     domain: "machine-learning",
     label: { cs: "Supervised learning", en: "Supervised learning" },
     tagline: { cs: "Učení z dvojic vstup → správná odpověď.", en: "Learning from labeled (input → answer) pairs." },
@@ -312,7 +349,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "unsupervised-learning",
-    level: "concept",
+    parentId: "machine-learning",
     domain: "machine-learning",
     label: { cs: "Unsupervised learning", en: "Unsupervised learning" },
     tagline: { cs: "Najít strukturu bez správné odpovědi.", en: "Find structure without correct answers." },
@@ -327,7 +364,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "reinforcement-learning",
-    level: "concept",
+    parentId: "machine-learning",
     domain: "machine-learning",
     label: { cs: "Reinforcement learning", en: "Reinforcement learning" },
     tagline: { cs: "Učení odměnami a tresty.", en: "Learning by reward and punishment." },
@@ -342,7 +379,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "gradient-descent",
-    level: "concept",
+    parentId: "machine-learning",
     domain: "machine-learning",
     label: { cs: "Gradient descent", en: "Gradient descent" },
     tagline: { cs: "Iterativní sestup po svahu chyby.", en: "Walking downhill on the error landscape." },
@@ -357,7 +394,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "overfitting",
-    level: "concept",
+    parentId: "machine-learning",
     domain: "machine-learning",
     label: { cs: "Overfitting", en: "Overfitting" },
     tagline: { cs: "Model umí trénink nazpaměť, na novém selže.", en: "Memorising the training set, failing on new data." },
@@ -374,7 +411,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Neural Networks ---- */
   {
     id: "artificial-neuron",
-    level: "concept",
+    parentId: "neural-networks",
     domain: "neural-networks",
     label: { cs: "Umělý neuron", en: "Artificial neuron" },
     tagline: { cs: "Vážený součet + aktivace.", en: "Weighted sum + activation." },
@@ -389,7 +426,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "relu",
-    level: "concept",
+    parentId: "neural-networks",
     domain: "neural-networks",
     label: { cs: "ReLU a aktivační funkce", en: "ReLU & activation functions" },
     tagline: { cs: "Co dělá síť nelineární.", en: "What makes a net non-linear." },
@@ -404,7 +441,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "backpropagation",
-    level: "concept",
+    parentId: "neural-networks",
     domain: "neural-networks",
     label: { cs: "Backpropagation", en: "Backpropagation" },
     tagline: { cs: "Jak síť ví, které váhy upravit.", en: "How a net knows which weights to nudge." },
@@ -419,7 +456,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "deep-learning",
-    level: "concept",
+    parentId: "neural-networks",
     domain: "neural-networks",
     label: { cs: "Hluboké učení", en: "Deep learning" },
     tagline: { cs: "Hodně vrstev, hodně dat, hodně GPU.", en: "Many layers, much data, lots of GPUs." },
@@ -436,7 +473,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Generative AI ---- */
   {
     id: "transformer",
-    level: "concept",
+    parentId: "generative-ai",
     domain: "generative-ai",
     label: { cs: "Transformer", en: "Transformer" },
     tagline: { cs: "Architektura, která spustila celou éru.", en: "The architecture that lit the fuse on the modern era." },
@@ -454,7 +491,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "attention",
-    level: "concept",
+    parentId: "generative-ai",
     domain: "generative-ai",
     label: { cs: "Attention", en: "Attention" },
     tagline: { cs: "Kde se má model dívat.", en: "Where the model should look." },
@@ -469,7 +506,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "diffusion-models",
-    level: "concept",
+    parentId: "generative-ai",
     domain: "generative-ai",
     label: { cs: "Diffusion modely", en: "Diffusion models" },
     tagline: { cs: "Z čistého šumu k obrázku, krok po kroku.", en: "From pure noise to image, step by step." },
@@ -484,7 +521,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "gan",
-    level: "concept",
+    parentId: "generative-ai",
     domain: "generative-ai",
     label: { cs: "GAN", en: "GAN" },
     tagline: { cs: "Falzifikátor proti detektivovi.", en: "A forger vs. a detective." },
@@ -501,7 +538,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- LLMs ---- */
   {
     id: "tokenization",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "Tokenizace", en: "Tokenization" },
     tagline: { cs: "Jak model „vidí“ text.", en: "How the model 'sees' text." },
@@ -516,7 +553,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "embeddings",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "Embeddingy", en: "Embeddings" },
     tagline: { cs: "Slova jako body ve vesmíru významů.", en: "Words as points in a meaning-space." },
@@ -532,7 +569,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "pretraining",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "Pre-training", en: "Pre-training" },
     tagline: { cs: "Měsíce čtení internetu zaplaceného GPU.", en: "Months of GPU-funded internet reading." },
@@ -547,7 +584,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "fine-tuning",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "Fine-tuning", en: "Fine-tuning" },
     tagline: { cs: "Přizpůsobení hotového modelu vašemu úkolu.", en: "Adapting a pre-trained model to your task." },
@@ -562,7 +599,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "rlhf",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "RLHF / DPO", en: "RLHF / DPO" },
     tagline: { cs: "Učení preferencí od lidí.", en: "Teaching the model human preferences." },
@@ -577,7 +614,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "hallucinations",
-    level: "concept",
+    parentId: "llms",
     domain: "llms",
     label: { cs: "Halucinace", en: "Hallucinations" },
     tagline: { cs: "Sebevědomé výmysly modelu.", en: "Confidently wrong outputs." },
@@ -594,7 +631,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- RAG ---- */
   {
     id: "vector-database",
-    level: "concept",
+    parentId: "rag",
     domain: "rag",
     label: { cs: "Vektorová databáze", en: "Vector database" },
     tagline: { cs: "Vyhledávání podle významu, ne podle slov.", en: "Search by meaning, not by keywords." },
@@ -609,7 +646,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "chunking",
-    level: "concept",
+    parentId: "rag",
     domain: "rag",
     label: { cs: "Chunking", en: "Chunking" },
     tagline: { cs: "Rozsekání dokumentů na kousky, které dávají smysl.", en: "Splitting documents into pieces that stand alone." },
@@ -624,7 +661,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "reranking",
-    level: "concept",
+    parentId: "rag",
     domain: "rag",
     label: { cs: "Reranking", en: "Reranking" },
     tagline: { cs: "Druhé kolo, kde se vyberou ty fakt nejlepší.", en: "A second round that picks the truly best matches." },
@@ -639,7 +676,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "context-window",
-    level: "concept",
+    parentId: "rag",
     domain: "rag",
     label: { cs: "Context window", en: "Context window" },
     tagline: { cs: "Kolik tokenů model „vidí“ najednou.", en: "How many tokens the model can see at once." },
@@ -656,7 +693,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Agents ---- */
   {
     id: "tool-use",
-    level: "concept",
+    parentId: "agents",
     domain: "agents",
     label: { cs: "Tool use", en: "Tool use" },
     tagline: { cs: "Model volá API, kalkulačku, vyhledávač.", en: "The model calls APIs, calculators, search engines." },
@@ -671,7 +708,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "react-pattern",
-    level: "concept",
+    parentId: "agents",
     domain: "agents",
     label: { cs: "ReAct pattern", en: "ReAct pattern" },
     tagline: { cs: "Smyčka Reason → Act → Observe.", en: "A Reason → Act → Observe loop." },
@@ -686,7 +723,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "agent-memory",
-    level: "concept",
+    parentId: "agents",
     domain: "agents",
     label: { cs: "Paměť agenta", en: "Agent memory" },
     tagline: { cs: "Jak si pamatovat, co se stalo včera.", en: "How to remember what happened yesterday." },
@@ -701,7 +738,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "multi-agent",
-    level: "concept",
+    parentId: "agents",
     domain: "agents",
     label: { cs: "Multi-agent systémy", en: "Multi-agent systems" },
     tagline: { cs: "Tým agentů místo jednoho hrdiny.", en: "A team of agents instead of a lone hero." },
@@ -718,7 +755,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Evaluation ---- */
   {
     id: "benchmarks",
-    level: "concept",
+    parentId: "evaluation",
     domain: "evaluation",
     label: { cs: "Benchmarky", en: "Benchmarks" },
     tagline: { cs: "Standardizované testy modelů.", en: "Standardised model exams." },
@@ -733,7 +770,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "llm-as-judge",
-    level: "concept",
+    parentId: "evaluation",
     domain: "evaluation",
     label: { cs: "LLM jako soudce", en: "LLM-as-judge" },
     tagline: { cs: "Necháme jeden LLM ohodnotit výstup druhého.", en: "Letting one LLM grade another's output." },
@@ -748,7 +785,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "eval-sets",
-    level: "concept",
+    parentId: "evaluation",
     domain: "evaluation",
     label: { cs: "Eval sety", en: "Eval sets" },
     tagline: { cs: "Vlastní sada otázek, kde víte správnou odpověď.", en: "Your own question set with known answers." },
@@ -763,7 +800,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "ab-testing",
-    level: "concept",
+    parentId: "evaluation",
     domain: "evaluation",
     label: { cs: "A/B testování", en: "A/B testing" },
     tagline: { cs: "Online verdikt od reálných uživatelů.", en: "Live verdict from real users." },
@@ -780,7 +817,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- AI Safety ---- */
   {
     id: "alignment",
-    level: "concept",
+    parentId: "ai-safety",
     domain: "ai-safety",
     label: { cs: "Alignment", en: "Alignment" },
     tagline: { cs: "Model dělá to, co opravdu chceme.", en: "Model doing what we actually want." },
@@ -795,7 +832,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "red-teaming",
-    level: "concept",
+    parentId: "ai-safety",
     domain: "ai-safety",
     label: { cs: "Red teaming", en: "Red teaming" },
     tagline: { cs: "Cílená snaha model přimět dělat hlouposti.", en: "Deliberately trying to make the model misbehave." },
@@ -810,7 +847,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "bias-fairness",
-    level: "concept",
+    parentId: "ai-safety",
     domain: "ai-safety",
     label: { cs: "Bias a fairness", en: "Bias & fairness" },
     tagline: { cs: "Když model zdědí předsudky z dat.", en: "When the model inherits prejudice from its data." },
@@ -825,7 +862,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "privacy",
-    level: "concept",
+    parentId: "ai-safety",
     domain: "ai-safety",
     label: { cs: "Privacy", en: "Privacy" },
     tagline: { cs: "Co se s daty stane, když jdou do modelu.", en: "What happens to data once it enters a model." },
@@ -842,7 +879,7 @@ export const CONCEPTS: ConceptNode[] = [
   /* ---- Business Use Cases ---- */
   {
     id: "customer-support",
-    level: "concept",
+    parentId: "business-use-cases",
     domain: "business-use-cases",
     label: { cs: "Zákaznická podpora", en: "Customer support" },
     tagline: { cs: "Chatbot / asistent na první linii.", en: "Chatbot / assistant on the front line." },
@@ -857,7 +894,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "doc-search",
-    level: "concept",
+    parentId: "business-use-cases",
     domain: "business-use-cases",
     label: { cs: "Vyhledávání ve firemních datech", en: "Internal document search" },
     tagline: { cs: "Google nad vaší Confluence / SharePointem.", en: "Google over your own Confluence / SharePoint." },
@@ -872,7 +909,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "coding-assistants",
-    level: "concept",
+    parentId: "business-use-cases",
     domain: "business-use-cases",
     label: { cs: "Asistenti pro vývojáře", en: "Coding assistants" },
     tagline: { cs: "Copilot, Cursor, Claude Code.", en: "Copilot, Cursor, Claude Code." },
@@ -887,7 +924,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "content-generation",
-    level: "concept",
+    parentId: "business-use-cases",
     domain: "business-use-cases",
     label: { cs: "Generování obsahu", en: "Content generation" },
     tagline: { cs: "Marketing, dokumentace, lokalizace.", en: "Marketing, documentation, localisation." },
@@ -902,7 +939,7 @@ export const CONCEPTS: ConceptNode[] = [
   },
   {
     id: "decision-support",
-    level: "concept",
+    parentId: "business-use-cases",
     domain: "business-use-cases",
     label: { cs: "Podpora rozhodování", en: "Decision support" },
     tagline: { cs: "Briefy, srovnání, doporučení pro manažery.", en: "Briefs, comparisons, recommendations for managers." },
@@ -914,6 +951,204 @@ export const CONCEPTS: ConceptNode[] = [
       cs: "Pomalá, ale vysoká hodnota. Často skrytý důvod, proč management AI vůbec financuje.",
       en: "Slow burn, high value. Often the hidden reason management funds AI in the first place.",
     },
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Sub-concepts (children of concepts — third level and beyond)        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The schema is a free tree, so any node here can itself have children
+ * down the line. The current set is intentionally selective: enough to
+ * prove the "drill all the way down" UX without forcing the editor to
+ * write 200 parables in one go.
+ */
+export const SUB_CONCEPTS: ConceptNode[] = [
+  /* ---- Transformer ---- */
+  {
+    id: "self-attention",
+    parentId: "transformer",
+    domain: "generative-ai",
+    label: { cs: "Self-attention", en: "Self-attention" },
+    tagline: { cs: "Slova ve větě „mluví“ sama se sebou.", en: "Words in a sentence 'talk' to each other." },
+    parable: {
+      cs: "Při poradě nikdo nemluví do prázdna — každý se dívá na ostatní a podle nich váží svoje slova. Self-attention je matematický zápis téhle porady: každý token se podívá na všechny ostatní a spočítá, kdo mu právě teď „pomáhá k významu“.",
+      en: "In a meeting, nobody speaks into a void — each person watches the others and weighs their words accordingly. Self-attention is the math write-up of that meeting: each token looks at every other and computes who's currently 'helping its meaning'.",
+    },
+    whyItMatters: {
+      cs: "Důvod, proč Transformer rozumí kontextu líp než RNN. Bez self-attention žádné GPT.",
+      en: "The reason a Transformer understands context better than an RNN. No self-attention, no GPT.",
+    },
+    related: ["multi-head-attention", "qkv", "attention"],
+  },
+  {
+    id: "multi-head-attention",
+    parentId: "transformer",
+    domain: "generative-ai",
+    label: { cs: "Multi-head attention", en: "Multi-head attention" },
+    tagline: { cs: "Více pohledů na text najednou.", en: "Multiple views of the text in parallel." },
+    parable: {
+      cs: "Místo jednoho čtenáře nasadíte tým. Jeden čte syntax, druhý emoce, třetí fakta — a pak se všichni sejdou nad jedním shrnutím. Každá „hlava“ má svůj reflektor.",
+      en: "Instead of one reader you bring a panel. One tracks syntax, another emotion, a third facts — then they merge into a single summary. Each 'head' carries its own spotlight.",
+    },
+    whyItMatters: {
+      cs: "Drobná architektonická změna, ale obrovský skok v kvalitě. Hlavy zachycují různé typy vztahů.",
+      en: "Tiny architecture change, huge jump in quality. The heads capture different kinds of relationships.",
+    },
+    related: ["self-attention"],
+  },
+  {
+    id: "positional-encoding",
+    parentId: "transformer",
+    domain: "generative-ai",
+    label: { cs: "Positional encoding", en: "Positional encoding" },
+    tagline: { cs: "Jak modelu říct pořadí slov.", en: "How to tell the model word order." },
+    parable: {
+      cs: "Self-attention sama o sobě vidí jen pytel slov. Positional encoding je „číslo na zadní straně dresu“ — bez něj fotbalisty (tokeny) na hřišti rozeznáte po obličeji, ale netušíte, kdo je v jaké formaci.",
+      en: "Self-attention by itself only sees a bag of words. Positional encoding is the 'number on the jersey' — without it you'd recognise the players (tokens) by face but never figure out the formation.",
+    },
+    whyItMatters: {
+      cs: "Důvod, proč model umí odlišit „pes kouše muže“ od „muž kouše psa“.",
+      en: "The reason the model can tell 'dog bites man' from 'man bites dog'.",
+    },
+  },
+
+  /* ---- Self-attention (4th level) ---- */
+  {
+    id: "qkv",
+    parentId: "self-attention",
+    domain: "generative-ai",
+    label: { cs: "Query / Key / Value", en: "Query / Key / Value" },
+    tagline: { cs: "Tři role pro každý token.", en: "Three roles every token plays." },
+    parable: {
+      cs: "Představte si knihovnu. Query je vaše otázka („chci něco o vesmíru“), Keys jsou štítky na knihách, Value je obsah knihy. Vy porovnáte otázku se štítky a vytáhnete obsah té nejpodobnější.",
+      en: "Imagine a library. The Query is your question ('I want something about space'), the Keys are book labels, and the Values are the book contents. You match the query to the labels and pull the value of the closest match.",
+    },
+    whyItMatters: {
+      cs: "Když rozumíte Q/K/V, rozumíte attention od první rovnice. Otevírá pochopení trénovaných vah.",
+      en: "Understand Q/K/V and you understand attention from the first equation. Opens the door to reading trained weights.",
+    },
+  },
+
+  /* ---- Embeddings ---- */
+  {
+    id: "cosine-similarity",
+    parentId: "embeddings",
+    domain: "llms",
+    label: { cs: "Kosinová podobnost", en: "Cosine similarity" },
+    tagline: { cs: "Měření blízkosti významu.", en: "Measuring how close two meanings are." },
+    parable: {
+      cs: "Dva šípy v prostoru — když ukazují stejným směrem, říkáme, že texty „znamenají to samé“. Vůbec nezáleží, jak jsou dlouhé. Krátká věta o psovi ukazuje stejným směrem jako odstavec o psovi.",
+      en: "Two arrows in space — if they point the same way, the texts 'mean the same thing'. Their length doesn't matter. A short sentence about dogs and a paragraph about dogs both point the same way.",
+    },
+    whyItMatters: {
+      cs: "Standardní operace ve vector DB. Když ladíte RAG, ladíte často právě cosinky.",
+      en: "The bread-and-butter operation in vector DBs. Most RAG tuning is, at the end of the day, cosine tuning.",
+    },
+  },
+  {
+    id: "semantic-search",
+    parentId: "embeddings",
+    domain: "llms",
+    label: { cs: "Sémantické vyhledávání", en: "Semantic search" },
+    tagline: { cs: "Hledání podle významu, ne podle slov.", en: "Search by meaning, not by keywords." },
+    parable: {
+      cs: "Hledáte „auto“, ale dokument obsahuje jen „vůz“ a „čtyřkolák“. Klasický fulltext mlčí, sémantické vyhledávání odpoví — protože jejich embeddingy jsou skoro stejné.",
+      en: "You search for 'car', but the document only mentions 'vehicle' and 'four-wheeler'. Classic full-text gives up; semantic search hits the doc because the embeddings are almost identical.",
+    },
+    whyItMatters: {
+      cs: "Důvod, proč RAG funguje líp než stará firemní vyhledávátka.",
+      en: "The reason RAG outperforms the old enterprise search you've all suffered through.",
+    },
+    related: ["rag", "vector-databases", "cosine-similarity"],
+  },
+
+  /* ---- RLHF ---- */
+  {
+    id: "reward-modeling",
+    parentId: "rlhf",
+    domain: "llms",
+    label: { cs: "Reward modeling", en: "Reward modeling" },
+    tagline: { cs: "Naučit model, co je „dobrá odpověď“.", en: "Teaching the model what 'a good answer' looks like." },
+    parable: {
+      cs: "Než naučíte psa nový trik, musíte mu nejdřív stanovit, co je piškot. Reward model je váš způsob, jak modelu říct: tohle je piškot, tohle suchá kůrka.",
+      en: "Before you teach a dog a new trick, you have to define what a treat is. The reward model is how you tell the LLM 'this is a treat, this is a stale crust'.",
+    },
+    whyItMatters: {
+      cs: "Bez kvalitního reward modelu je RLHF jen drahý šum. Klíč k „chování“ modelu.",
+      en: "Without a solid reward model, RLHF is just expensive noise. The lever that shapes model 'behaviour'.",
+    },
+    related: ["rlhf"],
+  },
+  {
+    id: "dpo",
+    parentId: "rlhf",
+    domain: "llms",
+    label: { cs: "DPO", en: "Direct Preference Optimization" },
+    tagline: { cs: "RLHF bez složitého RL.", en: "RLHF without the heavy RL machinery." },
+    parable: {
+      cs: "Místo aby trenér psa odměňoval piškoty, prostě mu rovnou ukáže videa „takhle dobře, takhle špatně“. DPO se učí přímo z dvojic „lepší vs. horší odpověď“ — žádné PPO, žádné value funkce.",
+      en: "Instead of treating the dog with biscuits, you just show it 'this is the good way, this is the bad way' videos. DPO learns directly from 'preferred vs rejected' pairs — no PPO, no value function.",
+    },
+    whyItMatters: {
+      cs: "Stabilnější a lacinější trénink. Důvod, proč se z RLHF stalo „komoditní“.",
+      en: "More stable and far cheaper. A big reason RLHF moved from research-only to commodity.",
+    },
+    related: ["rlhf", "reward-modeling"],
+  },
+
+  /* ---- Vector databases ---- */
+  {
+    id: "ann-search",
+    parentId: "vector-databases",
+    domain: "rag",
+    label: { cs: "Approximate Nearest Neighbor", en: "Approximate Nearest Neighbor" },
+    tagline: { cs: "Skoro nejbližší soused, zato za milisekundy.", en: "Almost the nearest neighbor — in milliseconds." },
+    parable: {
+      cs: "Místo abyste prošli všechny lidi v Praze a hledali toho nejvyššího, projdete jen vybrané vchody. Občas vám nejvyšší unikne — zato máte výsledek za pět vteřin místo pěti hodin.",
+      en: "Instead of checking every person in Prague to find the tallest, you only peek into a few buildings. Occasionally you miss the actual tallest — but you finish in seconds, not hours.",
+    },
+    whyItMatters: {
+      cs: "Bez ANN by žádné velké vector DB nestihlo dotaz pod sekundu. Skoro každý RAG běží na ANN.",
+      en: "Without ANN no large vector DB would answer under a second. Almost every RAG you've used runs on ANN.",
+    },
+  },
+
+  /* ---- Agent loops ---- */
+  {
+    id: "react-pattern",
+    parentId: "agent-loop",
+    domain: "agents",
+    label: { cs: "ReAct (Reason + Act)", en: "ReAct (Reason + Act)" },
+    tagline: { cs: "Přemýšlej, pak jednej, pak zase přemýšlej.", en: "Think, act, think again." },
+    parable: {
+      cs: "Detektiv u tabule: napíše si hypotézu, vyšle stážistu zkontrolovat alibi, podle výsledku přepíše hypotézu, znovu vyšle. ReAct je tenhle „pište-jednejte“ rytmus zapsaný do promptu.",
+      en: "A detective at a whiteboard: writes a hypothesis, sends an intern to check an alibi, rewrites the hypothesis with the result, dispatches again. ReAct is exactly that 'reason-act' rhythm encoded in the prompt.",
+    },
+    whyItMatters: {
+      cs: "Nejjednodušší recept, jak udělat z LLM agenta. Pořád běží pod kapotou většiny frameworků.",
+      en: "The simplest recipe to turn an LLM into an agent. Still running under the hood of most frameworks.",
+    },
+    related: ["agent-loop", "tool-use"],
+  },
+
+  /* ---- Hallucinations ---- */
+  {
+    id: "grounding",
+    parentId: "hallucinations",
+    domain: "llms",
+    label: { cs: "Grounding", en: "Grounding" },
+    tagline: { cs: "Připoutat odpověď ke konkrétnímu zdroji.", en: "Anchor the answer to a concrete source." },
+    parable: {
+      cs: "Student u zkoušky bez taháku tipuje. Student s otevřenou knihou cituje. Grounding je to „dej mu otevřenou knihu“ — RAG, search, databáze, nebo kombinace.",
+      en: "A student without notes guesses. A student with the book open quotes. Grounding is 'give them the open book' — RAG, search, a database, or a combination.",
+    },
+    whyItMatters: {
+      cs: "Přímý lék na halucinace. Bez groundingu je faktická přesnost loterie.",
+      en: "The direct cure for hallucinations. Without grounding, factual accuracy is a lottery.",
+    },
+    related: ["hallucinations", "rag"],
   },
 ];
 
@@ -939,23 +1174,69 @@ export const DOMAIN_BRIDGES: ConceptEdge[] = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* Lookups                                                              */
+/* Lookups & tree traversal                                            */
 /* ------------------------------------------------------------------ */
 
-export const ALL_NODES: ConceptNode[] = [...DOMAINS, ...CONCEPTS];
+export const ALL_NODES: ConceptNode[] = [
+  ROOT_NODE,
+  ...DOMAINS,
+  ...CONCEPTS,
+  ...SUB_CONCEPTS,
+];
 
 const NODES_BY_ID = new Map(ALL_NODES.map((n) => [n.id, n]));
+
+const CHILDREN_BY_PARENT: Map<string, ConceptNode[]> = (() => {
+  const map = new Map<string, ConceptNode[]>();
+  for (const n of ALL_NODES) {
+    if (n.parentId == null) continue;
+    const bucket = map.get(n.parentId);
+    if (bucket) bucket.push(n);
+    else map.set(n.parentId, [n]);
+  }
+  return map;
+})();
 
 export function getNode(id: string): ConceptNode | undefined {
   return NODES_BY_ID.get(id);
 }
 
-export function conceptsForDomain(domainId: string): ConceptNode[] {
-  return CONCEPTS.filter((c) => c.domain === domainId);
+/** Direct children of a node, in the original authoring order. */
+export function childrenOf(id: string): ConceptNode[] {
+  return CHILDREN_BY_PARENT.get(id) ?? [];
 }
 
-/** Domain id → display colour token. Order matches DOMAINS. */
+export function hasChildren(id: string): boolean {
+  return CHILDREN_BY_PARENT.has(id);
+}
+
+/** True for the outer-ring pillars (LLMs, RAG, …). */
+export function isTopLevelDomain(node: ConceptNode): boolean {
+  return node.parentId === "ai-root";
+}
+
+/**
+ * Path from the root down to (and including) `id`. Useful for breadcrumbs
+ * and the "up one level" button. Returns `[]` if the id is unknown.
+ */
+export function pathToNode(id: string): ConceptNode[] {
+  const path: ConceptNode[] = [];
+  let cursor: ConceptNode | undefined = NODES_BY_ID.get(id);
+  while (cursor) {
+    path.unshift(cursor);
+    cursor = cursor.parentId ? NODES_BY_ID.get(cursor.parentId) : undefined;
+  }
+  return path;
+}
+
+/** Back-compat helper used by older code paths and tests. */
+export function conceptsForDomain(domainId: string): ConceptNode[] {
+  return CONCEPTS.filter((c) => c.parentId === domainId);
+}
+
+/** Domain id → display colour token. */
 export const DOMAIN_COLORS: Record<string, string> = {
+  "ai-root": "hsl(220 12% 80%)",
   "ai-basics": "hsl(212 100% 60%)",
   "machine-learning": "hsl(265 70% 62%)",
   "neural-networks": "hsl(195 78% 50%)",
@@ -967,3 +1248,7 @@ export const DOMAIN_COLORS: Record<string, string> = {
   "ai-safety": "hsl(4 80% 60%)",
   "business-use-cases": "hsl(132 49% 47%)",
 };
+
+export function colourForNode(node: ConceptNode): string {
+  return DOMAIN_COLORS[node.domain] ?? "hsl(220 12% 70%)";
+}

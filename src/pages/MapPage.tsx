@@ -22,6 +22,7 @@ import {
   DOMAIN_COLORS,
   conceptsForDomain,
   getNode,
+  isTopLevelDomain,
   pickLocaleText,
   type ConceptNode,
 } from "@/lib/aiMapData";
@@ -205,7 +206,7 @@ export function Component() {
           onJumpTo={(id) => {
             const target = getNode(id);
             if (!target) return;
-            if (target.level === "domain") {
+            if (isTopLevelDomain(target)) {
               setFocusedDomain(target.id);
               setSelectedConcept(null);
             } else {
@@ -737,7 +738,7 @@ function ConceptPanel({
   onClose: () => void;
   onJumpTo: (id: string) => void;
 }) {
-  const isDomain = node.level === "domain";
+  const isDomain = isTopLevelDomain(node);
   const domainNode = isDomain ? node : getNode(node.domain);
   const color = DOMAIN_COLORS[node.domain] ?? "hsl(var(--primary))";
 
