@@ -303,18 +303,19 @@ async function remoteStream(options: StreamOptions): Promise<void> {
     });
   } catch (e) {
     if ((e as Error).name === "AbortError") return;
-    onError(new Error(`Network error: ${(e as Error).message}`));
-    return;
+    // Edge function unreachable (not deployed / network) — fall back to mock
+    console.warn("[ai-tutor] remote unavailable, using mock fallback:", (e as Error).message);
+    return mockStream(options);
   }
 
   if (!res.ok) {
-    onError(new Error(`Tutor API error: ${res.status} ${res.statusText}`));
-    return;
+    // Function missing (404) or error — degrade gracefully to mock responses
+    console.warn(`[ai-tutor] remote returned ${res.status}, using mock fallback`);
+    return mockStream(options);
   }
 
   if (!res.body) {
-    onError(new Error("No response body"));
-    return;
+    return mockStream(options);
   }
 
   const reader = res.body.getReader();
