@@ -57,6 +57,11 @@ deno_version = 2
 
 [edge_runtime.secrets]
 OPENAI_API_KEY = "env(OPENAI_API_KEY)"
+# Vercel AI Gateway: one key routes to OpenAI / Anthropic / Google. Preferred
+# over OPENAI_API_KEY when set (see supabase/functions/ai-tutor/index.ts).
+AI_GATEWAY_API_KEY = "env(AI_GATEWAY_API_KEY)"
+AI_GATEWAY_PROVIDER = "env(AI_GATEWAY_PROVIDER)"
+OPENAI_CHAT_MODEL = "env(OPENAI_CHAT_MODEL)"
 RSS_USER_AGENT = "env(RSS_USER_AGENT)"
 PAPERS_SEARCH_USER_AGENT = "env(PAPERS_SEARCH_USER_AGENT)"
 UNPAYWALL_EMAIL = "env(UNPAYWALL_EMAIL)"
@@ -73,6 +78,13 @@ verify_jwt = false
 
 [functions.ai-enrich]
 verify_jwt = false
+
+# AI Tutor chat. Requires a signed-in caller so anonymous traffic can't burn
+# tokens — the chat widget attaches the user's Supabase access token. Real AI
+# turns on automatically once AI_GATEWAY_API_KEY (or OPENAI_API_KEY) is set in
+# secrets; until then the function streams a high-quality mock response.
+[functions.ai-tutor]
+verify_jwt = true
 
 # Scholar-like search. JWT verification is left off so the function is callable
 # from the browser with just the publishable key; the client still attaches the

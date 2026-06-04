@@ -17,7 +17,16 @@
  *   }
  *
  * Response: text/plain streaming (plain text deltas concatenated).
- * When no OPENAI_API_KEY is set, returns a high-quality mock stream.
+ *
+ * Provider resolution (best → fallback), mirroring the `tazatelka` /
+ * `sciobot-next` projects:
+ *   1. Vercel AI Gateway   — set `AI_GATEWAY_API_KEY`. One key routes to
+ *                            OpenAI / Anthropic / Google, picked per `provider/model`
+ *                            string. The AI SDK uses the gateway automatically
+ *                            when a bare model string is passed and the key is set.
+ *   2. Direct OpenAI       — set `OPENAI_API_KEY`. Used when no gateway key.
+ *   3. Mock stream         — neither key set (or the provider errors before any
+ *                            token is produced). Always available, no secrets.
  */
 
 import { streamText } from "npm:ai@6";
@@ -28,6 +37,14 @@ import { getCorsHeaders, handleCorsPreflight } from "../_shared/cors.ts";
 
 const CHAT_MODEL = Deno.env.get("OPENAI_CHAT_MODEL") ?? "gpt-4o-mini";
 const MAX_TOKENS = 2048;
+
+/**
+ * Default provider prefix used when routing a bare OpenAI-style model id
+ * (e.g. "gpt-4o-mini") through the Vercel AI Gateway. Override with
+ * `AI_GATEWAY_PROVIDER` (e.g. "openai", "anthropic", "google") if you point the
+ * gateway at a different default provider.
+ */
+const GATEWAY_PROVIDER = Deno.env.get("AI_GATEWAY_PROVIDER") ?? "openai";
 
 /* ─── System prompt ─────────────────────────────────────────────────────── */
 
@@ -189,6 +206,49 @@ function resolveModel(requested?: string): string {
   return CHAT_MODEL;
 }
 
+/**
+ * Resolve the model spec passed to `streamText`, preferring the AI Gateway,
+ * then a direct OpenAI key. Returns `null` when no provider is configured, in
+ * which case the caller falls back to the mock stream.
+ *
+ * The returned `model` is either:
+ *   - a `"provider/model"` string (Gateway routes it automatically), or
+ *   - an OpenAI model object from `createOpenAI(...)`.
+ * Both are valid `model` arguments for the AI SDK's `streamText`.
+ */
+function resolveModelSpec(
+  chosenModel: string,
+): { model: unknown; label: string } | null {
+  const gatewayKey = Deno.env.get("AI_GATEWAY_API_KEY");
+  if (gatewayKey) {
+    const id = chosenModel.includes("/") ? chosenModel : `${GATEWAY_PROVIDER}/${chosenModel}`;
+    return { model: id, label: `gateway:${id}` };
+  }
+
+  const openaiKey = Deno.env.get("OPENAI_API_KEY");
+  if (openaiKey) {
+    const openai = createOpenAI({ apiKey: openaiKey });
+    const bare = chosenModel.includes("/") ? chosenModel.split("/").pop()! : chosenModel;
+    return { model: openai(bare), label: `openai:${bare}` };
+  }
+
+  return null;
+}
+
+/** Stream a deterministic mock response word-by-word into the controller. */
+async function pumpMock(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  encoder: TextEncoder,
+  messages: TutorMessage[],
+  context?: TutorContext,
+): Promise<void> {
+  const mockText = buildMockResponse(messages, context);
+  for (const word of mockText.split(/(?<=\s)/)) {
+    await new Promise((r) => setTimeout(r, 14 + Math.random() * 20));
+    controller.enqueue(encoder.encode(word));
+  }
+}
+
 /* ─── Mock streaming (no API key) ───────────────────────────────────────── */
 
 function buildMockResponse(messages: TutorMessage[], context?: TutorContext): string {
@@ -337,8 +397,9 @@ Deno.serve(async (req: Request) => {
 
   const { messages = [], context, model: requestedModel } = body;
   const systemPrompt = buildSystemPrompt(context);
-  const apiKey = Deno.env.get("OPENAI_API_KEY");
   const chosenModel = resolveModel(requestedModel);
+  const spec = resolveModelSpec(chosenModel);
+  const encoder = new TextEncoder();
 
   const streamHeaders = {
     ...getCorsHeaders(req),
@@ -347,51 +408,49 @@ Deno.serve(async (req: Request) => {
     "Cache-Control": "no-cache",
   };
 
-  /* ── Real OpenAI streaming ─────────────────────────────────────────── */
-  if (apiKey) {
-    try {
-      const openai = createOpenAI({ apiKey });
-      const result = streamText({
-        model: openai(chosenModel),
-        system: systemPrompt,
-        messages,
-        maxTokens: MAX_TOKENS,
-        temperature: 0.7,
-      });
-
-      const encoder = new TextEncoder();
-      const stream = new ReadableStream({
-        async start(controller) {
-          try {
-            for await (const chunk of result.textStream) {
-              controller.enqueue(encoder.encode(chunk));
-            }
-          } catch (e) {
-            console.error("[ai-tutor] Stream error:", e);
-          } finally {
-            controller.close();
-          }
-        },
-      });
-
-      return new Response(stream, { headers: streamHeaders });
-    } catch (e) {
-      console.error("[ai-tutor] OpenAI error:", e);
-      // Fall through to mock on error
-    }
+  /* ── No provider configured → mock stream ──────────────────────────── */
+  if (!spec) {
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        await pumpMock(controller, encoder, messages, context);
+        controller.close();
+      },
+    });
+    return new Response(stream, { headers: streamHeaders });
   }
 
-  /* ── Mock streaming (no key or error) ──────────────────────────────── */
-  const mockText = buildMockResponse(messages, context);
-  const words = mockText.split(/(?<=\s)/); // split keeping trailing spaces
-
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
+  /* ── Real streaming (Gateway or direct OpenAI), mock on hard failure ─ */
+  console.log(`[ai-tutor] streaming via ${spec.label}`);
+  const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
-      for (const word of words) {
-        await new Promise((r) => setTimeout(r, 18 + Math.random() * 22));
-        controller.enqueue(encoder.encode(word));
+      let emittedAny = false;
+      try {
+        const result = streamText({
+          // deno-lint-ignore no-explicit-any
+          model: spec.model as any,
+          system: systemPrompt,
+          messages,
+          maxOutputTokens: MAX_TOKENS,
+          temperature: 0.7,
+        });
+
+        for await (const chunk of result.textStream) {
+          emittedAny = true;
+          controller.enqueue(encoder.encode(chunk));
+        }
+        controller.close();
+        return;
+      } catch (e) {
+        console.error("[ai-tutor] stream error:", e);
+        // Only degrade to mock if the model failed before producing any output;
+        // a mid-stream failure has already shown partial content to the user.
+        if (emittedAny) {
+          controller.close();
+          return;
+        }
       }
+
+      await pumpMock(controller, encoder, messages, context);
       controller.close();
     },
   });
