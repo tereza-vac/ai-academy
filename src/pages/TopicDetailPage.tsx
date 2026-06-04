@@ -21,8 +21,6 @@ import { listConversations } from "@/services/conversationHistory";
 import { dueCount } from "@/services/flashcards";
 import { hasNote } from "@/services/conceptNotes";
 import { cn } from "@/lib/utils";
-import { openChatWithConcept } from "@/stores/chatWidgetStore";
-
 /* ─── Topic learning stats card ─────────────────────────────────────────── */
 
 const MASTERY_CFG = [
@@ -100,17 +98,6 @@ function TopicLearningStats({ slug }: { slug: string }) {
 
         {/* Quick action links */}
         <div className="space-y-1.5">
-          {/* Quick question — widget stays on this page */}
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-full border-primary/20 text-primary hover:bg-primary/5"
-            onClick={() => openChatWithConcept({ conceptId: slug })}
-          >
-            <MessageSquareText className="h-3.5 w-3.5" />
-            Quick question (widget)
-          </Button>
-
           <Button asChild size="sm" className="w-full">
             <Link to={`/tutor?conceptId=${encodeURIComponent(slug)}`}>
               <Sparkles className="h-3.5 w-3.5" />

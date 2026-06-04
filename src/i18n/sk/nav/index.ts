@@ -8,6 +8,7 @@ const sk_nav: NamespaceNavTranslation = {
   teamLink: "Tím",
   radarLink: "Radar",
   libraryLink: "Knižnica",
+  papersLink: "Publikácie",
   practiceLink: "Precvičovanie",
   buildLabLink: "Build Lab",
   expandSidebar: "Rozbaliť panel",

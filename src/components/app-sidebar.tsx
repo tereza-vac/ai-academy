@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Award, GraduationCap, MapPin, MessageSquare, PanelLeftClose, PanelLeftOpen, Search, Sparkles, TrendingUp } from "lucide-react";
-import { useChatWidgetStore } from "@/stores/chatWidgetStore";
+import { Award, GraduationCap, MapPin, PanelLeftClose, PanelLeftOpen, Search, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { sidebarNavigation } from "@/config/navigation";
 import { dueCount } from "@/services/flashcards";
@@ -64,52 +63,6 @@ function FlashcardsNavItem({ collapsed }: { collapsed: boolean }) {
         </span>
       )}
     </NavLink>
-  );
-}
-
-function ChatButton({ collapsed }: { collapsed: boolean }) {
-  const toggle = useChatWidgetStore((s) => s.toggle);
-  const isOpen = useChatWidgetStore((s) => s.isOpen);
-
-  return (
-    <div className={cn("shrink-0 border-t border-border-subtle", collapsed ? "p-2" : "px-3 py-2.5")}>
-      <button
-        type="button"
-        onClick={toggle}
-        title="AI Tutor Chat"
-        className={cn(
-          "flex w-full items-center gap-2.5 rounded-xl transition-all duration-150 outline-none",
-          "focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
-          collapsed
-            ? "h-9 justify-center px-0 text-content-secondary hover:bg-surface-hover hover:text-content-primary"
-            : cn(
-                "px-3 py-2 text-left",
-                isOpen
-                  ? "bg-primary/10 text-primary"
-                  : "bg-gradient-to-r from-primary/8 to-transparent border border-primary/15 text-primary hover:from-primary/15 hover:border-primary/30",
-              ),
-        )}
-      >
-        <div className={cn(
-          "flex shrink-0 items-center justify-center rounded-lg",
-          collapsed ? "h-5 w-5" : "h-6 w-6",
-          !collapsed && "bg-primary/15",
-        )}>
-          <MessageSquare className={cn(collapsed ? "h-4 w-4" : "h-3.5 w-3.5")} />
-        </div>
-        {!collapsed && (
-          <div className="flex-1 min-w-0">
-            <p className="text-caption-xs font-semibold leading-tight truncate">AI Tutor</p>
-            <p className="text-[10px] text-primary/60 leading-tight">Zeptej se čehokoliv</p>
-          </div>
-        )}
-        {!collapsed && (
-          <span className="shrink-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary">
-            ✦
-          </span>
-        )}
-      </button>
-    </div>
   );
 }
 
@@ -249,9 +202,6 @@ export function AppSidebar({ onOpenPalette }: AppSidebarProps) {
             {!collapsed && <span className="flex-1 truncate">Study Plans</span>}
           </NavLink>
         </nav>
-
-        {/* AI Chat quick-launch */}
-        <ChatButton collapsed={collapsed} />
 
         <div className={cn("border-t border-border-subtle", collapsed ? "flex justify-center p-2" : "p-3")}>
           <SidebarUserMenu collapsed={collapsed} />

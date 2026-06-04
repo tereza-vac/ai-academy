@@ -10,7 +10,6 @@ import {
   GraduationCap,
   MapPin,
   MessageCircle,
-  MessageSquareText,
   Send,
   Sparkles,
   Square,
@@ -36,7 +35,6 @@ import {
 import { useTutorChat } from "@/hooks/useTutorChat";
 import { getStudiedConceptIds, masteryLevel, getConceptProgress } from "@/services/learningProgress";
 import { TutorMessageContent } from "@/components/tutor/TutorMessageContent";
-import { openChatWithConcept } from "@/stores/chatWidgetStore";
 import type { Locales } from "@/i18n/i18n-types";
 
 /* -------------------------------------------------------------------------- */
@@ -964,21 +962,6 @@ function ConceptPanel({
             <p className="text-caption-xs font-semibold uppercase tracking-widest text-content-tertiary">
               {locale === "cs" ? "Rychlé akce" : "Quick actions"}
             </p>
-
-            {/* Quick question — opens widget, keeps map open */}
-            <button
-              type="button"
-              onClick={() => openChatWithConcept({
-                conceptId: node.id,
-                domain: node.domain,
-              })}
-              className="group flex w-full items-center gap-3 rounded-xl border border-border-subtle bg-surface-base px-4 py-2.5 hover:border-primary/30 hover:bg-primary/5 transition-all text-left"
-            >
-              <MessageSquareText className="h-4 w-4 text-content-tertiary group-hover:text-primary shrink-0 transition-colors" />
-              <span className="flex-1 text-body-sm font-medium text-content-secondary group-hover:text-primary transition-colors">
-                {locale === "cs" ? "Rychlá otázka (zůstat na mapě)" : "Quick question (stay on map)"}
-              </span>
-            </button>
 
             {/* Primary: Open in Tutor */}
             <Link

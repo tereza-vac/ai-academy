@@ -8,6 +8,7 @@ const en_nav: NamespaceNavTranslation = {
   teamLink: "Team",
   radarLink: "Radar",
   libraryLink: "Library",
+  papersLink: "Publications",
   practiceLink: "Practice",
   buildLabLink: "Build Lab",
   expandSidebar: "Expand sidebar",

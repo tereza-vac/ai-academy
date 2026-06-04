@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import { AppSidebar } from "@/components/app-sidebar";
 import { CommandPalette } from "@/components/CommandPalette";
 import { AchievementToast } from "@/components/AchievementToast";
-import { ChatWidget } from "@/components/ChatWidget";
 import { useLocaleStore, selectLocale } from "@/stores/localeStore";
 import { useAchievementChecker } from "@/hooks/useAchievementChecker";
 import { getAllProgress, masteryLevel } from "@/services/learningProgress";
@@ -82,7 +81,6 @@ export default function MainLayout() {
 
       {paletteOpen && <CommandPalette locale={locale} onClose={closePalette} />}
       <AchievementToast queue={toastQueue} onDismiss={dismiss} locale={locale} />
-      <ChatWidget />
     </div>
   );
 }

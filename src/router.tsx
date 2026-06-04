@@ -30,6 +30,7 @@ export const router = createBrowserRouter([
           { path: "team", lazy: () => import("@/pages/TeamPage") },
           { path: "library", lazy: () => import("@/pages/LibraryPage") },
           { path: "library/search", lazy: () => import("@/pages/PaperSearchPage") },
+          { path: "papers", lazy: () => import("@/pages/PaperSearchPage") },
           { path: "reader/:resourceId", lazy: () => import("@/pages/ReaderPage") },
           { path: "practice", lazy: () => import("@/pages/PracticePage") },
           { path: "practice/:slug", lazy: () => import("@/pages/QuizRunnerPage") },

@@ -14,6 +14,7 @@ const cs_nav: BaseTranslation = {
   teamLink: "Tým",
   radarLink: "Radar",
   libraryLink: "Knihovna",
+  papersLink: "Publikace",
   practiceLink: "Procvičování",
   buildLabLink: "Build Lab",
   expandSidebar: "Rozbalit panel",

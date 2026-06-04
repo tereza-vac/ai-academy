@@ -1224,6 +1224,10 @@ export type NamespaceNavTranslation = {
 	 */
 	libraryLink: string
 	/**
+	 * P​u​b​l​i​k​a​c​e
+	 */
+	papersLink: string
+	/**
 	 * P​r​o​c​v​i​č​o​v​á​n​í
 	 */
 	practiceLink: string
@@ -3091,6 +3095,10 @@ export type TranslationFunctions = {
 		 * Knihovna
 		 */
 		libraryLink: () => LocalizedString
+		/**
+		 * Publikace
+		 */
+		papersLink: () => LocalizedString
 		/**
 		 * Procvičování
 		 */
