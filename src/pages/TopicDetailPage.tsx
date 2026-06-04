@@ -1,6 +1,7 @@
+import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Brain, BookOpen, Clock } from "lucide-react";
+import { ArrowLeft, Brain, BookOpen, CheckCircle2, Clock, GraduationCap, MessageSquareText, Sparkles, Star } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,10 +11,143 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Markdown } from "@/components/markdown";
 import { ResourceCard } from "@/components/resource-card";
 import { AIGeneratedQuestions } from "@/components/ai-generated-questions";
+import { TutorNotebook } from "@/components/tutor/TutorNotebook";
 import { getTopicBySlug, listTopics } from "@/services/topicsApi";
 import { listResources } from "@/services/resourcesApi";
 import { listQuizzes } from "@/services/practiceApi";
 import { queryKeys } from "@/lib/queryKeys";
+import { getConceptProgress, masteryLevel } from "@/services/learningProgress";
+import { listConversations } from "@/services/conversationHistory";
+import { dueCount } from "@/services/flashcards";
+import { hasNote } from "@/services/conceptNotes";
+import { cn } from "@/lib/utils";
+import { openChatWithConcept } from "@/stores/chatWidgetStore";
+
+/* ─── Topic learning stats card ─────────────────────────────────────────── */
+
+const MASTERY_CFG = [
+  { label: "Not started", icon: null,         color: "text-content-tertiary",                     bg: "" },
+  { label: "Explored",    icon: null,         color: "text-sky-600 dark:text-sky-400",            bg: "bg-sky-50 dark:bg-sky-950/30 border-sky-400/30" },
+  { label: "Proficient",  icon: Star,         color: "text-amber-600 dark:text-amber-400",        bg: "bg-amber-50 dark:bg-amber-950/30 border-amber-400/30" },
+  { label: "Mastered",    icon: CheckCircle2, color: "text-emerald-600 dark:text-emerald-400",    bg: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-400/30" },
+] as const;
+
+function TopicLearningStats({ slug }: { slug: string }) {
+  const progress = useMemo(() => getConceptProgress(slug), [slug]);
+  const conversations = useMemo(
+    () => listConversations().filter((c) => c.conceptId === slug),
+    [slug],
+  );
+  const cardsDue = useMemo(() => dueCount(), []);
+  const noteExists = useMemo(() => hasNote(slug), [slug]);
+
+  if (!progress) {
+    return (
+      <Card variant="soft">
+        <CardContent className="py-4">
+          <div className="flex flex-col gap-3">
+            <p className="text-caption-xs text-content-tertiary font-medium uppercase tracking-wide">Your progress</p>
+            <p className="text-body-sm text-content-tertiary">Start learning this topic with the AI Tutor to track your progress.</p>
+            <Button asChild size="sm" variant="outline" className="w-full">
+              <Link to={`/tutor?conceptId=${encodeURIComponent(slug)}`}>
+                <MessageSquareText className="h-3.5 w-3.5" />
+                Open AI Tutor
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const lvl = masteryLevel(progress);
+  const cfg = MASTERY_CFG[lvl];
+  const Icon = cfg.icon;
+
+  return (
+    <Card variant="soft">
+      <CardHeader>
+        <CardTitle className="text-body-md">Your progress</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {/* Mastery badge */}
+        <div className={cn(
+          "flex items-center gap-2 rounded-lg border px-3 py-2",
+          cfg.bg || "border-border-subtle bg-surface-base",
+        )}>
+          {Icon && <Icon className={cn("h-4 w-4", cfg.color)} />}
+          <div>
+            <p className={cn("text-body-sm font-semibold", cfg.color)}>{cfg.label}</p>
+            <p className="text-caption-xs text-content-tertiary">Mastery level {lvl}/3</p>
+          </div>
+        </div>
+
+        {/* Stat row */}
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-lg bg-surface-base border border-border-subtle py-2">
+            <p className="text-heading-xs font-bold text-content-primary">{progress.visitCount}</p>
+            <p className="text-[10px] text-content-tertiary">sessions</p>
+          </div>
+          <div className="rounded-lg bg-surface-base border border-border-subtle py-2">
+            <p className="text-heading-xs font-bold text-content-primary">{progress.messageCount}</p>
+            <p className="text-[10px] text-content-tertiary">messages</p>
+          </div>
+          <div className="rounded-lg bg-surface-base border border-border-subtle py-2">
+            <p className="text-heading-xs font-bold text-content-primary">{conversations.length}</p>
+            <p className="text-[10px] text-content-tertiary">convos</p>
+          </div>
+        </div>
+
+        {/* Quick action links */}
+        <div className="space-y-1.5">
+          {/* Quick question — widget stays on this page */}
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-full border-primary/20 text-primary hover:bg-primary/5"
+            onClick={() => openChatWithConcept({ conceptId: slug })}
+          >
+            <MessageSquareText className="h-3.5 w-3.5" />
+            Quick question (widget)
+          </Button>
+
+          <Button asChild size="sm" className="w-full">
+            <Link to={`/tutor?conceptId=${encodeURIComponent(slug)}`}>
+              <Sparkles className="h-3.5 w-3.5" />
+              Full AI Tutor session
+            </Link>
+          </Button>
+
+          {conversations.length > 0 && (
+            <Button asChild size="sm" variant="outline" className="w-full">
+              <Link to={`/tutor?resume=${encodeURIComponent(conversations[0].id)}`}>
+                <MessageSquareText className="h-3.5 w-3.5" />
+                Resume last conversation
+              </Link>
+            </Button>
+          )}
+
+          {cardsDue > 0 && (
+            <Button asChild size="sm" variant="outline" className="w-full">
+              <Link to="/flashcards">
+                <GraduationCap className="h-3.5 w-3.5" />
+                {cardsDue} flashcard{cardsDue !== 1 ? "s" : ""} due
+              </Link>
+            </Button>
+          )}
+
+          {noteExists && (
+            <Button asChild size="sm" variant="ghost" className="w-full">
+              <Link to={`/tutor?conceptId=${encodeURIComponent(slug)}`}>
+                📝 View my notes
+              </Link>
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function Component() {
   const { slug = "" } = useParams<{ slug: string }>();
@@ -152,7 +286,15 @@ export function Component() {
             </Card>
           ) : null}
 
+          <TopicLearningStats slug={slug} />
+
           <AIGeneratedQuestions topic={topic} />
+
+          <TutorNotebook
+            title={topic.title}
+            contextSummary={topic.bodyMd ?? topic.summary ?? undefined}
+            domain={topic.tags?.[0]}
+          />
         </aside>
       </div>
 

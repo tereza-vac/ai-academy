@@ -10,6 +10,7 @@ import {
   LogOut,
   Moon,
   Palette,
+  Settings,
   Sun,
   User as UserIcon,
 } from "lucide-react";
@@ -304,6 +305,11 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
         >
           <Keyboard />
           <span>{LL.userMenu.keyboardShortcuts()}</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem onSelect={() => navigate("/settings")}>
+          <Settings />
+          <span>Settings</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

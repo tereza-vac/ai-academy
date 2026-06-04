@@ -4,6 +4,7 @@ const sk_nav: NamespaceNavTranslation = {
   homeLink: "Domov",
   learnLink: "Učenie",
   mapLink: "Mapa AI",
+  tutorLink: "AI Tutor",
   teamLink: "Tím",
   radarLink: "Radar",
   libraryLink: "Knižnica",

@@ -18,6 +18,7 @@ export const API_CONFIG = {
 
   RADAR_INGEST_URL: `${SUPABASE_URL}/functions/v1/radar-ingest`,
   AI_ENRICH_URL: `${SUPABASE_URL}/functions/v1/ai-enrich`,
+  AI_TUTOR_URL: `${SUPABASE_URL}/functions/v1/ai-tutor`,
   PAPERS_SEARCH_URL: `${SUPABASE_URL}/functions/v1/papers-search`,
   RESOURCE_IMPORT_URL: `${SUPABASE_URL}/functions/v1/resource-import`,
   RESOURCE_TRANSLATE_URL: `${SUPABASE_URL}/functions/v1/resource-translate`,

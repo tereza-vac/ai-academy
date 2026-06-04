@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock, Layers } from "lucide-react";
+import { ArrowRight, Clock, CheckCircle2, Layers, MessageSquareText, Star } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,36 @@ import { cn } from "@/lib/utils";
 import { useI18nContext } from "@/i18n/i18n-react";
 import type { TranslationFunctions } from "@/i18n/i18n-types";
 import type { Topic, Track } from "@/types/domain";
+import { getConceptProgress, masteryLevel } from "@/services/learningProgress";
+import { openChatWithConcept } from "@/stores/chatWidgetStore";
+
+/* ─── Topic progress badge ─────────────────────────────────────────────── */
+
+const MASTERY_CONFIG = [
+  { label: "Explored",  icon: null,         classes: "border-sky-400/40 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400" },
+  { label: "Studied",   icon: null,         classes: "border-violet-400/40 bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-400" },
+  { label: "Proficient",icon: Star,         classes: "border-amber-400/40 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400" },
+  { label: "Mastered",  icon: CheckCircle2, classes: "border-emerald-400/40 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400" },
+] as const;
+
+function TopicProgressBadge({ slug }: { slug: string }) {
+  const progress = useMemo(() => getConceptProgress(slug), [slug]);
+  if (!progress) return null;
+
+  const level = masteryLevel(progress);
+  const cfg = MASTERY_CONFIG[level];
+  const Icon = cfg.icon;
+
+  return (
+    <span className={cn(
+      "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold",
+      cfg.classes,
+    )}>
+      {Icon && <Icon className="h-3 w-3" />}
+      {cfg.label}
+    </span>
+  );
+}
 
 const trackAccent: Record<string, string> = {
   brand: "bg-brand-soft text-primary",
@@ -222,11 +252,14 @@ function TrackSection({
           <Link key={topic.id} to={`/learn/${topic.slug}`} className="group">
             <Card variant="elevated" interactive className="h-full">
               <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Badge variant="muted">{topic.difficulty}</Badge>
-                  <span className="text-caption-xs text-content-tertiary">
-                    {LL.learn.topicMinutes({ count: topic.estimatedMinutes })}
-                  </span>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="muted">{topic.difficulty}</Badge>
+                    <span className="text-caption-xs text-content-tertiary">
+                      {LL.learn.topicMinutes({ count: topic.estimatedMinutes })}
+                    </span>
+                  </div>
+                  <TopicProgressBadge slug={topic.slug} />
                 </div>
                 <CardTitle>
                   <span className="group-hover:text-primary">{topic.title}</span>
@@ -241,8 +274,23 @@ function TrackSection({
                     <Badge key={tag} variant="outline">#{tag}</Badge>
                   ))}
                 </div>
-                <div className="mt-3 inline-flex items-center gap-1 text-body-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                  {LL.learn.openTopic()} <ArrowRight className="h-3.5 w-3.5" />
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-1 text-body-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                    {LL.learn.openTopic()} <ArrowRight className="h-3.5 w-3.5" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      openChatWithConcept({ conceptId: topic.slug });
+                    }}
+                    className="inline-flex items-center gap-1 rounded-full border border-transparent px-2 py-0.5 text-caption-xs text-content-tertiary opacity-0 transition-all group-hover:opacity-100 hover:border-primary/20 hover:bg-primary/5 hover:text-primary"
+                    title="Ask AI Tutor about this topic"
+                  >
+                    <MessageSquareText className="h-3 w-3" />
+                    Ask AI
+                  </button>
                 </div>
               </CardContent>
             </Card>

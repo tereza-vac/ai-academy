@@ -1,12 +1,19 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
+  Brain,
   Compass,
   ExternalLink,
+  GraduationCap,
+  MapPin,
   MessageCircle,
+  MessageSquareText,
   Send,
   Sparkles,
+  Square,
   X,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
@@ -26,6 +33,10 @@ import {
   pickLocaleText,
   type ConceptNode,
 } from "@/lib/aiMapData";
+import { useTutorChat } from "@/hooks/useTutorChat";
+import { getStudiedConceptIds, masteryLevel, getConceptProgress } from "@/services/learningProgress";
+import { TutorMessageContent } from "@/components/tutor/TutorMessageContent";
+import { openChatWithConcept } from "@/stores/chatWidgetStore";
 import type { Locales } from "@/i18n/i18n-types";
 
 /* -------------------------------------------------------------------------- */
@@ -118,6 +129,8 @@ export function Component() {
   const locale = useLocaleStore(selectLocale);
   const [focusedDomain, setFocusedDomain] = useState<string | null>(null);
   const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
+  // Studied concepts — read once on mount (updated when user visits tutor)
+  const studiedIds = useMemo(() => getStudiedConceptIds(), []);
 
   // Pre-compute layout. Memoised because re-deriving on every render flickers
   // SVG transitions when the parent state churns from chat messages.
@@ -185,6 +198,7 @@ export function Component() {
             setSelectedConcept(null);
           }}
           onSelectConcept={(id) => setSelectedConcept(id)}
+          studiedIds={studiedIds}
         />
         <Legend locale={locale} />
       </Card>
@@ -234,6 +248,7 @@ interface MapCanvasProps {
   focusedDomain: string | null;
   onFocusDomain: (id: string) => void;
   onSelectConcept: (id: string) => void;
+  studiedIds?: Set<string>;
 }
 
 function MapCanvas({
@@ -242,6 +257,7 @@ function MapCanvas({
   focusedDomain,
   onFocusDomain,
   onSelectConcept,
+  studiedIds,
 }: MapCanvasProps) {
   return (
     <div className="relative h-[640px] w-full">
@@ -312,6 +328,7 @@ function MapCanvas({
             domainId={focusedDomain}
             locale={locale}
             onSelect={onSelectConcept}
+            studiedIds={studiedIds}
           />
         ) : null}
 
@@ -525,10 +542,12 @@ function FocusConcepts({
   domainId,
   locale,
   onSelect,
+  studiedIds,
 }: {
   domainId: string;
   locale: Locales;
   onSelect: (id: string) => void;
+  studiedIds?: Set<string>;
 }) {
   const concepts = conceptsForDomain(domainId);
   const color = DOMAIN_COLORS[domainId] ?? "hsl(var(--primary))";
@@ -573,17 +592,68 @@ function FocusConcepts({
               onSelect(c.id);
             }}
           >
-            <circle
-              r={FOCUS_CONCEPT_RADIUS}
-              fill="hsl(var(--surface-elevated))"
-              stroke={color}
-              strokeWidth={2}
-            />
-            <circle
-              r={FOCUS_CONCEPT_RADIUS - 8}
-              fill={color}
-              opacity={0.15}
-            />
+            {/* Mastery heatmap: glow + fill color by mastery level */}
+            {studiedIds?.has(c.id) && (() => {
+              const progress = getConceptProgress(c.id);
+              const lvl = progress ? masteryLevel(progress) : 1;
+              // Level colors: 1=sky, 2=violet, 3=emerald
+              const MASTERY_COLORS = [color, "#38bdf8", "#a78bfa", "#34d399"] as const;
+              const masteryColor = MASTERY_COLORS[lvl] ?? color;
+              const glowR = FOCUS_CONCEPT_RADIUS + (lvl >= 3 ? 10 : lvl >= 2 ? 7 : 5);
+              const glowOpacity = lvl >= 3 ? 0.45 : lvl >= 2 ? 0.30 : 0.18;
+              return (
+                <>
+                  <circle r={glowR} fill={masteryColor} opacity={glowOpacity} />
+                  <circle
+                    r={FOCUS_CONCEPT_RADIUS}
+                    fill="hsl(var(--surface-elevated))"
+                    stroke={masteryColor}
+                    strokeWidth={lvl >= 3 ? 3 : lvl >= 2 ? 2.5 : 2}
+                  />
+                  <circle
+                    r={FOCUS_CONCEPT_RADIUS - 8}
+                    fill={masteryColor}
+                    opacity={lvl >= 3 ? 0.35 : lvl >= 2 ? 0.25 : 0.18}
+                  />
+                  {/* Mastery badge dot (top-right) */}
+                  <circle
+                    cx={FOCUS_CONCEPT_RADIUS * 0.7}
+                    cy={-FOCUS_CONCEPT_RADIUS * 0.7}
+                    r={lvl >= 3 ? 6.5 : 5}
+                    fill={masteryColor}
+                    stroke="hsl(var(--surface-elevated))"
+                    strokeWidth={1.5}
+                  />
+                  {lvl >= 3 && (
+                    <text
+                      x={FOCUS_CONCEPT_RADIUS * 0.7}
+                      y={-FOCUS_CONCEPT_RADIUS * 0.7 + 4}
+                      textAnchor="middle"
+                      fontSize={8}
+                      fontWeight={700}
+                      fill="white"
+                      className="select-none pointer-events-none"
+                    >✓</text>
+                  )}
+                </>
+              );
+            })()}
+            {/* Default (unstudied) node */}
+            {!studiedIds?.has(c.id) && (
+              <>
+                <circle
+                  r={FOCUS_CONCEPT_RADIUS}
+                  fill="hsl(var(--surface-elevated))"
+                  stroke={color}
+                  strokeWidth={2}
+                />
+                <circle
+                  r={FOCUS_CONCEPT_RADIUS - 8}
+                  fill={color}
+                  opacity={0.15}
+                />
+              </>
+            )}
             <text
               x={labelDx}
               y={labelDy}
@@ -604,10 +674,18 @@ function FocusConcepts({
 
 function Legend({ locale }: { locale: Locales }) {
   return (
-    <div className="pointer-events-none absolute bottom-4 left-4 flex flex-wrap gap-3 rounded-xl border border-border-subtle bg-surface-elevated/85 px-3 py-2 text-caption-xs text-content-secondary backdrop-blur">
-      <LegendDot color="hsl(var(--primary))" label={t("legendDomains", locale)} />
-      <LegendDot color="hsl(var(--premium))" label={t("legendConcepts", locale)} />
-      <LegendLine label={t("legendBridges", locale)} />
+    <div className="pointer-events-none absolute bottom-4 left-4 flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface-elevated/90 px-3 py-2.5 text-caption-xs text-content-secondary backdrop-blur">
+      <div className="flex flex-wrap gap-3">
+        <LegendDot color="hsl(var(--primary))" label={t("legendDomains", locale)} />
+        <LegendDot color="hsl(var(--premium))" label={t("legendConcepts", locale)} />
+        <LegendLine label={t("legendBridges", locale)} />
+      </div>
+      <div className="border-t border-border-subtle/50 pt-1.5 flex flex-wrap gap-3">
+        <span className="text-[10px] font-semibold text-content-tertiary uppercase tracking-wide w-full">Mastery</span>
+        <LegendDot color="#38bdf8" label="Explored" />
+        <LegendDot color="#a78bfa" label="Studied" />
+        <LegendDot color="#34d399" label="Mastered" />
+      </div>
     </div>
   );
 }
@@ -721,12 +799,6 @@ function FocusBreakdown({
 /* Concept panel — slides in from the right, contains the mini-chatbot         */
 /* -------------------------------------------------------------------------- */
 
-interface ChatMessage {
-  id: string;
-  role: "user" | "bot";
-  text: string;
-}
-
 function ConceptPanel({
   locale,
   node,
@@ -741,6 +813,7 @@ function ConceptPanel({
   const isDomain = isTopLevelDomain(node);
   const domainNode = isDomain ? node : getNode(node.domain);
   const color = DOMAIN_COLORS[node.domain] ?? "hsl(var(--primary))";
+  const conceptProgress = useMemo(() => getConceptProgress(node.id), [node.id]);
 
   // Related = explicit related[] plus, for domains, all their concept ids.
   const relatedIds = useMemo(() => {
@@ -796,6 +869,32 @@ function ConceptPanel({
         </div>
 
         <div className="space-y-6 px-6 py-6">
+          {/* Learning progress badge */}
+          {conceptProgress && (() => {
+            const lvl = masteryLevel(conceptProgress);
+            const levelLabels = {
+              cs: ["", "Prozkoumáno", "Studováno", "Zvládnuto"],
+              en: ["", "Explored", "Studied", "Mastered"],
+            };
+            const loc = (locale === "cs" ? "cs" : "en") as "cs" | "en";
+            const dotColors = ["", "bg-yellow-400", "bg-blue-400", "bg-success"];
+            return (
+              <div className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-base px-4 py-3">
+                <span className={`inline-block h-2.5 w-2.5 rounded-full ${dotColors[lvl]}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-body-sm font-medium text-content-primary">
+                    {levelLabels[loc][lvl]}
+                  </p>
+                  <p className="text-caption-xs text-content-tertiary">
+                    {locale === "cs"
+                      ? `${conceptProgress.visitCount} návštěv · ${conceptProgress.messageCount} zpráv`
+                      : `${conceptProgress.visitCount} visits · ${conceptProgress.messageCount} messages`}
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
+
           <Section title={t("parableHeading", locale)}>
             <p className="text-body-md leading-relaxed text-content-secondary">
               {pickLocaleText(node.parable, locale)}
@@ -860,6 +959,71 @@ function ConceptPanel({
 
           <ConceptChat locale={locale} node={node} />
 
+          {/* Quick actions */}
+          <div className="space-y-2.5">
+            <p className="text-caption-xs font-semibold uppercase tracking-widest text-content-tertiary">
+              {locale === "cs" ? "Rychlé akce" : "Quick actions"}
+            </p>
+
+            {/* Quick question — opens widget, keeps map open */}
+            <button
+              type="button"
+              onClick={() => openChatWithConcept({
+                conceptId: node.id,
+                domain: node.domain,
+              })}
+              className="group flex w-full items-center gap-3 rounded-xl border border-border-subtle bg-surface-base px-4 py-2.5 hover:border-primary/30 hover:bg-primary/5 transition-all text-left"
+            >
+              <MessageSquareText className="h-4 w-4 text-content-tertiary group-hover:text-primary shrink-0 transition-colors" />
+              <span className="flex-1 text-body-sm font-medium text-content-secondary group-hover:text-primary transition-colors">
+                {locale === "cs" ? "Rychlá otázka (zůstat na mapě)" : "Quick question (stay on map)"}
+              </span>
+            </button>
+
+            {/* Primary: Open in Tutor */}
+            <Link
+              to={`/tutor?conceptId=${encodeURIComponent(node.id)}&domain=${encodeURIComponent(node.domain)}`}
+              className="group flex w-full items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 hover:border-primary/40 hover:bg-primary/10 transition-all"
+            >
+              <Sparkles className="h-4 w-4 text-primary shrink-0" />
+              <span className="flex-1 text-body-sm font-semibold text-primary">
+                {locale === "cs" ? "Studovat s AI Tutorem" : "Study with AI Tutor"}
+              </span>
+              <ArrowRight className="h-3.5 w-3.5 text-primary/60 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+            {/* Secondary row */}
+            <div className="grid grid-cols-3 gap-2">
+              <Link
+                to={`/tutor?conceptId=${encodeURIComponent(node.id)}&domain=${encodeURIComponent(node.domain)}&mode=quiz`}
+                className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
+              >
+                <Brain className="h-4 w-4 text-amber-500 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
+                  {locale === "cs" ? "Kvíz" : "Quiz me"}
+                </span>
+              </Link>
+              <Link
+                to={`/tutor?conceptId=${encodeURIComponent(node.id)}&domain=${encodeURIComponent(node.domain)}&mode=feynman`}
+                className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
+              >
+                <GraduationCap className="h-4 w-4 text-violet-500 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
+                  {locale === "cs" ? "Feynman" : "Feynman"}
+                </span>
+              </Link>
+              <Link
+                to={`/plan`}
+                className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
+              >
+                <MapPin className="h-4 w-4 text-emerald-500 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
+                  {locale === "cs" ? "Plán" : "Plan"}
+                </span>
+              </Link>
+            </div>
+          </div>
+
           <Card variant="soft" className="p-4">
             <div className="flex items-start gap-3">
               <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-brand-soft text-primary">
@@ -893,50 +1057,48 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 /* -------------------------------------------------------------------------- */
-/* Mini chatbot — local-only placeholder. Will be replaced with a real model.  */
+/* Mini chatbot — wired to the real ai-tutor edge function                    */
 /* -------------------------------------------------------------------------- */
 
 function ConceptChat({ locale, node }: { locale: Locales; node: ConceptNode }) {
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [
-    { id: "intro", role: "bot", text: t("chatIntro", locale) },
-  ]);
+  const context = {
+    conceptId: node.id,
+    conceptLabel: pickLocaleText(node.label, locale),
+    conceptSummary: pickLocaleText(node.parable, locale),
+    domain: node.domain,
+    locale,
+  };
+
+  const { messages, streamingText, isStreaming, isError, sendMessage, cancelStream, resetSession } =
+    useTutorChat({
+      context,
+      welcomeMessage: t("chatIntro", locale),
+    });
+  // regenerate not exposed in map mini-chat — it's available in full tutor
+
   const [draft, setDraft] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Reset the chat when the user switches concept or locale so the panel
-  // doesn't leak yesterday's conversation when reopened on a new topic.
   useEffect(() => {
-    setMessages([
-      { id: "intro", role: "bot", text: t("chatIntro", locale) },
-    ]);
+    resetSession();
     setDraft("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale, node.id]);
 
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages]);
+  }, [messages.length, streamingText]);
 
-  function send(text: string) {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    const userMsg: ChatMessage = {
-      id: `u-${Date.now()}`,
-      role: "user",
-      text: trimmed,
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setDraft("");
-    // Pretend the assistant is thinking briefly, then drop a canned reply.
-    setTimeout(() => {
-      const botMsg: ChatMessage = {
-        id: `b-${Date.now()}`,
-        role: "bot",
-        text: cannedReply(trimmed, node, locale),
-      };
-      setMessages((prev) => [...prev, botMsg]);
-    }, 420);
-  }
+  const send = useCallback(
+    (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isStreaming) return;
+      sendMessage(trimmed);
+      setDraft("");
+    },
+    [isStreaming, sendMessage]
+  );
 
   const starters = [
     t("chatStarter1", locale),
@@ -946,17 +1108,71 @@ function ConceptChat({ locale, node }: { locale: Locales; node: ConceptNode }) {
 
   return (
     <Card variant="soft" className="overflow-hidden">
-      <div className="flex items-center gap-2 border-b border-border-subtle px-4 py-3">
-        <MessageCircle className="h-4 w-4 text-content-secondary" />
-        <span className="text-body-md font-semibold text-content-primary">
-          {t("chatHeading", locale)}
-        </span>
+      <div className="flex items-center justify-between gap-2 border-b border-border-subtle px-4 py-3">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="h-4 w-4 text-content-secondary" />
+          <span className="text-body-md font-semibold text-content-primary">
+            {t("chatHeading", locale)}
+          </span>
+        </div>
+        <Link
+          to={`/tutor?conceptId=${node.id}&domain=${encodeURIComponent(node.domain)}`}
+          className="flex items-center gap-1 text-caption-xs text-content-tertiary hover:text-primary transition-colors"
+        >
+          {locale === "cs" ? "Otevřít v tutoru" : "Open in tutor"}
+          <ArrowUpRight className="h-3 w-3" />
+        </Link>
       </div>
 
       <div ref={scrollRef} className="max-h-72 overflow-y-auto px-4 py-3 space-y-2">
         {messages.map((m) => (
-          <ChatBubble key={m.id} role={m.role} text={m.text} />
+          <div key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
+            <div
+              className={cn(
+                "max-w-[85%] rounded-2xl px-3.5 py-2 text-body-sm leading-relaxed",
+                m.role === "user"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-surface-elevated text-content-secondary border border-border-subtle",
+              )}
+            >
+              {m.role === "assistant" ? (
+                <TutorMessageContent content={m.content} className="text-body-sm" />
+              ) : (
+                m.content
+              )}
+            </div>
+          </div>
         ))}
+
+        {/* Streaming bubble */}
+        {isStreaming && streamingText && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-border-subtle bg-surface-elevated px-3.5 py-2 text-body-sm">
+              <TutorMessageContent content={streamingText} isStreaming className="text-body-sm" />
+            </div>
+          </div>
+        )}
+
+        {/* Typing indicator */}
+        {isStreaming && !streamingText && (
+          <div className="flex justify-start">
+            <div className="flex items-center gap-1 rounded-2xl border border-border-subtle bg-surface-elevated px-3.5 py-2.5">
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className="h-1.5 w-1.5 rounded-full bg-content-tertiary animate-bounce"
+                  style={{ animationDelay: `${i * 0.15}s` }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {isError && (
+          <div className="text-caption-xs text-destructive text-center py-1">
+            {locale === "cs" ? "Něco se nepovedlo. Zkus to znovu." : "Something went wrong. Try again."}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-1.5 border-t border-border-subtle px-4 pt-3">
@@ -965,7 +1181,8 @@ function ConceptChat({ locale, node }: { locale: Locales; node: ConceptNode }) {
             key={s}
             type="button"
             onClick={() => send(s)}
-            className="rounded-full border border-border-subtle bg-surface-base px-3 py-1 text-caption-xs text-content-secondary transition-colors hover:border-border-strong hover:text-content-primary outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]"
+            disabled={isStreaming}
+            className="rounded-full border border-border-subtle bg-surface-base px-3 py-1 text-caption-xs text-content-secondary transition-colors hover:border-border-strong hover:text-content-primary outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))] disabled:opacity-40 disabled:pointer-events-none"
           >
             {s}
           </button>
@@ -984,64 +1201,19 @@ function ConceptChat({ locale, node }: { locale: Locales; node: ConceptNode }) {
           onChange={(e) => setDraft(e.target.value)}
           placeholder={t("chatPlaceholder", locale)}
           className="h-9"
+          disabled={isStreaming}
         />
-        <Button type="submit" size="sm" disabled={!draft.trim()}>
-          <Send className="h-3.5 w-3.5" />
-          {t("chatSend", locale)}
-        </Button>
+        {isStreaming ? (
+          <Button type="button" size="sm" variant="outline" onClick={cancelStream}>
+            <Square className="h-3 w-3 fill-current" />
+          </Button>
+        ) : (
+          <Button type="submit" size="sm" disabled={!draft.trim()}>
+            <Send className="h-3.5 w-3.5" />
+            {t("chatSend", locale)}
+          </Button>
+        )}
       </form>
     </Card>
   );
-}
-
-function ChatBubble({ role, text }: { role: ChatMessage["role"]; text: string }) {
-  const isUser = role === "user";
-  return (
-    <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
-      <div
-        className={cn(
-          "max-w-[80%] rounded-2xl px-3.5 py-2 text-body-sm leading-relaxed",
-          isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-surface-elevated text-content-secondary border border-border-subtle",
-        )}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
-/**
- * Hand-rolled canned reply. Picks one of a handful of canned answers based on
- * keywords. The plan is to replace this with a real LLM call once the chat
- * backend lands; the calling shape (`text → reply`) is intentionally trivial.
- */
-function cannedReply(input: string, node: ConceptNode, locale: Locales): string {
-  const low = input.toLowerCase();
-  const oneLiner = pickLocaleText(node.tagline, locale);
-  const parable = pickLocaleText(node.parable, locale);
-  const why = pickLocaleText(node.whyItMatters, locale);
-
-  const isCs = locale === "cs";
-  const example = isCs
-    ? `Konkrétní příklad: ${parable}`
-    : `Concrete example: ${parable}`;
-  const notWhat = isCs
-    ? `Není to: pravidlový systém, který fungoval před deep learning ér­ou — tady jsme dál.`
-    : `What it's NOT: a hand-coded rule system from the pre-deep-learning era — we've moved past that.`;
-  const oneSent = isCs
-    ? `Jednou větou: ${oneLiner}`
-    : `In one sentence: ${oneLiner}`;
-  const practice = isCs
-    ? `V praxi: ${why}`
-    : `In practice: ${why}`;
-
-  if (low.includes("nen") || low.includes("not")) return notWhat;
-  if (low.includes("příklad") || low.includes("example") || low.includes("real")) return example;
-  if (low.includes("jedn") || low.includes("one") || low.includes("věta")) return oneSent;
-  if (low.includes("prax") || low.includes("practice") || low.includes("použ") || low.includes("use")) return practice;
-
-  // Default reply nudges back to the structured content above.
-  return t("exampleAnswer", locale);
 }
