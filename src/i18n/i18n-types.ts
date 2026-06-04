@@ -27,6 +27,7 @@ export type Translations = RootTranslation &
 	practice: NamespacePracticeTranslation,
 	radar: NamespaceRadarTranslation,
 	reader: NamespaceReaderTranslation,
+	spectrum: NamespaceSpectrumTranslation,
 	userMenu: NamespaceUserMenuTranslation
 }
 
@@ -1220,6 +1221,10 @@ export type NamespaceNavTranslation = {
 	 */
 	radarLink: string
 	/**
+	 * S​p​e​k​t​r​u​m​ ​m​o​d​e​l​ů
+	 */
+	spectrumLink: string
+	/**
 	 * K​n​i​h​o​v​n​a
 	 */
 	libraryLink: string
@@ -1744,6 +1749,184 @@ export type NamespaceReaderTranslation = {
 	availabilityUnavailable: string
 }
 
+export type NamespaceSpectrumTranslation = {
+	/**
+	 * S​p​e​k​t​r​u​m
+	 */
+	eyebrow: string
+	/**
+	 * S​p​e​k​t​r​u​m​ ​m​o​d​e​l​ů
+	 */
+	title: string
+	/**
+	 * P​ř​e​h​l​e​d​ ​k​o​m​e​r​č​n​í​c​h​ ​i​ ​o​p​e​n​-​s​o​u​r​c​e​ ​j​a​z​y​k​o​v​ý​c​h​ ​m​o​d​e​l​ů​ ​—​ ​o​d​ ​v​l​a​j​k​o​v​ý​c​h​ ​A​P​I​ ​p​o​ ​s​p​e​c​i​a​l​i​z​o​v​a​n​é​ ​a​ ​m​é​n​ě​ ​z​n​á​m​é​.​ ​K​a​t​a​l​o​g​ ​s​e​ ​d​e​n​n​ě​ ​o​b​n​o​v​u​j​e​ ​z​ ​O​p​e​n​R​o​u​t​e​r​ ​a​ ​H​u​g​g​i​n​g​ ​F​a​c​e​.
+	 */
+	description: string
+	/**
+	 * K​u​r​á​t​o​r​s​k​é​ ​k​a​r​t​y​ ​m​a​j​í​ ​p​o​d​r​o​b​n​ý​ ​p​o​p​i​s​ ​a​ ​t​y​p​i​c​k​é​ ​v​y​u​ž​i​t​í​;​ ​o​s​t​a​t​n​í​ ​p​o​l​o​ž​k​y​ ​d​o​p​l​ň​u​j​e​ ​a​u​t​o​m​a​t​i​c​k​á​ ​s​y​n​c​h​r​o​n​i​z​a​c​e​.
+	 */
+	catalogNote: string
+	/**
+	 * M​o​d​e​l​ů​ ​v​ ​k​a​t​a​l​o​g​u
+	 */
+	statModels: string
+	/**
+	 * P​o​s​l​e​d​n​í​ ​s​y​n​c​h​r​o​n​i​z​a​c​e​:​ ​{​w​h​e​n​}
+	 * @param {unknown} when
+	 */
+	lastUpdated: RequiredParams<'when'>
+	/**
+	 * H​l​e​d​a​t​ ​m​o​d​e​l​,​ ​p​o​s​k​y​t​o​v​a​t​e​l​e​,​ ​š​t​í​t​e​k​…
+	 */
+	searchPlaceholder: string
+	/**
+	 * O​b​n​o​v​i​t
+	 */
+	refresh: string
+	/**
+	 * N​e​j​p​o​p​u​l​á​r​n​ě​j​š​í
+	 */
+	sortPopular: string
+	/**
+	 * A​b​e​c​e​d​n​ě
+	 */
+	sortName: string
+	/**
+	 * N​e​j​n​o​v​ě​j​š​í
+	 */
+	sortRecent: string
+	/**
+	 * V​š​e
+	 */
+	tabAll: string
+	/**
+	 * K​o​m​e​r​č​n​í
+	 */
+	tabCommercial: string
+	/**
+	 * O​p​e​n​ ​s​o​u​r​c​e
+	 */
+	tabOpenSource: string
+	/**
+	 * M​u​l​t​i​m​o​d​á​l​n​í
+	 */
+	tabMultimodal: string
+	/**
+	 * S​p​e​c​i​a​l​i​z​o​v​a​n​é
+	 */
+	tabNiche: string
+	/**
+	 * Z​o​b​r​a​z​e​n​o​ ​{​c​o​u​n​t​|​n​u​m​}​ ​{​{​m​o​d​e​l​|​m​o​d​e​l​y​|​m​o​d​e​l​ů​}​}
+	 * @param {string | number | boolean} count
+	 */
+	showingCount: RequiredParams<'count|num'>
+	/**
+	 * Ž​á​d​n​ý​ ​m​o​d​e​l​ ​n​e​v​y​h​o​v​u​j​e​ ​f​i​l​t​r​u
+	 */
+	emptyTitle: string
+	/**
+	 * Z​k​u​s​t​e​ ​j​i​n​ý​ ​f​i​l​t​r​ ​n​e​b​o​ ​u​p​r​a​v​t​e​ ​h​l​e​d​a​n​ý​ ​v​ý​r​a​z​.
+	 */
+	emptyDescription: string
+	/**
+	 * N​e​p​o​d​a​ř​i​l​o​ ​s​e​ ​n​a​č​í​s​t​ ​k​a​t​a​l​o​g
+	 */
+	errorTitle: string
+	/**
+	 * Z​p​ě​t​ ​n​a​ ​p​ř​e​h​l​e​d
+	 */
+	backToList: string
+	/**
+	 * M​o​d​e​l​ ​n​e​n​a​l​e​z​e​n
+	 */
+	notFoundTitle: string
+	/**
+	 * T​a​t​o​ ​p​o​l​o​ž​k​a​ ​v​ ​k​a​t​a​l​o​g​u​ ​n​e​n​í​ ​n​e​b​o​ ​b​y​l​a​ ​o​d​s​t​r​a​n​ě​n​a​.
+	 */
+	notFoundDescription: string
+	/**
+	 * W​e​b
+	 */
+	homepageLink: string
+	/**
+	 * D​o​k​u​m​e​n​t​a​c​e
+	 */
+	docsLink: string
+	/**
+	 * P​o​d​r​o​b​n​o​s​t​i
+	 */
+	detailTitle: string
+	/**
+	 * T​y​p​i​c​k​é​ ​v​y​u​ž​i​t​í
+	 */
+	useCasesTitle: string
+	/**
+	 * S​i​l​n​é​ ​s​t​r​á​n​k​y
+	 */
+	strengthsTitle: string
+	/**
+	 * O​m​e​z​e​n​í
+	 */
+	limitationsTitle: string
+	/**
+	 * K​o​n​t​e​x​t​o​v​é​ ​o​k​n​o
+	 */
+	specContext: string
+	/**
+	 * P​a​r​a​m​e​t​r​y
+	 */
+	specParams: string
+	/**
+	 * C​e​n​a
+	 */
+	specPricing: string
+	/**
+	 * V​y​d​á​n​í
+	 */
+	specReleased: string
+	/**
+	 * {​t​o​k​e​n​s​|​n​u​m​}​ ​t​o​k​e​n​ů
+	 * @param {unknown} tokens
+	 */
+	contextLabel: RequiredParams<'tokens|num'>
+	/**
+	 * S​p​e​c​i​a​l​i​z​o​v​a​n​ý
+	 */
+	nicheBadge: string
+	/**
+	 * K​o​m​e​r​č​n​í
+	 */
+	licenseCommercial: string
+	/**
+	 * O​p​e​n​ ​s​o​u​r​c​e
+	 */
+	licenseOpenSource: string
+	/**
+	 * V​ý​z​k​u​m
+	 */
+	licenseResearch: string
+	/**
+	 * N​e​z​n​á​m​á​ ​l​i​c​e​n​c​e
+	 */
+	licenseUnknown: string
+	/**
+	 * H​l​a​v​n​í​ ​p​r​o​u​d
+	 */
+	tierMainstream: string
+	/**
+	 * R​o​s​t​o​u​c​í
+	 */
+	tierEmerging: string
+	/**
+	 * S​p​e​c​i​a​l​i​z​o​v​a​n​ý
+	 */
+	tierNiche: string
+	/**
+	 * L​e​g​a​c​y
+	 */
+	tierLegacy: string
+}
+
 export type NamespaceUserMenuTranslation = {
 	/**
 	 * N​a​b​í​d​k​a​ ​u​ž​i​v​a​t​e​l​e
@@ -1836,6 +2019,7 @@ export type Namespaces =
 	| 'practice'
 	| 'radar'
 	| 'reader'
+	| 'spectrum'
 	| 'userMenu'
 
 type DisallowNamespaces = {
@@ -1910,6 +2094,12 @@ type DisallowNamespaces = {
 	 * you need to use the `./reader/index.ts` file instead
 	 */
 	reader?: "[typesafe-i18n] reserved for 'reader'-namespace. You need to use the `./reader/index.ts` file instead."
+
+	/**
+	 * reserved for 'spectrum'-namespace\
+	 * you need to use the `./spectrum/index.ts` file instead
+	 */
+	spectrum?: "[typesafe-i18n] reserved for 'spectrum'-namespace. You need to use the `./spectrum/index.ts` file instead."
 
 	/**
 	 * reserved for 'userMenu'-namespace\
@@ -3092,6 +3282,10 @@ export type TranslationFunctions = {
 		 */
 		radarLink: () => LocalizedString
 		/**
+		 * Spektrum modelů
+		 */
+		spectrumLink: () => LocalizedString
+		/**
 		 * Knihovna
 		 */
 		libraryLink: () => LocalizedString
@@ -3587,6 +3781,180 @@ export type TranslationFunctions = {
 		 * Plný text není dostupný
 		 */
 		availabilityUnavailable: () => LocalizedString
+	}
+	spectrum: {
+		/**
+		 * Spektrum
+		 */
+		eyebrow: () => LocalizedString
+		/**
+		 * Spektrum modelů
+		 */
+		title: () => LocalizedString
+		/**
+		 * Přehled komerčních i open-source jazykových modelů — od vlajkových API po specializované a méně známé. Katalog se denně obnovuje z OpenRouter a Hugging Face.
+		 */
+		description: () => LocalizedString
+		/**
+		 * Kurátorské karty mají podrobný popis a typické využití; ostatní položky doplňuje automatická synchronizace.
+		 */
+		catalogNote: () => LocalizedString
+		/**
+		 * Modelů v katalogu
+		 */
+		statModels: () => LocalizedString
+		/**
+		 * Poslední synchronizace: {when}
+		 */
+		lastUpdated: (arg: { when: unknown }) => LocalizedString
+		/**
+		 * Hledat model, poskytovatele, štítek…
+		 */
+		searchPlaceholder: () => LocalizedString
+		/**
+		 * Obnovit
+		 */
+		refresh: () => LocalizedString
+		/**
+		 * Nejpopulárnější
+		 */
+		sortPopular: () => LocalizedString
+		/**
+		 * Abecedně
+		 */
+		sortName: () => LocalizedString
+		/**
+		 * Nejnovější
+		 */
+		sortRecent: () => LocalizedString
+		/**
+		 * Vše
+		 */
+		tabAll: () => LocalizedString
+		/**
+		 * Komerční
+		 */
+		tabCommercial: () => LocalizedString
+		/**
+		 * Open source
+		 */
+		tabOpenSource: () => LocalizedString
+		/**
+		 * Multimodální
+		 */
+		tabMultimodal: () => LocalizedString
+		/**
+		 * Specializované
+		 */
+		tabNiche: () => LocalizedString
+		/**
+		 * Zobrazeno {count|num} {{model|modely|modelů}}
+		 */
+		showingCount: (arg: { count: string | number | boolean }) => LocalizedString
+		/**
+		 * Žádný model nevyhovuje filtru
+		 */
+		emptyTitle: () => LocalizedString
+		/**
+		 * Zkuste jiný filtr nebo upravte hledaný výraz.
+		 */
+		emptyDescription: () => LocalizedString
+		/**
+		 * Nepodařilo se načíst katalog
+		 */
+		errorTitle: () => LocalizedString
+		/**
+		 * Zpět na přehled
+		 */
+		backToList: () => LocalizedString
+		/**
+		 * Model nenalezen
+		 */
+		notFoundTitle: () => LocalizedString
+		/**
+		 * Tato položka v katalogu není nebo byla odstraněna.
+		 */
+		notFoundDescription: () => LocalizedString
+		/**
+		 * Web
+		 */
+		homepageLink: () => LocalizedString
+		/**
+		 * Dokumentace
+		 */
+		docsLink: () => LocalizedString
+		/**
+		 * Podrobnosti
+		 */
+		detailTitle: () => LocalizedString
+		/**
+		 * Typické využití
+		 */
+		useCasesTitle: () => LocalizedString
+		/**
+		 * Silné stránky
+		 */
+		strengthsTitle: () => LocalizedString
+		/**
+		 * Omezení
+		 */
+		limitationsTitle: () => LocalizedString
+		/**
+		 * Kontextové okno
+		 */
+		specContext: () => LocalizedString
+		/**
+		 * Parametry
+		 */
+		specParams: () => LocalizedString
+		/**
+		 * Cena
+		 */
+		specPricing: () => LocalizedString
+		/**
+		 * Vydání
+		 */
+		specReleased: () => LocalizedString
+		/**
+		 * {tokens|num} tokenů
+		 */
+		contextLabel: (arg: { tokens: unknown }) => LocalizedString
+		/**
+		 * Specializovaný
+		 */
+		nicheBadge: () => LocalizedString
+		/**
+		 * Komerční
+		 */
+		licenseCommercial: () => LocalizedString
+		/**
+		 * Open source
+		 */
+		licenseOpenSource: () => LocalizedString
+		/**
+		 * Výzkum
+		 */
+		licenseResearch: () => LocalizedString
+		/**
+		 * Neznámá licence
+		 */
+		licenseUnknown: () => LocalizedString
+		/**
+		 * Hlavní proud
+		 */
+		tierMainstream: () => LocalizedString
+		/**
+		 * Rostoucí
+		 */
+		tierEmerging: () => LocalizedString
+		/**
+		 * Specializovaný
+		 */
+		tierNiche: () => LocalizedString
+		/**
+		 * Legacy
+		 */
+		tierLegacy: () => LocalizedString
 	}
 	userMenu: {
 		/**

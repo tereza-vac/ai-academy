@@ -76,6 +76,9 @@ BASECAMP_RECORDINGS_MAX_PAGES = "env(BASECAMP_RECORDINGS_MAX_PAGES)"
 [functions.radar-ingest]
 verify_jwt = false
 
+[functions.models-ingest]
+verify_jwt = false
+
 [functions.ai-enrich]
 verify_jwt = false
 

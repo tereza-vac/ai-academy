@@ -13,6 +13,7 @@ const cs_nav: BaseTranslation = {
   tutorLink: "AI Tutor",
   teamLink: "Tým",
   radarLink: "Radar",
+  spectrumLink: "Spektrum modelů",
   libraryLink: "Knihovna",
   papersLink: "Publikace",
   practiceLink: "Procvičování",

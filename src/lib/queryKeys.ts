@@ -36,4 +36,11 @@ export const queryKeys = {
   basecampActivity: (opts?: { aiOnly?: boolean; limit?: number }) =>
     opts ? (["basecamp", "activity", opts] as const) : (["basecamp", "activity"] as const),
   basecampWorkspace: ["basecamp", "workspace"] as const,
+
+  llmModels: (opts?: { license?: string; tab?: string; sort?: string }) =>
+    opts && Object.keys(opts).length > 0
+      ? (["llm-models", opts] as const)
+      : (["llm-models"] as const),
+  llmModelBySlug: (slug: string) => ["llm-models", "by-slug", slug] as const,
+  llmModelsMeta: ["llm-models", "meta"] as const,
 } as const;

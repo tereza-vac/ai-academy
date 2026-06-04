@@ -9,6 +9,7 @@ import {
   Users,
   MessageSquareText,
   FileSearch,
+  Cpu,
 } from "lucide-react";
 import type { TranslationFunctions } from "@/i18n/i18n-types";
 
@@ -26,6 +27,7 @@ export const sidebarNavigation: NavItem[] = [
   { labelKey: "tutorLink",    href: "/tutor",     icon: MessageSquareText },
   { labelKey: "teamLink",     href: "/team",      icon: Users },
   { labelKey: "radarLink",    href: "/radar",     icon: RadarIcon },
+  { labelKey: "spectrumLink", href: "/spectrum",  icon: Cpu },
   { labelKey: "libraryLink",  href: "/library",   icon: Library },
   { labelKey: "papersLink",   href: "/papers",    icon: FileSearch },
   { labelKey: "practiceLink", href: "/practice",  icon: Brain },

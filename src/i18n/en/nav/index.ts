@@ -7,6 +7,7 @@ const en_nav: NamespaceNavTranslation = {
   tutorLink: "AI Tutor",
   teamLink: "Team",
   radarLink: "Radar",
+  spectrumLink: "Model spectrum",
   libraryLink: "Library",
   papersLink: "Publications",
   practiceLink: "Practice",

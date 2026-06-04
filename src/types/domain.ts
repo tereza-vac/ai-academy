@@ -287,3 +287,39 @@ export interface BasecampRecording {
 export interface BasecampProjectWithActivity extends BasecampProject {
   recentActivity: BasecampRecording[];
 }
+
+/* -------------------------------------------------------------------------- */
+/* LLM model catalog ("Spektrum modelů")                                       */
+/* -------------------------------------------------------------------------- */
+
+export type LlmLicenseType = "commercial" | "open_source" | "research" | "unknown";
+export type LlmPopularityTier = "mainstream" | "emerging" | "niche" | "legacy";
+export type LlmModelSource = "curated" | "openrouter" | "huggingface";
+
+export interface LlmModel {
+  id: string;
+  slug: string;
+  name: string;
+  provider: string;
+  family: string | null;
+  licenseType: LlmLicenseType;
+  modalities: string[];
+  contextWindow: number | null;
+  parameterCount: string | null;
+  releaseDate: string | null;
+  summary: string | null;
+  descriptionMd: string | null;
+  typicalUseCases: string[];
+  strengths: string[];
+  limitations: string[];
+  tags: string[];
+  homepageUrl: string | null;
+  docsUrl: string | null;
+  pricingHint: string | null;
+  isNiche: boolean;
+  popularityTier: LlmPopularityTier;
+  externalId: string | null;
+  source: LlmModelSource;
+  score: number;
+  fetchedAt: string;
+}

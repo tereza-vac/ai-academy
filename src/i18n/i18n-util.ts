@@ -30,6 +30,7 @@ export const namespaces: Namespaces[] = [
 	'practice',
 	'radar',
 	'reader',
+	'spectrum',
 	'userMenu'
 ]
 
