@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Network,
   Users,
-  MessageSquareText,
   FileSearch,
   Cpu,
 } from "lucide-react";
@@ -24,7 +23,6 @@ export const sidebarNavigation: NavItem[] = [
   { labelKey: "homeLink",     href: "/",          icon: LayoutDashboard },
   { labelKey: "learnLink",    href: "/learn",     icon: BookOpen },
   { labelKey: "mapLink",      href: "/map",       icon: Network },
-  { labelKey: "tutorLink",    href: "/tutor",     icon: MessageSquareText },
   { labelKey: "teamLink",     href: "/team",      icon: Users },
   { labelKey: "radarLink",    href: "/radar",     icon: RadarIcon },
   { labelKey: "spectrumLink", href: "/spectrum",  icon: Cpu },

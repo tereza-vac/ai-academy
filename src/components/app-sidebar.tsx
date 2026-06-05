@@ -145,7 +145,6 @@ export function AppSidebar({ onOpenPalette }: AppSidebarProps) {
             );
           })}
 
-          {/* Flashcards — sub-item below tutor */}
           <FlashcardsNavItem collapsed={collapsed} />
 
           {/* Progress dashboard */}
