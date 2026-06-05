@@ -197,7 +197,7 @@ function DomainRow({
         <span className="text-body-sm font-medium text-content-primary truncate">{label}</span>
         <span className="text-caption-xs text-content-tertiary shrink-0">
           {studied}/{total} concepts
-          {mastered > 0 && <span className="text-emerald-600 dark:text-emerald-400 ml-1">· {mastered} ✓</span>}
+          {mastered > 0 && <span className="text-[hsl(var(--success))] ml-1">· {mastered} ✓</span>}
         </span>
       </div>
       <div className="h-2 w-full overflow-hidden rounded-full bg-border-subtle">
@@ -214,9 +214,9 @@ function DomainRow({
 
 const MASTERY_COLORS = [
   "",                   // 0 = not studied (hidden)
-  "border-sky-400/40 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400",
-  "border-violet-400/40 bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-400",
-  "border-emerald-400/40 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400",
+  "border-primary/30 bg-brand-soft text-primary",
+  "border-[hsl(var(--premium))]/40 bg-premium-soft text-[hsl(var(--premium))]",
+  "border-[hsl(var(--success))]/40 bg-success-soft text-[hsl(var(--success))]",
 ] as const;
 
 const MASTERY_ICONS = [null, null, Star, CheckCircle2] as const;
@@ -359,7 +359,7 @@ export function Component() {
           value={streak?.currentStreak ?? 0}
           icon={Zap}
           sub={`Longest: ${streak?.longestStreak ?? 0} days`}
-          accent={(streak?.currentStreak ?? 0) > 0 ? "text-orange-500" : "text-content-primary"}
+          accent={(streak?.currentStreak ?? 0) > 0 ? "text-[hsl(var(--premium))]" : "text-content-primary"}
         />
         <BigStat
           label="Concepts studied"
@@ -380,7 +380,7 @@ export function Component() {
           value={cards.length}
           icon={GraduationCap}
           sub={due > 0 ? `${due} due today` : "All reviewed!"}
-          accent={due > 0 ? "text-orange-500" : "text-content-primary"}
+          accent={due > 0 ? "text-[hsl(var(--premium))]" : "text-content-primary"}
           href="/flashcards"
         />
       </div>
@@ -422,9 +422,9 @@ export function Component() {
             {/* Donut-like stat row */}
             <div className="grid grid-cols-3 gap-3 text-center">
               {[
-                { label: "Mastered", value: masteredCount, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
-                { label: "Proficient", value: proficientCount, color: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-950/30" },
-                { label: "Explored", value: exploredCount, color: "text-sky-600 dark:text-sky-400", bg: "bg-sky-50 dark:bg-sky-950/30" },
+                { label: "Mastered", value: masteredCount, color: "text-[hsl(var(--success))]", bg: "bg-success-soft" },
+                { label: "Proficient", value: proficientCount, color: "text-[hsl(var(--premium))]", bg: "bg-premium-soft" },
+                { label: "Explored", value: exploredCount, color: "text-primary", bg: "bg-brand-soft" },
               ].map((s) => (
                 <div key={s.label} className={cn("rounded-xl py-3 px-2", s.bg)}>
                   <p className={cn("text-2xl font-black", s.color)}>{s.value}</p>
@@ -438,13 +438,13 @@ export function Component() {
               <div className="space-y-1">
                 <div className="flex h-3 w-full overflow-hidden rounded-full bg-border-subtle">
                   {masteredCount > 0 && (
-                    <div className="bg-emerald-500" style={{ width: `${(masteredCount / totalConcepts) * 100}%` }} />
+                    <div className="bg-[hsl(var(--success))]" style={{ width: `${(masteredCount / totalConcepts) * 100}%` }} />
                   )}
                   {proficientCount > 0 && (
-                    <div className="bg-violet-500" style={{ width: `${(proficientCount / totalConcepts) * 100}%` }} />
+                    <div className="bg-[hsl(var(--premium))]" style={{ width: `${(proficientCount / totalConcepts) * 100}%` }} />
                   )}
                   {exploredCount > 0 && (
-                    <div className="bg-sky-500" style={{ width: `${(exploredCount / totalConcepts) * 100}%` }} />
+                    <div className="bg-primary" style={{ width: `${(exploredCount / totalConcepts) * 100}%` }} />
                   )}
                 </div>
                 <p className="text-caption-xs text-content-tertiary/70 text-right">
@@ -455,9 +455,9 @@ export function Component() {
 
             {/* Notes & more */}
             {noteIds.length > 0 && (
-              <div className="rounded-lg border border-amber-400/25 bg-amber-50/50 dark:bg-amber-950/20 px-3 py-2 flex items-center justify-between">
+              <div className="rounded-lg border border-[hsl(var(--premium))]/25 bg-premium-soft/50 px-3 py-2 flex items-center justify-between">
                 <span className="text-body-sm text-content-secondary">📝 Notes saved</span>
-                <span className="text-body-sm font-semibold text-amber-700 dark:text-amber-400">{noteIds.length} topics</span>
+                <span className="text-body-sm font-semibold text-[hsl(var(--premium))]">{noteIds.length} topics</span>
               </div>
             )}
           </CardContent>

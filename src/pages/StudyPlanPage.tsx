@@ -103,7 +103,7 @@ function PlanCard({
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
-                pct === 100 ? "bg-emerald-500" : "bg-primary",
+                pct === 100 ? "bg-[hsl(var(--success))]" : "bg-primary",
               )}
               style={{ width: `${pct}%` }}
             />
@@ -175,13 +175,13 @@ function PlanView({
                 ? (locale === "cs" ? "🎉 Plán dokončen!" : "🎉 Plan complete!")
                 : `${done} of ${total} tasks completed`}
             </span>
-            <span className={cn("text-body-sm font-bold", pct === 100 ? "text-emerald-600 dark:text-emerald-400" : "text-primary")}>
+            <span className={cn("text-body-sm font-bold", pct === 100 ? "text-[hsl(var(--success))]" : "text-primary")}>
               {pct}%
             </span>
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-border-subtle">
             <div
-              className={cn("h-full rounded-full transition-all duration-500", pct === 100 ? "bg-emerald-500" : "bg-primary")}
+              className={cn("h-full rounded-full transition-all duration-500", pct === 100 ? "bg-[hsl(var(--success))]" : "bg-primary")}
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -200,13 +200,13 @@ function PlanView({
               className={cn(
                 "flex items-start gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all",
                 item.done
-                  ? "border-emerald-400/20 bg-emerald-50/50 dark:bg-emerald-950/10"
+                  ? "border-[hsl(var(--success))]/20 bg-success-soft/50"
                   : "border-border-subtle bg-surface-base hover:border-border-strong hover:bg-surface-elevated",
               )}
               onClick={() => handleToggle(item.id)}
             >
               {item.done
-                ? <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                ? <CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))] shrink-0 mt-0.5" />
                 : <Circle className="h-4 w-4 text-content-tertiary/50 shrink-0 mt-0.5" />
               }
               <span className={cn(

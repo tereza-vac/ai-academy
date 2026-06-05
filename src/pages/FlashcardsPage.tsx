@@ -54,10 +54,10 @@ function masteryLabel(card: Flashcard): MasteryLabel {
 }
 
 const MASTERY_STYLES: Record<MasteryLabel, string> = {
-  New:      "border-sky-400/40 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400",
-  Learning: "border-violet-400/40 bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-400",
-  Review:   "border-amber-400/40 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400",
-  Mastered: "border-emerald-400/40 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400",
+  New:      "border-primary/30 bg-brand-soft text-primary",
+  Learning: "border-[hsl(var(--premium))]/40 bg-premium-soft text-[hsl(var(--premium))]",
+  Review:   "border-[hsl(var(--warning))]/40 bg-warning-soft text-[hsl(var(--warning))]",
+  Mastered: "border-[hsl(var(--success))]/40 bg-success-soft text-[hsl(var(--success))]",
 };
 
 /* ─── Inline editable card ───────────────────────────────────────────────── */
@@ -90,7 +90,7 @@ function CardRow({ card, onDeleted, onUpdated }: {
   return (
     <div className={cn(
       "rounded-xl border transition-colors",
-      due ? "border-orange-400/30 bg-orange-50/50 dark:bg-orange-950/10" : "border-border-subtle bg-surface-base",
+      due ? "border-[hsl(var(--premium))]/30 bg-premium-soft/50" : "border-border-subtle bg-surface-base",
     )}>
       {/* Summary row */}
       <div
@@ -107,7 +107,7 @@ function CardRow({ card, onDeleted, onUpdated }: {
 
         <div className="flex items-center gap-2 shrink-0">
           {due && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 dark:bg-orange-900/30 border border-orange-300/50 px-2 py-0.5 text-[10px] font-semibold text-orange-700 dark:text-orange-400">
+            <span className="inline-flex items-center gap-1 rounded-full bg-premium-soft border border-[hsl(var(--premium))]/40 px-2 py-0.5 text-[10px] font-semibold text-[hsl(var(--premium))]">
               Due
             </span>
           )}
@@ -216,7 +216,7 @@ function ConceptGroup({ label, cards, onDeleted, onUpdated }: {
         <h3 className="text-body-sm font-semibold text-content-primary">{label}</h3>
         <span className="text-caption-xs text-content-tertiary">({cards.length})</span>
         {due > 0 && (
-          <span className="ml-1 rounded-full bg-orange-100 dark:bg-orange-900/30 border border-orange-300/50 px-1.5 py-0.5 text-[10px] font-bold text-orange-700 dark:text-orange-400">
+          <span className="ml-1 rounded-full bg-premium-soft border border-[hsl(var(--premium))]/40 px-1.5 py-0.5 text-[10px] font-bold text-[hsl(var(--premium))]">
             {due} due
           </span>
         )}
@@ -316,9 +316,9 @@ export function Component() {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="Total cards" value={cards.length} />
-        <Stat label="Due today"   value={due}      accent={due > 0 ? "text-orange-600 dark:text-orange-400" : undefined} sub={due > 0 ? "Review now" : "All clear!"} />
+        <Stat label="Due today"   value={due}      accent={due > 0 ? "text-[hsl(var(--premium))]" : undefined} sub={due > 0 ? "Review now" : "All clear!"} />
         <Stat label="Learning"    value={learning} sub="in progress" />
-        <Stat label="Mastered"    value={mastered} accent="text-emerald-600 dark:text-emerald-400" sub="interval ≥ 21d" />
+        <Stat label="Mastered"    value={mastered} accent="text-[hsl(var(--success))]" sub="interval \u2265 21d" />
       </div>
 
       {/* Empty state */}

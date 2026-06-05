@@ -31,10 +31,10 @@ function formatDate(iso: string): string {
 }
 
 const CATEGORY_META: Record<AchievementCategory, { label: { cs: string; en: string }; color: string }> = {
-  learning: { label: { cs: "Učení",    en: "Learning"  }, color: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-400/20" },
-  mastery:  { label: { cs: "Mistrovství", en: "Mastery" }, color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-400/20" },
-  streak:   { label: { cs: "Série",    en: "Streaks"   }, color: "text-orange-600 dark:text-orange-400 bg-orange-500/10 border-orange-400/20" },
-  tools:    { label: { cs: "Nástroje", en: "Tools"     }, color: "text-violet-600 dark:text-violet-400 bg-violet-500/10 border-violet-400/20" },
+  learning: { label: { cs: "Učení",    en: "Learning"  }, color: "text-primary bg-brand-soft border-primary/20" },
+  mastery:  { label: { cs: "Mistrovství", en: "Mastery" }, color: "text-[hsl(var(--warning))] bg-warning-soft border-[hsl(var(--warning))]/20" },
+  streak:   { label: { cs: "Série",    en: "Streaks"   }, color: "text-[hsl(var(--premium))] bg-premium-soft border-[hsl(var(--premium))]/20" },
+  tools:    { label: { cs: "Nástroje", en: "Tools"     }, color: "text-[hsl(var(--coral))] bg-coral-soft border-[hsl(var(--coral))]/20" },
 };
 
 /* ─── Single achievement card ────────────────────────────────────────────── */
@@ -66,7 +66,7 @@ function AchievementCard({
       {/* Earned badge */}
       {earned && (
         <div className="absolute -top-2.5 -right-2.5">
-          <CheckCircle2 className="h-5 w-5 text-emerald-500 fill-emerald-500/20" />
+          <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))] fill-[hsl(var(--success))]/20" />
         </div>
       )}
 
@@ -146,7 +146,7 @@ export function Component() {
             </p>
           </div>
           <div className="text-center space-y-1">
-            <p className="text-display-sm font-bold text-amber-600 dark:text-amber-400">
+            <p className="text-display-sm font-bold text-[hsl(var(--premium))]">
               {totalEarned > 0 ? "🏆" : "–"}
             </p>
             <p className="text-caption-xs text-content-tertiary">
@@ -165,7 +165,7 @@ export function Component() {
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-700",
-                pct === 100 ? "bg-gradient-to-r from-amber-500 to-emerald-500" : "bg-primary",
+                pct === 100 ? "bg-gradient-to-r from-[hsl(var(--premium))] to-[hsl(var(--success))]" : "bg-primary",
               )}
               style={{ width: `${pct}%` }}
             />

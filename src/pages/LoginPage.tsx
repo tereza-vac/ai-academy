@@ -68,10 +68,10 @@ export function Component() {
   }
 
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="min-h-dvh bg-background bg-aura">
       <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-12">
-        <div className="mb-6 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-elevation-sm">
+        <div className="mb-6 flex items-center gap-2.5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-brand text-white shadow-glow-brand">
             <Sparkles className="h-5 w-5" />
           </div>
           <div className="leading-tight">
@@ -82,7 +82,7 @@ export function Component() {
           </div>
         </div>
 
-        <Card variant="elevated">
+        <Card variant="hero" className="shadow-elevation-lg">
           <CardHeader>
             <CardTitle>{LL.auth.signInTitle()}</CardTitle>
             <p className="text-body-md text-content-secondary">

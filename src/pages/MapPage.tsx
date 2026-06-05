@@ -875,7 +875,7 @@ function ConceptPanel({
               en: ["", "Explored", "Studied", "Mastered"],
             };
             const loc = (locale === "cs" ? "cs" : "en") as "cs" | "en";
-            const dotColors = ["", "bg-yellow-400", "bg-blue-400", "bg-success"];
+            const dotColors = ["", "bg-[hsl(var(--premium))]", "bg-primary", "bg-[hsl(var(--success))]"];
             return (
               <div className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-base px-4 py-3">
                 <span className={`inline-block h-2.5 w-2.5 rounded-full ${dotColors[lvl]}`} />
@@ -981,7 +981,7 @@ function ConceptPanel({
                 to={`/tutor?conceptId=${encodeURIComponent(node.id)}&domain=${encodeURIComponent(node.domain)}&mode=quiz`}
                 className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
               >
-                <Brain className="h-4 w-4 text-amber-500 group-hover:scale-110 transition-transform" />
+                <Brain className="h-4 w-4 text-[hsl(var(--premium))] group-hover:scale-110 transition-transform" />
                 <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
                   {locale === "cs" ? "Kvíz" : "Quiz me"}
                 </span>
@@ -990,7 +990,7 @@ function ConceptPanel({
                 to={`/tutor?conceptId=${encodeURIComponent(node.id)}&domain=${encodeURIComponent(node.domain)}&mode=feynman`}
                 className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
               >
-                <GraduationCap className="h-4 w-4 text-violet-500 group-hover:scale-110 transition-transform" />
+                <GraduationCap className="h-4 w-4 text-primary group-hover:scale-110 transition-transform" />
                 <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
                   {locale === "cs" ? "Feynman" : "Feynman"}
                 </span>
@@ -999,7 +999,7 @@ function ConceptPanel({
                 to={`/plan`}
                 className="flex flex-col items-center gap-1.5 rounded-xl border border-border-subtle bg-surface-base px-2 py-3 hover:border-border-strong hover:bg-surface-elevated transition-all group"
               >
-                <MapPin className="h-4 w-4 text-emerald-500 group-hover:scale-110 transition-transform" />
+                <MapPin className="h-4 w-4 text-[hsl(var(--success))] group-hover:scale-110 transition-transform" />
                 <span className="text-[10px] font-medium text-content-secondary text-center leading-tight">
                   {locale === "cs" ? "Plán" : "Plan"}
                 </span>
