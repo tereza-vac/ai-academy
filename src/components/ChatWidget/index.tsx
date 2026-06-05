@@ -1,9 +1,13 @@
 /**
- * ChatWidget ? floating AI Tutor chat bubble available on every page.
+ * ChatWidget - floating AI Tutor chat bubble available on every page.
  *
  * Renders via createPortal into document.body to bypass any overflow /
- * stacking-context issues. A gradient "sparkle" FAB toggles a compact chat
- * panel; the panel can expand into the full /tutor page.
+ * stacking-context issues. A gradient FAB toggles a compact chat panel;
+ * the panel can expand into the full /tutor page.
+ *
+ * NOTE: all user-facing non-ASCII text (Czech diacritics, em dashes, emoji)
+ * is written with \u escapes so the source stays pure ASCII and is immune to
+ * editor/OS encoding issues.
  */
 import {
   useCallback,
@@ -31,11 +35,11 @@ import { getNode, pickLocaleText } from "@/lib/aiMapData";
 import type { TutorContext } from "@/services/tutorApi";
 import type { Locales } from "@/i18n/i18n-types";
 
-/* ??? Constants ???????????????????????????????????????????????????????????? */
+/* --- Constants ----------------------------------------------------------- */
 
 const WELCOME = {
-  en: "Hi ?? I'm your **AI Tutor**. Ask me anything about AI, machine learning, or any concept in the Academy.",
-  cs: "Ahoj ?? Jsem tv?j **AI Tutor**. Zeptej se m? na cokoliv o um?l? inteligenci nebo konceptech z Akademie.",
+  en: "Hi \u{1F44B} I'm your **AI Tutor**. Ask me anything about AI, machine learning, or any concept in the Academy.",
+  cs: "Ahoj \u{1F44B} Jsem tv\u016Fj **AI Tutor**. Zeptej se m\u011B na cokoliv o um\u011Bl\u00E9 inteligenci nebo konceptech z Akademie.",
 };
 
 const SUGGESTIONS = {
@@ -46,8 +50,8 @@ const SUGGESTIONS = {
   ],
   cs: [
     "Co je to transformer?",
-    "Vysv?tli attention jednodu?e",
-    "Navrhni studijn? pl?n pro LLMs",
+    "Vysv\u011Btli attention jednodu\u0161e",
+    "Navrhni studijn\u00ED pl\u00E1n pro LLMs",
   ],
 };
 
@@ -55,7 +59,7 @@ const SUGGESTIONS = {
 const BRAND_GRADIENT =
   "bg-[linear-gradient(140deg,hsl(206_100%_58%)_0%,hsl(214_100%_50%)_48%,hsl(224_82%_46%)_100%)]";
 
-/* ??? Typing dots ?????????????????????????????????????????????????????????? */
+/* --- Typing dots --------------------------------------------------------- */
 
 function TypingDots() {
   return (
@@ -79,7 +83,7 @@ function TypingDots() {
   );
 }
 
-/* ??? Message bubble ??????????????????????????????????????????????????????? */
+/* --- Message bubble ------------------------------------------------------ */
 
 interface Msg {
   id: string;
@@ -115,7 +119,7 @@ function Bubble({ msg, isStreaming }: { msg: Msg; isStreaming?: boolean }) {
   );
 }
 
-/* ??? Empty / suggestions ?????????????????????????????????????????????????? */
+/* --- Empty / suggestions ------------------------------------------------- */
 
 function EmptyState({
   locale, conceptLabel, onSuggestion,
@@ -129,7 +133,7 @@ function EmptyState({
           <Bot className="h-8 w-8" />
         </div>
         <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 border-2 border-surface-elevated text-[9px] text-white font-bold">
-          ?
+          {"\u2713"}
         </span>
       </div>
 
@@ -138,10 +142,10 @@ function EmptyState({
         <p className="text-caption-xs text-content-tertiary leading-relaxed max-w-[210px]">
           {conceptLabel
             ? locale === "cs"
-              ? `Poj?me probrat ?${conceptLabel}". Na co se chce? zeptat?`
+              ? `Poj\u010Fme probrat \u201E${conceptLabel}\u201C. Na co se chce\u0161 zeptat?`
               : `Let's explore "${conceptLabel}". What would you like to know?`
             : locale === "cs"
-              ? "Tv?j asistent pro u?en? AI. Zeptej se na cokoliv."
+              ? "Tv\u016Fj asistent pro u\u010Den\u00ED AI. Zeptej se na cokoliv."
               : "Your AI learning assistant. Ask me anything."}
         </p>
       </div>
@@ -162,7 +166,7 @@ function EmptyState({
   );
 }
 
-/* ??? Inner chat panel ????????????????????????????????????????????????????? */
+/* --- Inner chat panel ---------------------------------------------------- */
 
 function ChatPanel({
   locale, context, onClose,
@@ -188,8 +192,8 @@ function ChatPanel({
 
   const welcomeMsg = conceptLabel
     ? locale === "cs"
-      ? `Ahoj ?? Poj?me probrat **${conceptLabel}**. Na co se chce? zeptat?`
-      : `Hey ?? Let's explore **${conceptLabel}**. What would you like to know?`
+      ? `Ahoj \u{1F44B} Poj\u010Fme probrat **${conceptLabel}**. Na co se chce\u0161 zeptat?`
+      : `Hey \u{1F44B} Let's explore **${conceptLabel}**. What would you like to know?`
     : (WELCOME[locale as "cs" | "en"] ?? WELCOME.en);
 
   const {
@@ -244,7 +248,7 @@ function ChatPanel({
   return (
     <div className="flex flex-col h-full overflow-hidden rounded-2xl">
 
-      {/* ?? Header ?? */}
+      {/* Header */}
       <div className={cn("shrink-0 px-4 py-4 text-white", BRAND_GRADIENT)}>
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20">
@@ -259,21 +263,21 @@ function ChatPanel({
               )} />
               <p className="text-[11px] text-white/80">
                 {isStreaming
-                  ? (locale === "cs" ? "P??e?" : "Typing?")
+                  ? (locale === "cs" ? "P\u00ED\u0161e\u2026" : "Typing\u2026")
                   : (conceptLabel ?? "Online")}
               </p>
             </div>
           </div>
           <div className="flex items-center">
-            <button type="button" title={locale === "cs" ? "Nov? konverzace" : "New conversation"} onClick={resetSession}
+            <button type="button" title={locale === "cs" ? "Nov\u00E1 konverzace" : "New conversation"} onClick={resetSession}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <RefreshCw className="h-3.5 w-3.5" />
             </button>
-            <button type="button" title={locale === "cs" ? "Otev??t pln? tutor" : "Open full tutor"} onClick={handleExpand}
+            <button type="button" title={locale === "cs" ? "Otev\u0159\u00EDt pln\u00FD tutor" : "Open full tutor"} onClick={handleExpand}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <ArrowUpRight className="h-3.5 w-3.5" />
             </button>
-            <button type="button" title={locale === "cs" ? "Zav??t" : "Close"} onClick={onClose}
+            <button type="button" title={locale === "cs" ? "Zav\u0159\u00EDt" : "Close"} onClick={onClose}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <X className="h-4 w-4" />
             </button>
@@ -281,7 +285,7 @@ function ChatPanel({
         </div>
       </div>
 
-      {/* ?? Messages ?? */}
+      {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-thin bg-surface-base">
         {!hasContent
           ? <EmptyState locale={locale} conceptLabel={conceptLabel} onSuggestion={sendMessage} />
@@ -302,7 +306,7 @@ function ChatPanel({
         }
       </div>
 
-      {/* ?? Input ?? */}
+      {/* Input */}
       <div className="shrink-0 border-t border-border-subtle bg-surface-elevated px-3 pt-3 pb-3">
         <div className={cn(
           "flex items-end gap-2 rounded-xl border border-border-subtle bg-surface-base px-3 py-2.5",
@@ -313,7 +317,7 @@ function ChatPanel({
             value={draft}
             rows={1}
             disabled={isStreaming}
-            placeholder={locale === "cs" ? "Napi? zpr?vu?" : "Type a message?"}
+            placeholder={locale === "cs" ? "Napi\u0161 zpr\u00E1vu\u2026" : "Type a message\u2026"}
             onChange={(e) => {
               setDraft(e.target.value);
               e.target.style.height = "auto";
@@ -344,11 +348,11 @@ function ChatPanel({
         </div>
         <div className="mt-2 flex items-center justify-between px-0.5">
           <p className="text-[10px] text-content-tertiary/50">
-            {locale === "cs" ? "Enter ? odeslat ? Shift+Enter ? nov? ??dek" : "Enter to send ? Shift+Enter for newline"}
+            {locale === "cs" ? "Enter \u2014 odeslat \u00B7 Shift+Enter \u2014 nov\u00FD \u0159\u00E1dek" : "Enter to send \u00B7 Shift+Enter for newline"}
           </p>
           <button type="button" onClick={handleExpand}
             className="flex items-center gap-0.5 text-[10px] text-primary/60 hover:text-primary transition-colors">
-            {locale === "cs" ? "Pln? tutor" : "Full tutor"} <ArrowUpRight className="h-2.5 w-2.5" />
+            {locale === "cs" ? "Pln\u00FD tutor" : "Full tutor"} <ArrowUpRight className="h-2.5 w-2.5" />
           </button>
         </div>
       </div>
@@ -356,7 +360,7 @@ function ChatPanel({
   );
 }
 
-/* ??? Root ? portal to document.body ?????????????????????????????????????? */
+/* --- Root - portal to document.body -------------------------------------- */
 
 export function ChatWidget() {
   const locale   = useLocaleStore(selectLocale);
@@ -417,7 +421,7 @@ export function ChatWidget() {
         {isOpen && <ChatPanel locale={locale} context={context} onClose={close} />}
       </div>
 
-      {/* Floating launcher ? custom squircle that morphs to a circle when open */}
+      {/* Floating launcher - custom squircle that morphs to a circle when open */}
       <button
         type="button"
         onClick={toggle}
