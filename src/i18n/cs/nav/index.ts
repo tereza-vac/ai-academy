@@ -20,6 +20,12 @@ const cs_nav: BaseTranslation = {
   buildLabLink: "Build Lab",
   expandSidebar: "Rozbalit panel",
   collapseSidebar: "Sbalit panel",
+  flashcardsLink: "Kartičky",
+  progressLink: "Pokrok",
+  achievementsLink: "Úspěchy",
+  planLink: "Studijní plány",
+  settingsLink: "Nastavení",
+  searchPlaceholder: "Hledat…",
 };
 
 export default cs_nav;

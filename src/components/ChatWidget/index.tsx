@@ -55,9 +55,9 @@ const SUGGESTIONS = {
   ],
 };
 
-/** Shared brand-blue gradient for the FAB + header so they read as one product. */
-const BRAND_GRADIENT =
-  "bg-[linear-gradient(140deg,hsl(206_100%_58%)_0%,hsl(214_100%_50%)_48%,hsl(224_82%_46%)_100%)]";
+/** Shared brand-blue gradient for the FAB + header so they read as one product.
+ *  Backed by the global --gradient-brand token so it stays in sync app-wide. */
+const BRAND_GRADIENT = "bg-gradient-brand";
 
 /* --- Typing dots --------------------------------------------------------- */
 
@@ -132,7 +132,7 @@ function EmptyState({
         <div className={cn("flex h-16 w-16 items-center justify-center rounded-[1.3rem] text-white shadow-elevation-sm", BRAND_GRADIENT)}>
           <Bot className="h-8 w-8" />
         </div>
-        <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 border-2 border-surface-elevated text-[9px] text-white font-bold">
+        <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[hsl(var(--success))] border-2 border-surface-elevated text-[9px] text-white font-bold">
           {"\u2713"}
         </span>
       </div>
@@ -259,7 +259,7 @@ function ChatPanel({
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className={cn(
                 "h-1.5 w-1.5 rounded-full",
-                isStreaming ? "bg-amber-300 animate-pulse" : "bg-emerald-300",
+                isStreaming ? "bg-[hsl(var(--premium))] animate-pulse" : "bg-emerald-300",
               )} />
               <p className="text-[11px] text-white/80">
                 {isStreaming

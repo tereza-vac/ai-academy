@@ -69,19 +69,19 @@ function ConceptOfDayCard({ locale = "en" }: { locale?: string }) {
   const domain = concept.domain ?? "";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-amber-400/25 bg-gradient-to-br from-amber-50/60 via-amber-50/20 to-transparent dark:from-amber-950/20 dark:via-transparent dark:to-transparent p-5">
+    <div className="relative overflow-hidden rounded-2xl border border-[hsl(var(--premium))]/20 bg-premium-soft p-5">
       {/* Badge */}
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30">
-            <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--premium))]/15">
+            <Lightbulb className="h-4 w-4 text-[hsl(var(--premium))]" />
           </div>
-          <span className="text-caption-xs font-semibold uppercase tracking-widest text-amber-700 dark:text-amber-400">
+          <span className="text-caption-xs font-semibold uppercase tracking-widest text-[hsl(var(--premium))]">
             {locale === "cs" ? "Koncept dne" : "Concept of the day"}
           </span>
         </div>
         {fc > 0 && (
-          <Link to="/tutor" className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-2.5 py-0.5 text-caption-xs text-orange-700 dark:text-orange-400 hover:opacity-80 transition-opacity">
+          <Link to="/tutor" className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(var(--premium))]/12 border border-[hsl(var(--premium))]/25 px-2.5 py-0.5 text-caption-xs text-[hsl(var(--premium))] hover:opacity-80 transition-opacity">
             <span>🃏</span>
             {fc} {locale === "cs" ? "karet k opakování" : "cards due"}
           </Link>
@@ -92,7 +92,7 @@ function ConceptOfDayCard({ locale = "en" }: { locale?: string }) {
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-heading-sm font-bold text-content-primary">{label}</h3>
           {domain && (
-            <span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-700 dark:text-amber-400">
+            <span className="inline-block rounded-full bg-[hsl(var(--premium))]/12 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[hsl(var(--premium))]">
               {domain}
             </span>
           )}
@@ -100,7 +100,7 @@ function ConceptOfDayCard({ locale = "en" }: { locale?: string }) {
         </div>
         <Link
           to={`/tutor?concept=${concept.id}`}
-          className="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 text-body-sm font-medium text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+          className="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-[hsl(var(--premium))]/30 bg-[hsl(var(--premium))]/10 px-3 py-2 text-body-sm font-medium text-[hsl(var(--premium))] hover:bg-[hsl(var(--premium))]/18 transition-colors"
         >
           <MessageSquareText className="h-3.5 w-3.5" />
           {locale === "cs" ? "Probrat s AI" : "Ask AI"}
@@ -133,9 +133,9 @@ function LearningProgressCard() {
         <div className="flex items-center gap-3">
           {/* Streak badge */}
           {streak && streak.currentStreak > 0 && (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-400/30 bg-orange-400/10 px-2.5 py-1">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--premium))]/30 bg-[hsl(var(--premium))]/10 px-2.5 py-1">
               <span className="text-base leading-none">🔥</span>
-              <span className="text-caption-xs font-semibold text-orange-500">
+              <span className="text-caption-xs font-semibold text-[hsl(var(--premium))]">
                 {streak.currentStreak} day{streak.currentStreak !== 1 ? "s" : ""}
               </span>
             </div>
@@ -160,7 +160,7 @@ function LearningProgressCard() {
               { label: "Conversations", value: conversations.length },
               { label: "Saved notes", value: pins.length },
             ].map(({ label, value }) => (
-              <div key={label} className="rounded-xl bg-surface-base p-3 text-center">
+              <div key={label} className="rounded-xl border border-border-subtle bg-surface-base p-3 text-center">
                 <div className="text-heading-sm font-bold text-content-primary">{value}</div>
                 <div className="text-caption-xs text-content-tertiary mt-0.5">{label}</div>
               </div>
@@ -176,14 +176,14 @@ function LearningProgressCard() {
                 </span>
               )}
               {studied > 0 && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-1 text-blue-600 dark:text-blue-400 font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-500 inline-block" />
+                <span className="inline-flex items-center gap-1 rounded-full bg-brand-soft px-2.5 py-1 text-primary font-medium">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary inline-block" />
                   {studied} studied
                 </span>
               )}
               {explored > 0 && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/10 px-2.5 py-1 text-yellow-600 dark:text-yellow-400 font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 inline-block" />
+                <span className="inline-flex items-center gap-1 rounded-full bg-[hsl(var(--premium))]/10 px-2.5 py-1 text-[hsl(var(--premium))] font-medium">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--premium))] inline-block" />
                   {explored} explored
                 </span>
               )}
@@ -229,26 +229,26 @@ function StudyPlansCard() {
 
   return (
     <Link to="/plan" className="group block">
-      <div className="relative overflow-hidden rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-500/6 via-emerald-500/3 to-transparent p-5 hover:border-emerald-400/40 hover:shadow-elevation-sm transition-all">
+      <div className="relative overflow-hidden rounded-2xl border border-[hsl(var(--success))]/20 bg-success-soft/60 p-5 hover:border-[hsl(var(--success))]/40 hover:shadow-elevation-sm transition-all">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5 min-w-0">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15">
-                <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--success))]/15">
+                <MapPin className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
               </div>
-              <span className="text-caption-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              <span className="text-caption-xs font-semibold uppercase tracking-widest text-[hsl(var(--success))]">
                 Study plans
               </span>
             </div>
             {activePlan ? (
               <>
-                <p className="text-body-sm font-semibold text-content-primary line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                <p className="text-body-sm font-semibold text-content-primary line-clamp-1 group-hover:text-[hsl(var(--success))] transition-colors">
                   {activePlan.goal}
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-24 overflow-hidden rounded-full bg-border-subtle">
                     <div
-                      className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                      className="h-full rounded-full bg-[hsl(var(--success))] transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -261,11 +261,11 @@ function StudyPlansCard() {
               </p>
             )}
           </div>
-          <ArrowRight className="h-4 w-4 text-content-tertiary shrink-0 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all mt-1" />
+          <ArrowRight className="h-4 w-4 text-content-tertiary shrink-0 group-hover:text-[hsl(var(--success))] group-hover:translate-x-0.5 transition-all mt-1" />
         </div>
         {!activePlan && (
           <div className="mt-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/8 px-3 py-1 text-caption-xs font-medium text-emerald-700 dark:text-emerald-400">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--success))]/30 bg-[hsl(var(--success))]/10 px-3 py-1 text-caption-xs font-medium text-[hsl(var(--success))]">
               <Sparkles className="h-3 w-3" />
               Create my first plan →
             </span>
@@ -310,42 +310,43 @@ export function Component() {
 
       {/* AI Tutor feature hero */}
       <Link to="/tutor" className="group block">
-        <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent p-6 transition-all hover:border-primary/40 hover:shadow-elevation-md">
-          <div className="flex items-start justify-between gap-4">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 text-white shadow-glow-brand transition-all hover:brightness-105 hover:shadow-elevation-xl">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(255,255,255,0.22),transparent_55%)]" />
+          <div className="relative flex items-start justify-between gap-4">
             <div className="space-y-2 max-w-lg">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15">
-                  <MessageSquareText className="h-4 w-4 text-primary" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
+                  <MessageSquareText className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-caption-xs font-semibold uppercase tracking-widest text-primary">
+                <span className="text-caption-xs font-semibold uppercase tracking-widest text-white/85">
                   {LL.nav.tutorLink()}
                 </span>
               </div>
-              <h2 className="text-heading-sm font-semibold tracking-tight text-content-primary group-hover:text-primary transition-colors">
+              <h2 className="text-heading-sm font-semibold tracking-tight text-white">
                 Your personal AI learning partner
               </h2>
-              <p className="text-body-md text-content-secondary">
+              <p className="text-body-md text-white/85">
                 Ask anything — from "explain transformers" to "write me a RAG pipeline in Python". Get expert-level answers with code, analogies, and depth. Connects to any concept in the AI Map.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
                 {["Streaming responses", "Code examples", "AI Map context", "CS + EN"].map((tag) => (
-                  <span key={tag} className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-caption-xs text-primary">
+                  <span key={tag} className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 px-2.5 py-0.5 text-caption-xs text-white/90">
                     <Sparkles className="h-2.5 w-2.5" />
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="hidden sm:flex shrink-0 h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
-              <MessageSquareText className="h-10 w-10 text-primary/60" />
+            <div className="hidden sm:flex shrink-0 h-20 w-20 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm">
+              <MessageSquareText className="h-10 w-10 text-white/70" />
             </div>
           </div>
-          <div className="mt-4 flex items-center gap-2">
-            <Button size="sm" className="group-hover:bg-[hsl(var(--brand-600))]">
+          <div className="relative mt-4 flex items-center gap-2">
+            <Button size="sm" className="bg-white text-primary shadow-elevation-sm hover:bg-white/90">
               Start a conversation
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button size="sm" variant="ghost" asChild>
+            <Button size="sm" variant="ghost" className="text-white hover:bg-white/15 hover:text-white" asChild>
               <Link to="/map" onClick={(e) => e.stopPropagation()}>
                 Explore AI Map
               </Link>

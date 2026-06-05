@@ -6,15 +6,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap rounded-full border border-transparent text-body-md font-medium tracking-tight transition-[background-color,color,border-color,box-shadow,opacity] duration-150 ease-out disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
+  "inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap rounded-full border border-transparent text-body-md font-medium tracking-tight transition-[background-color,color,border-color,box-shadow,opacity,transform] duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:shrink-0 outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-[hsl(var(--brand-600))]",
+        default: "bg-primary text-primary-foreground shadow-elevation-sm hover:bg-[hsl(var(--brand-600))] hover:shadow-elevation-md",
+        gradient: "bg-gradient-brand text-white shadow-glow-brand hover:shadow-elevation-lg hover:brightness-105",
         destructive:
           "bg-destructive text-destructive-foreground hover:opacity-90",
         outline:
-          "border-border-subtle bg-surface-base text-content-primary hover:border-border-strong",
+          "border-border-subtle bg-surface-base text-content-primary hover:border-border-strong hover:bg-surface-hover",
         secondary:
           "bg-brand-soft text-content-primary hover:bg-brand-muted",
         ghost:

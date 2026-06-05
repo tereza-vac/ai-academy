@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils";
 const cardVariants = cva("border text-card-foreground", {
   variants: {
     variant: {
-      elevated: "rounded-xl border-border-subtle bg-surface-elevated shadow-elevation-sm",
-      outline: "rounded-16 border-border-subtle bg-surface-base",
-      soft: "rounded-xl border-transparent bg-surface-soft",
+      elevated: "rounded-2xl border-border-subtle bg-surface-elevated shadow-elevation-sm",
+      outline: "rounded-2xl border-border-subtle bg-surface-base",
+      soft: "rounded-2xl border-transparent bg-surface-soft",
+      hero: "rounded-2xl border-border-subtle bg-surface-elevated bg-aura shadow-elevation-md overflow-hidden",
     },
     interactive: {
-      true: "transition-[border-color,box-shadow,transform] duration-150 ease-out hover:border-border-strong hover:shadow-elevation-md",
+      true: "transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:border-border-strong hover:shadow-elevation-lg",
       false: "",
     },
   },

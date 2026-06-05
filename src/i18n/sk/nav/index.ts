@@ -14,6 +14,12 @@ const sk_nav: NamespaceNavTranslation = {
   buildLabLink: "Build Lab",
   expandSidebar: "Rozbaliť panel",
   collapseSidebar: "Zbaliť panel",
+  flashcardsLink: "Kartičky",
+  progressLink: "Pokrok",
+  achievementsLink: "Úspechy",
+  planLink: "Študijné plány",
+  settingsLink: "Nastavenia",
+  searchPlaceholder: "Hľadať…",
 };
 
 export default sk_nav;

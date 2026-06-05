@@ -12,9 +12,9 @@ interface PageHeaderProps {
 export function PageHeader({ title, description, actions, eyebrow, className }: PageHeaderProps) {
   return (
     <header className={cn("flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between", className)}>
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {eyebrow ? (
-          <div className="text-caption-xs uppercase tracking-wide text-content-tertiary">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-0.5 text-caption-xs font-semibold uppercase tracking-widest text-primary">
             {eyebrow}
           </div>
         ) : null}

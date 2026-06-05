@@ -24,10 +24,10 @@ import { cn } from "@/lib/utils";
 /* ─── Topic learning stats card ─────────────────────────────────────────── */
 
 const MASTERY_CFG = [
-  { label: "Not started", icon: null,         color: "text-content-tertiary",                     bg: "" },
-  { label: "Explored",    icon: null,         color: "text-sky-600 dark:text-sky-400",            bg: "bg-sky-50 dark:bg-sky-950/30 border-sky-400/30" },
-  { label: "Proficient",  icon: Star,         color: "text-amber-600 dark:text-amber-400",        bg: "bg-amber-50 dark:bg-amber-950/30 border-amber-400/30" },
-  { label: "Mastered",    icon: CheckCircle2, color: "text-emerald-600 dark:text-emerald-400",    bg: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-400/30" },
+  { label: "Not started", icon: null,         color: "text-content-tertiary",          bg: "" },
+  { label: "Explored",    icon: null,         color: "text-primary",                   bg: "bg-brand-soft border-primary/30" },
+  { label: "Proficient",  icon: Star,         color: "text-[hsl(var(--premium))]",     bg: "bg-premium-soft border-[hsl(var(--premium))]/30" },
+  { label: "Mastered",    icon: CheckCircle2, color: "text-[hsl(var(--success))]",     bg: "bg-success-soft border-[hsl(var(--success))]/30" },
 ] as const;
 
 function TopicLearningStats({ slug }: { slug: string }) {

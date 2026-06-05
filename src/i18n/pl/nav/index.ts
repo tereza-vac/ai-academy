@@ -14,6 +14,12 @@ const pl_nav: NamespaceNavTranslation = {
   buildLabLink: "Build Lab",
   expandSidebar: "Rozwiń panel",
   collapseSidebar: "Zwiń panel",
+  flashcardsLink: "Fiszki",
+  progressLink: "Postępy",
+  achievementsLink: "Osiągnięcia",
+  planLink: "Plany nauki",
+  settingsLink: "Ustawienia",
+  searchPlaceholder: "Szukaj…",
 };
 
 export default pl_nav;

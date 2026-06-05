@@ -299,8 +299,8 @@ function WelcomeScreen({ locale, onPrompt, conceptLabel, conceptSummary }: Welco
       <div className="w-full max-w-lg text-center space-y-4">
         {/* Hero */}
         <div className="flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
-            <Brain className="h-8 w-8 text-primary" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-brand text-white shadow-glow-brand animate-float">
+            <Brain className="h-8 w-8" />
           </div>
         </div>
 
@@ -557,8 +557,8 @@ Start immediately with Question 1 — only the question, no preamble.`,
               className={cn(
                 "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-caption-xs transition-colors",
                 quizMode
-                  ? "border-amber-400/50 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400"
-                  : "border-border-subtle text-content-secondary hover:border-amber-400/40 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 hover:text-amber-700 dark:hover:text-amber-400",
+                  ? "border-[hsl(var(--premium))]/50 bg-premium-soft text-[hsl(var(--premium))]"
+                  : "border-border-subtle text-content-secondary hover:border-[hsl(var(--premium))]/40 hover:bg-premium-soft/60 hover:text-[hsl(var(--premium))]",
                 "disabled:opacity-40 disabled:pointer-events-none",
                 "outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
               )}
@@ -595,8 +595,8 @@ Start immediately with Question 1 — only the question, no preamble.`,
             className={cn(
               "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-caption-xs transition-colors",
               feynmanMode
-                ? "border-violet-400/50 bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-400"
-                : "border-border-subtle text-content-secondary hover:border-violet-400/40 hover:bg-violet-50/50 dark:hover:bg-violet-950/20 hover:text-violet-700 dark:hover:text-violet-400",
+                ? "border-primary/50 bg-brand-soft text-primary"
+                : "border-border-subtle text-content-secondary hover:border-primary/40 hover:bg-brand-soft/60 hover:text-primary",
               "disabled:opacity-40 disabled:pointer-events-none",
               "outline-none focus-visible:shadow-[0_0_0_2px_hsl(var(--primary))]",
             )}
@@ -644,7 +644,7 @@ Start immediately with Question 1 — only the question, no preamble.`,
               <GraduationCap className="h-3.5 w-3.5" />
             </Button>
             {flashcardsDue > 0 && (
-              <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-orange-500 text-[9px] text-white font-bold">
+              <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[hsl(var(--premium))] text-[9px] text-white font-bold">
                 {flashcardsDue > 9 ? "9+" : flashcardsDue}
               </span>
             )}
@@ -690,7 +690,7 @@ Start immediately with Question 1 — only the question, no preamble.`,
               <FileText className="h-3.5 w-3.5" />
             </Button>
             {notesHasContent && !showNotes && (
-              <span className="pointer-events-none absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-400 ring-1 ring-background" />
+              <span className="pointer-events-none absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[hsl(var(--premium))] ring-1 ring-background" />
             )}
           </div>
 

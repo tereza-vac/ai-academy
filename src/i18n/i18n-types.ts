@@ -1248,6 +1248,30 @@ export type NamespaceNavTranslation = {
 	 * S​b​a​l​i​t​ ​p​a​n​e​l
 	 */
 	collapseSidebar: string
+	/**
+	 * Flashcards
+	 */
+	flashcardsLink: string
+	/**
+	 * Progress
+	 */
+	progressLink: string
+	/**
+	 * Achievements
+	 */
+	achievementsLink: string
+	/**
+	 * Study plans
+	 */
+	planLink: string
+	/**
+	 * Settings
+	 */
+	settingsLink: string
+	/**
+	 * Search
+	 */
+	searchPlaceholder: string
 }
 
 export type NamespacePaperSearchTranslation = {
@@ -3309,6 +3333,30 @@ export type TranslationFunctions = {
 		 * Sbalit panel
 		 */
 		collapseSidebar: () => LocalizedString
+		/**
+		 * Flashcards
+		 */
+		flashcardsLink: () => LocalizedString
+		/**
+		 * Progress
+		 */
+		progressLink: () => LocalizedString
+		/**
+		 * Achievements
+		 */
+		achievementsLink: () => LocalizedString
+		/**
+		 * Study plans
+		 */
+		planLink: () => LocalizedString
+		/**
+		 * Settings
+		 */
+		settingsLink: () => LocalizedString
+		/**
+		 * Search
+		 */
+		searchPlaceholder: () => LocalizedString
 	}
 	paperSearch: {
 		/**

@@ -99,6 +99,11 @@
 
     --border-subtle: var(--neutral-150);
     --border-strong: var(--neutral-250);
+
+    /* Gradients & effects */
+    --gradient-brand: linear-gradient(135deg, hsl(206 100% 60%) 0%, hsl(214 100% 50%) 50%, hsl(224 82% 46%) 100%);
+    --aura-brand: hsl(212 100% 50% / 0.10);
+    --aura-accent: hsl(250 84% 60% / 0.10);
   }
 
   .dark {
@@ -143,6 +148,10 @@
 
     --brand-soft: 215 96% 16%;
     --brand-muted: 215 96% 22%;
+
+    /* Gradients & effects (dark) */
+    --aura-brand: hsl(212 100% 62% / 0.16);
+    --aura-accent: hsl(250 84% 66% / 0.16);
   }
 }
 
@@ -169,6 +178,21 @@
 }
 
 @layer utilities {
+  .text-gradient-brand {
+    background-image: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .bg-gradient-brand {
+    background-image: var(--gradient-brand);
+  }
+  .bg-aura {
+    background-image:
+      radial-gradient(60% 80% at 12% -10%, var(--aura-brand), transparent 70%),
+      radial-gradient(46% 64% at 104% 0%, var(--aura-accent), transparent 72%);
+  }
   .scrollbar-thin {
     scrollbar-width: thin;
   }

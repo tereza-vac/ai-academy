@@ -309,7 +309,7 @@ export function SidebarUserMenu({ collapsed }: { collapsed: boolean }) {
 
         <DropdownMenuItem onSelect={() => navigate("/settings")}>
           <Settings />
-          <span>Settings</span>
+          <span>{LL.nav.settingsLink()}</span>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

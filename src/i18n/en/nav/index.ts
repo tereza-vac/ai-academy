@@ -14,6 +14,12 @@ const en_nav: NamespaceNavTranslation = {
   buildLabLink: "Build Lab",
   expandSidebar: "Expand sidebar",
   collapseSidebar: "Collapse sidebar",
+  flashcardsLink: "Flashcards",
+  progressLink: "Progress",
+  achievementsLink: "Achievements",
+  planLink: "Study plans",
+  settingsLink: "Settings",
+  searchPlaceholder: "Search…",
 };
 
 export default en_nav;

@@ -18,10 +18,10 @@ import { openChatWithConcept } from "@/stores/chatWidgetStore";
 /* ─── Topic progress badge ─────────────────────────────────────────────── */
 
 const MASTERY_CONFIG = [
-  { label: "Explored",  icon: null,         classes: "border-sky-400/40 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-400" },
-  { label: "Studied",   icon: null,         classes: "border-violet-400/40 bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-400" },
-  { label: "Proficient",icon: Star,         classes: "border-amber-400/40 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400" },
-  { label: "Mastered",  icon: CheckCircle2, classes: "border-emerald-400/40 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400" },
+  { label: "Explored",  icon: null,         classes: "border-border-strong bg-surface-sunken text-content-secondary" },
+  { label: "Studied",   icon: null,         classes: "border-primary/30 bg-brand-soft text-primary" },
+  { label: "Proficient",icon: Star,         classes: "border-[hsl(var(--premium))]/40 bg-premium-soft text-[hsl(var(--premium))]" },
+  { label: "Mastered",  icon: CheckCircle2, classes: "border-[hsl(var(--success))]/40 bg-success-soft text-[hsl(var(--success))]" },
 ] as const;
 
 function TopicProgressBadge({ slug }: { slug: string }) {
@@ -194,7 +194,7 @@ function SummaryStat({ label, value, icon }: { label: string; value: React.React
           </div>
           <div className="mt-1 text-heading-sm font-semibold text-content-primary">{value}</div>
         </div>
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-elevated text-content-tertiary">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-soft text-primary">
           {icon}
         </div>
       </div>
