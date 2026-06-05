@@ -16,9 +16,9 @@ import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowUpRight,
+  Bot,
   RefreshCw,
   Send,
-  Sparkles,
   Square,
   X,
 } from "lucide-react";
@@ -35,7 +35,7 @@ import type { Locales } from "@/i18n/i18n-types";
 
 const WELCOME = {
   en: "Hi ?? I'm your **AI Tutor**. Ask me anything about AI, machine learning, or any concept in the Academy.",
-  cs: "Ahoj ?? Jsem tv?j **AI Tutor**. Zeptej se m? na cokoliv o um?lé inteligenci nebo konceptech z Akademie.",
+  cs: "Ahoj ?? Jsem tv?j **AI Tutor**. Zeptej se m? na cokoliv o um?l? inteligenci nebo konceptech z Akademie.",
 };
 
 const SUGGESTIONS = {
@@ -47,12 +47,13 @@ const SUGGESTIONS = {
   cs: [
     "Co je to transformer?",
     "Vysv?tli attention jednodu?e",
-    "Navrhni studijní plán pro LLMs",
+    "Navrhni studijn? pl?n pro LLMs",
   ],
 };
 
-/** Shared gradient for the FAB + header so they read as one product. */
-const BRAND_GRADIENT = "bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500";
+/** Shared brand-blue gradient for the FAB + header so they read as one product. */
+const BRAND_GRADIENT =
+  "bg-[linear-gradient(140deg,hsl(206_100%_58%)_0%,hsl(214_100%_50%)_48%,hsl(224_82%_46%)_100%)]";
 
 /* ??? Typing dots ?????????????????????????????????????????????????????????? */
 
@@ -60,7 +61,7 @@ function TypingDots() {
   return (
     <div className="flex items-end gap-2">
       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15">
-        <Sparkles className="h-3.5 w-3.5 text-primary" />
+        <Bot className="h-3.5 w-3.5 text-primary" />
       </div>
       <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-surface-sunken px-4 py-3">
         {[0, 1, 2].map((i) => (
@@ -94,7 +95,7 @@ function Bubble({ msg, isStreaming }: { msg: Msg; isStreaming?: boolean }) {
     <div className={cn("flex items-end gap-2", isUser ? "flex-row-reverse" : "flex-row")}>
       {!isUser && (
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <Bot className="h-3.5 w-3.5 text-primary" />
         </div>
       )}
       <div
@@ -124,8 +125,8 @@ function EmptyState({
   return (
     <div className="flex flex-col items-center gap-5 px-4 py-6 text-center h-full justify-center">
       <div className="relative">
-        <div className={cn("flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-elevation-sm", BRAND_GRADIENT)}>
-          <Sparkles className="h-8 w-8" />
+        <div className={cn("flex h-16 w-16 items-center justify-center rounded-[1.3rem] text-white shadow-elevation-sm", BRAND_GRADIENT)}>
+          <Bot className="h-8 w-8" />
         </div>
         <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 border-2 border-surface-elevated text-[9px] text-white font-bold">
           ?
@@ -140,7 +141,7 @@ function EmptyState({
               ? `Poj?me probrat ?${conceptLabel}". Na co se chce? zeptat?`
               : `Let's explore "${conceptLabel}". What would you like to know?`
             : locale === "cs"
-              ? "Tv?j asistent pro u?ení AI. Zeptej se na cokoliv."
+              ? "Tv?j asistent pro u?en? AI. Zeptej se na cokoliv."
               : "Your AI learning assistant. Ask me anything."}
         </p>
       </div>
@@ -247,7 +248,7 @@ function ChatPanel({
       <div className={cn("shrink-0 px-4 py-4 text-white", BRAND_GRADIENT)}>
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20">
-            <Sparkles className="h-[18px] w-[18px] text-white" />
+            <Bot className="h-[18px] w-[18px] text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-bold text-white leading-tight">AI Tutor</p>
@@ -258,21 +259,21 @@ function ChatPanel({
               )} />
               <p className="text-[11px] text-white/80">
                 {isStreaming
-                  ? (locale === "cs" ? "Pí?e?" : "Typing?")
+                  ? (locale === "cs" ? "P??e?" : "Typing?")
                   : (conceptLabel ?? "Online")}
               </p>
             </div>
           </div>
           <div className="flex items-center">
-            <button type="button" title={locale === "cs" ? "Nová konverzace" : "New conversation"} onClick={resetSession}
+            <button type="button" title={locale === "cs" ? "Nov? konverzace" : "New conversation"} onClick={resetSession}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <RefreshCw className="h-3.5 w-3.5" />
             </button>
-            <button type="button" title={locale === "cs" ? "Otev?ít plný tutor" : "Open full tutor"} onClick={handleExpand}
+            <button type="button" title={locale === "cs" ? "Otev??t pln? tutor" : "Open full tutor"} onClick={handleExpand}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <ArrowUpRight className="h-3.5 w-3.5" />
             </button>
-            <button type="button" title={locale === "cs" ? "Zav?ít" : "Close"} onClick={onClose}
+            <button type="button" title={locale === "cs" ? "Zav??t" : "Close"} onClick={onClose}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors">
               <X className="h-4 w-4" />
             </button>
@@ -312,7 +313,7 @@ function ChatPanel({
             value={draft}
             rows={1}
             disabled={isStreaming}
-            placeholder={locale === "cs" ? "Napi? zprávu?" : "Type a message?"}
+            placeholder={locale === "cs" ? "Napi? zpr?vu?" : "Type a message?"}
             onChange={(e) => {
               setDraft(e.target.value);
               e.target.style.height = "auto";
@@ -343,11 +344,11 @@ function ChatPanel({
         </div>
         <div className="mt-2 flex items-center justify-between px-0.5">
           <p className="text-[10px] text-content-tertiary/50">
-            {locale === "cs" ? "Enter ? odeslat · Shift+Enter ? nový ?ádek" : "Enter to send · Shift+Enter for newline"}
+            {locale === "cs" ? "Enter ? odeslat ? Shift+Enter ? nov? ??dek" : "Enter to send ? Shift+Enter for newline"}
           </p>
           <button type="button" onClick={handleExpand}
             className="flex items-center gap-0.5 text-[10px] text-primary/60 hover:text-primary transition-colors">
-            {locale === "cs" ? "Plný tutor" : "Full tutor"} <ArrowUpRight className="h-2.5 w-2.5" />
+            {locale === "cs" ? "Pln? tutor" : "Full tutor"} <ArrowUpRight className="h-2.5 w-2.5" />
           </button>
         </div>
       </div>
@@ -416,35 +417,47 @@ export function ChatWidget() {
         {isOpen && <ChatPanel locale={locale} context={context} onClose={close} />}
       </div>
 
-      {/* Gradient sparkle FAB */}
+      {/* Floating launcher ? custom squircle that morphs to a circle when open */}
       <button
         type="button"
         onClick={toggle}
         aria-label={isOpen ? "Close AI Tutor" : "Open AI Tutor"}
         className={cn(
-          "fixed bottom-6 right-6 z-[9999]",
-          "flex h-14 w-14 items-center justify-center rounded-full",
+          "group fixed bottom-6 right-6 z-[9999]",
+          "flex h-14 w-14 items-center justify-center overflow-hidden",
           "text-white",
           BRAND_GRADIENT,
-          "shadow-[0_8px_24px_rgba(124,58,237,0.35),0_2px_8px_rgba(0,0,0,0.15)]",
-          "transition-all duration-300 ease-out",
+          "ring-1 ring-inset ring-white/25",
+          "shadow-[0_10px_30px_-6px_hsl(214_100%_45%/0.55),0_2px_6px_rgba(0,0,0,0.18)]",
+          "transition-[transform,box-shadow,border-radius] duration-300 ease-out",
           "outline-none focus-visible:ring-4 focus-visible:ring-primary/40",
-          "hover:scale-110 hover:shadow-[0_12px_32px_rgba(124,58,237,0.45)]",
-          isOpen && "scale-90",
+          "hover:-translate-y-0.5 hover:shadow-[0_16px_42px_-6px_hsl(214_100%_45%/0.65)]",
+          isOpen ? "rounded-full scale-95" : "rounded-[1.15rem] hover:rounded-[1.4rem]",
         )}
       >
-        {/* Icon: Sparkles when closed, X when open */}
+        {/* Top sheen */}
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/25 to-transparent" />
+
+        {/* Status pulse dot (closed only) */}
+        {!isOpen && (
+          <span className="absolute right-1 top-1 flex h-3 w-3 items-center justify-center">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/70 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400 ring-2 ring-white/80" />
+          </span>
+        )}
+
+        {/* Icon: Bot when closed, X when open */}
         <span className={cn(
-          "absolute inset-0 flex items-center justify-center transition-all duration-250",
-          isOpen ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-75 -rotate-90",
+          "absolute inset-0 flex items-center justify-center transition-all duration-300",
+          isOpen ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-50 rotate-90",
         )}>
           <X className="h-5 w-5" />
         </span>
         <span className={cn(
-          "absolute inset-0 flex items-center justify-center transition-all duration-250",
-          isOpen ? "opacity-0 scale-75 rotate-90" : "opacity-100 scale-100 rotate-0",
+          "absolute inset-0 flex items-center justify-center transition-all duration-300",
+          isOpen ? "opacity-0 scale-50 -rotate-90" : "opacity-100 scale-100 rotate-0",
         )}>
-          <Sparkles className="h-6 w-6" strokeWidth={1.75} />
+          <Bot className="h-7 w-7" strokeWidth={1.9} />
         </span>
       </button>
     </>
