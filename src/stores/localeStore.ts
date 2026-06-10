@@ -24,6 +24,7 @@ const ALL_NAMESPACES: Namespaces[] = [
   "practice",
   "radar",
   "reader",
+  "spectrum",
   "userMenu",
 ];
 

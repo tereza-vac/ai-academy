@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { cs, enUS, pl, sk } from "date-fns/locale";
-import { Cpu, RefreshCw, Search, Sparkles } from "lucide-react";
+import { Boxes, Cpu, Images, Lock, RefreshCw, Search, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
+import { StatCard } from "@/components/stat-card";
 import { ModelCard } from "@/components/spectrum/ModelCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -69,6 +69,16 @@ export function Component() {
     return list;
   }, [modelsQuery.data, search, tab]);
 
+  const counts = useMemo(() => {
+    const list = modelsQuery.data ?? [];
+    return {
+      total: metaQuery.data?.count ?? list.length,
+      commercial: list.filter((m) => m.licenseType === "commercial").length,
+      openSource: list.filter((m) => m.licenseType === "open_source").length,
+      multimodal: list.filter((m) => m.modalities.some((mod) => mod !== "text")).length,
+    };
+  }, [modelsQuery.data, metaQuery.data]);
+
   const lastUpdated = metaQuery.data?.lastFetchedAt
     ? formatDistanceToNow(parseISO(metaQuery.data.lastFetchedAt), {
         addSuffix: true,
@@ -97,30 +107,40 @@ export function Component() {
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <Card variant="soft" className="flex items-center gap-3 px-4 py-3">
-          <Cpu className="h-8 w-8 text-brand" />
-          <div>
-            <p className="text-caption-xs uppercase tracking-wide text-content-tertiary">
-              {LL.spectrum.statModels()}
-            </p>
-            <p className="text-heading-sm font-semibold text-content-primary">
-              {metaQuery.data?.count ?? modelsQuery.data?.length ?? "—"}
-            </p>
-          </div>
-        </Card>
-        <Card variant="soft" className="flex items-center gap-3 px-4 py-3 sm:col-span-2">
-          <Sparkles className="h-8 w-8 shrink-0 text-premium" />
-          <p className="text-body-sm text-content-secondary">
-            {LL.spectrum.catalogNote()}
-            {lastUpdated ? (
-              <span className="mt-1 block text-caption-xs text-content-tertiary">
-                {LL.spectrum.lastUpdated({ when: lastUpdated })}
-              </span>
-            ) : null}
-          </p>
-        </Card>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard
+          label={LL.spectrum.statModels()}
+          value={counts.total}
+          icon={Cpu}
+          tone="brand"
+        />
+        <StatCard
+          label={LL.spectrum.tabCommercial()}
+          value={counts.commercial}
+          icon={Lock}
+          tone="premium"
+        />
+        <StatCard
+          label={LL.spectrum.tabOpenSource()}
+          value={counts.openSource}
+          icon={Boxes}
+          tone="success"
+        />
+        <StatCard
+          label={LL.spectrum.tabMultimodal()}
+          value={counts.multimodal}
+          icon={Images}
+          tone="brand"
+        />
       </div>
+
+      <p className="flex items-center gap-1.5 text-caption-xs text-content-tertiary">
+        <Sparkles className="h-3.5 w-3.5 shrink-0 text-[hsl(var(--premium))]" />
+        <span>{LL.spectrum.catalogNote()}</span>
+        {lastUpdated ? (
+          <span className="text-content-tertiary/70">· {LL.spectrum.lastUpdated({ when: lastUpdated })}</span>
+        ) : null}
+      </p>
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="relative w-full lg:max-w-sm">
@@ -155,7 +175,7 @@ export function Component() {
       {modelsQuery.isLoading ? (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {[0, 1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} className="h-44 rounded-xl" />
+            <Skeleton key={i} className="h-44 rounded-2xl" />
           ))}
         </div>
       ) : modelsQuery.isError ? (
