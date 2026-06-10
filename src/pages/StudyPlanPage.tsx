@@ -73,10 +73,10 @@ function PlanCard({
               {plan.goal}
             </span>
           </div>
-          <div className="flex items-center gap-2 flex-wrap text-caption-xs text-content-tertiary">
+          <div className="flex items-center gap-2 flex-wrap text-caption-xs text-content-secondary">
             <Badge variant="muted">{plan.background}</Badge>
             <span>{plan.daysPerWeek}d/week · {plan.weeksTotal}w</span>
-            <span>·</span>
+            <span className="text-content-tertiary">·</span>
             <span>{formatDate(plan.generatedAt)}</span>
           </div>
         </div>
@@ -94,12 +94,12 @@ function PlanCard({
 
       {/* Progress bar */}
       {total > 0 && (
-        <div className="mt-3 space-y-1">
-          <div className="flex items-center justify-between text-caption-xs text-content-tertiary/70">
-            <span>{done}/{total} tasks</span>
-            <span>{pct}%</span>
+        <div className="mt-3.5 space-y-1.5">
+          <div className="flex items-center justify-between text-caption-xs">
+            <span className="font-medium text-content-secondary">{done}/{total} tasks</span>
+            <span className={cn("font-bold", pct === 100 ? "text-[hsl(var(--success))]" : "text-primary")}>{pct}%</span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-subtle">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-surface-sunken">
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
@@ -179,7 +179,7 @@ function PlanView({
               {pct}%
             </span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-border-subtle">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-surface-sunken">
             <div
               className={cn("h-full rounded-full transition-all duration-500", pct === 100 ? "bg-[hsl(var(--success))]" : "bg-primary")}
               style={{ width: `${pct}%` }}

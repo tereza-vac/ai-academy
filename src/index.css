@@ -149,6 +149,14 @@
     --brand-soft: 215 96% 16%;
     --brand-muted: 215 96% 22%;
 
+    /* Soft status surfaces — dark-tinted so they read on dark backgrounds.
+       (Light-mode defaults stay near-white; without these the dark theme
+       inherits the pale values and accent-on-soft text becomes unreadable.) */
+    --success-soft: 132 40% 14%;
+    --warning-soft: 42 52% 15%;
+    --coral-soft: 4 54% 18%;
+    --premium-soft: 22 60% 16%;
+
     /* Gradients & effects (dark) */
     --aura-brand: hsl(212 100% 62% / 0.16);
     --aura-accent: hsl(250 84% 66% / 0.16);

@@ -229,11 +229,11 @@ function StudyPlansCard() {
 
   return (
     <Link to="/plan" className="group block">
-      <div className="relative overflow-hidden rounded-2xl border border-[hsl(var(--success))]/20 bg-success-soft/60 p-5 hover:border-[hsl(var(--success))]/40 hover:shadow-elevation-sm transition-all">
+      <div className="relative overflow-hidden rounded-2xl border border-[hsl(var(--success))]/25 bg-success-soft p-5 hover:border-[hsl(var(--success))]/50 hover:shadow-elevation-sm transition-all">
         <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1.5 min-w-0">
+          <div className="min-w-0 flex-1 space-y-2.5">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--success))]/15">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--success))]/20">
                 <MapPin className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
               </div>
               <span className="text-caption-xs font-semibold uppercase tracking-widest text-[hsl(var(--success))]">
@@ -242,18 +242,23 @@ function StudyPlansCard() {
             </div>
             {activePlan ? (
               <>
-                <p className="text-body-sm font-semibold text-content-primary line-clamp-1 group-hover:text-[hsl(var(--success))] transition-colors">
+                <p className="text-body-md font-semibold text-content-primary line-clamp-1 group-hover:text-[hsl(var(--success))] transition-colors">
                   {activePlan.goal}
                 </p>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-24 overflow-hidden rounded-full bg-border-subtle">
-                    <div
-                      className="h-full rounded-full bg-[hsl(var(--success))] transition-all duration-500"
-                      style={{ width: `${pct}%` }}
-                    />
+                {total > 0 && (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-3 text-caption-xs">
+                      <span className="font-medium text-content-secondary">{done} / {total} tasks</span>
+                      <span className="font-bold text-[hsl(var(--success))]">{pct}%</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-[hsl(var(--success))]/15">
+                      <div
+                        className="h-full rounded-full bg-[hsl(var(--success))] transition-all duration-500"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
                   </div>
-                  <span className="text-caption-xs text-content-tertiary">{done}/{total} tasks · {pct}%</span>
-                </div>
+                )}
               </>
             ) : (
               <p className="text-body-sm text-content-secondary">
@@ -261,11 +266,11 @@ function StudyPlansCard() {
               </p>
             )}
           </div>
-          <ArrowRight className="h-4 w-4 text-content-tertiary shrink-0 group-hover:text-[hsl(var(--success))] group-hover:translate-x-0.5 transition-all mt-1" />
+          <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[hsl(var(--success))]/70 group-hover:text-[hsl(var(--success))] group-hover:translate-x-0.5 transition-all" />
         </div>
         {!activePlan && (
           <div className="mt-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--success))]/30 bg-[hsl(var(--success))]/10 px-3 py-1 text-caption-xs font-medium text-[hsl(var(--success))]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--success))]/30 bg-[hsl(var(--success))]/15 px-3 py-1 text-caption-xs font-medium text-[hsl(var(--success))]">
               <Sparkles className="h-3 w-3" />
               Create my first plan →
             </span>
