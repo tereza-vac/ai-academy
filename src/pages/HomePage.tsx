@@ -34,6 +34,7 @@ import { ALL_NODES, pickLocaleText } from "@/lib/aiMapData";
 import { dueCount } from "@/services/flashcards";
 import { listPlans } from "@/services/studyPlan";
 import { DailyGoalsWidget } from "@/components/DailyGoalsWidget";
+import { openChat, openChatWithConcept } from "@/stores/chatWidgetStore";
 
 const sections: Array<{
   labelKey: keyof TranslationFunctions["nav"];
@@ -98,13 +99,14 @@ function ConceptOfDayCard({ locale = "en" }: { locale?: string }) {
           )}
           <p className="text-body-sm text-content-secondary line-clamp-2">{summary}</p>
         </div>
-        <Link
-          to={`/tutor?concept=${concept.id}`}
+        <button
+          type="button"
+          onClick={() => openChatWithConcept({ conceptId: concept.id, domain: domain || undefined })}
           className="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-[hsl(var(--premium))]/30 bg-[hsl(var(--premium))]/10 px-3 py-2 text-body-sm font-medium text-[hsl(var(--premium))] hover:bg-[hsl(var(--premium))]/18 transition-colors"
         >
           <MessageSquareText className="h-3.5 w-3.5" />
           {locale === "cs" ? "Probrat s AI" : "Ask AI"}
-        </Link>
+        </button>
       </div>
     </div>
   );
@@ -192,10 +194,14 @@ function LearningProgressCard() {
                   Best streak: {streak.longestStreak} days
                 </span>
               )}
-              <Link to="/tutor" className="ml-auto inline-flex items-center gap-1 text-primary hover:underline">
+              <button
+                type="button"
+                onClick={() => openChat()}
+                className="ml-auto inline-flex items-center gap-1 text-primary hover:underline"
+              >
                 <Zap className="h-3 w-3" />
                 Continue learning
-              </Link>
+              </button>
             </div>
           )}
         </>
@@ -207,12 +213,10 @@ function LearningProgressCard() {
           <p className="text-body-sm text-content-secondary">
             You're on a {streak.currentStreak}-day streak! Keep going.
           </p>
-          <Link to="/tutor">
-            <Button size="sm">
-              <Zap className="h-3.5 w-3.5" />
-              Continue
-            </Button>
-          </Link>
+          <Button size="sm" onClick={() => openChat()}>
+            <Zap className="h-3.5 w-3.5" />
+            Continue
+          </Button>
         </div>
       )}
     </div>

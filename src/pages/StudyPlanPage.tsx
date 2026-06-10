@@ -5,7 +5,6 @@
  * richly formatted checklist with concept deep-links to the AI Tutor.
  */
 import { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   BookOpen,
   Brain,
@@ -34,6 +33,7 @@ import { StudyPlanModal } from "@/components/tutor/StudyPlanModal";
 import { TutorMessageContent } from "@/components/tutor/TutorMessageContent";
 import { exportStudyPlanMarkdown } from "@/lib/exportUtils";
 import { useLocaleStore, selectLocale } from "@/stores/localeStore";
+import { openChat, openChatWithConcept } from "@/stores/chatWidgetStore";
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
@@ -157,12 +157,10 @@ function PlanView({
             <Download className="h-3.5 w-3.5" />
             Export
           </Button>
-          <Link to={`/tutor`}>
-            <Button size="sm" variant="outline">
-              <MessageSquareText className="h-3.5 w-3.5" />
-              Open Tutor
-            </Button>
-          </Link>
+          <Button size="sm" variant="outline" onClick={() => openChat()}>
+            <MessageSquareText className="h-3.5 w-3.5" />
+            Open Tutor
+          </Button>
         </div>
       </div>
 
@@ -216,14 +214,17 @@ function PlanView({
                 {item.text}
               </span>
               {item.conceptId && !item.done && (
-                <Link
-                  to={`/tutor?conceptId=${encodeURIComponent(item.conceptId)}`}
-                  onClick={(e) => e.stopPropagation()}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (item.conceptId) openChatWithConcept({ conceptId: item.conceptId });
+                  }}
                   className="shrink-0 inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] text-primary hover:bg-primary/10 transition-colors"
                 >
                   <Sparkles className="h-2.5 w-2.5" />
                   Study
-                </Link>
+                </button>
               )}
             </div>
           ))}

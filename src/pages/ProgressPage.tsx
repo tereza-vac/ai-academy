@@ -29,6 +29,7 @@ import { listCards, dueCount } from "@/services/flashcards";
 import { listNoteIds } from "@/services/conceptNotes";
 import { ALL_NODES, DOMAINS, pickLocaleText } from "@/lib/aiMapData";
 import { useLocaleStore, selectLocale } from "@/stores/localeStore";
+import { openChat, openChatWithConcept } from "@/stores/chatWidgetStore";
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
@@ -236,9 +237,10 @@ function ConceptGrid({ progress, locale }: { progress: ConceptProgress[]; locale
         const label = node ? pickLocaleText(node.label, locale as "cs" | "en") : p.conceptId;
         const Icon = MASTERY_ICONS[lvl];
         return (
-          <Link
+          <button
             key={p.conceptId}
-            to={`/tutor?conceptId=${encodeURIComponent(p.conceptId)}`}
+            type="button"
+            onClick={() => openChatWithConcept({ conceptId: p.conceptId })}
             title={`${MASTERY_LABELS[lvl]} · ${p.messageCount} messages`}
             className={cn(
               "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-caption-xs font-medium transition-opacity hover:opacity-80",
@@ -247,7 +249,7 @@ function ConceptGrid({ progress, locale }: { progress: ConceptProgress[]; locale
           >
             {Icon && <Icon className="h-3 w-3" />}
             {label}
-          </Link>
+          </button>
         );
       })}
     </div>
@@ -345,8 +347,8 @@ export function Component() {
             <Button asChild variant="outline" size="sm">
               <Link to="/map"><Network className="h-3.5 w-3.5" /> AI Map</Link>
             </Button>
-            <Button asChild size="sm">
-              <Link to="/tutor"><Sparkles className="h-3.5 w-3.5" /> Open Tutor</Link>
+            <Button size="sm" onClick={() => openChat()}>
+              <Sparkles className="h-3.5 w-3.5" /> Open Tutor
             </Button>
           </div>
         }
@@ -543,7 +545,7 @@ export function Component() {
           </div>
           <div className="flex items-center justify-center gap-2">
             <Button asChild size="sm" variant="outline"><Link to="/map">Explore AI Map</Link></Button>
-            <Button asChild size="sm"><Link to="/tutor">Open AI Tutor</Link></Button>
+            <Button size="sm" onClick={() => openChat()}>Open AI Tutor</Button>
           </div>
         </div>
       )}

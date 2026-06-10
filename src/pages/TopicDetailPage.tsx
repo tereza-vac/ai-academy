@@ -20,6 +20,7 @@ import { getConceptProgress, masteryLevel } from "@/services/learningProgress";
 import { listConversations } from "@/services/conversationHistory";
 import { dueCount } from "@/services/flashcards";
 import { hasNote } from "@/services/conceptNotes";
+import { openChatWithConcept } from "@/stores/chatWidgetStore";
 import { cn } from "@/lib/utils";
 /* ─── Topic learning stats card ─────────────────────────────────────────── */
 
@@ -46,11 +47,9 @@ function TopicLearningStats({ slug }: { slug: string }) {
           <div className="flex flex-col gap-3">
             <p className="text-caption-xs text-content-tertiary font-medium uppercase tracking-wide">Your progress</p>
             <p className="text-body-sm text-content-tertiary">Start learning this topic with the AI Tutor to track your progress.</p>
-            <Button asChild size="sm" variant="outline" className="w-full">
-              <Link to={`/tutor?conceptId=${encodeURIComponent(slug)}`}>
-                <MessageSquareText className="h-3.5 w-3.5" />
-                Open AI Tutor
-              </Link>
+            <Button size="sm" variant="outline" className="w-full" onClick={() => openChatWithConcept({ conceptId: slug })}>
+              <MessageSquareText className="h-3.5 w-3.5" />
+              Open AI Tutor
             </Button>
           </div>
         </CardContent>

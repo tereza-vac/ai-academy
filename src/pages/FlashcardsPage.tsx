@@ -5,7 +5,6 @@
  * inline editing, deletion, and a "Review due" shortcut.
  */
 import { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   BookOpen,
   Check,
@@ -31,6 +30,7 @@ import {
 } from "@/services/flashcards";
 import { FlashcardReviewModal } from "@/components/tutor/FlashcardReviewModal";
 import { exportFlashcardsCSV, exportFlashcardsAnki } from "@/lib/exportUtils";
+import { openChat } from "@/stores/chatWidgetStore";
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
@@ -297,12 +297,10 @@ export function Component() {
                 </Button>
               </div>
             )}
-            <Link to="/tutor">
-              <Button variant="outline" size="sm">
-                <BookOpen className="h-3.5 w-3.5" />
-                AI Tutor
-              </Button>
-            </Link>
+            <Button variant="outline" size="sm" onClick={() => openChat()}>
+              <BookOpen className="h-3.5 w-3.5" />
+              AI Tutor
+            </Button>
             {due > 0 && (
               <Button size="sm" onClick={() => setShowReview(true)}>
                 <Zap className="h-3.5 w-3.5" />
@@ -333,12 +331,10 @@ export function Component() {
               While chatting with the AI Tutor, click the <strong>Flashcard</strong> button on any response to save it for later review.
             </p>
           </div>
-          <Link to="/tutor">
-            <Button size="sm">
-              <BookOpen className="h-3.5 w-3.5" />
-              Open AI Tutor
-            </Button>
-          </Link>
+          <Button size="sm" onClick={() => openChat()}>
+            <BookOpen className="h-3.5 w-3.5" />
+            Open AI Tutor
+          </Button>
         </div>
       )}
 

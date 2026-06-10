@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Target, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getGoalStatuses, getGoalConfig, allGoalsDone, type GoalStatus } from "@/services/dailyGoals";
+import { openChat } from "@/stores/chatWidgetStore";
 
 interface Props {
   locale?: string;
@@ -104,9 +105,13 @@ export function DailyGoalsWidget({ locale = "en" }: Props) {
 
           {/* Actions */}
           <div className="flex items-center gap-3 pt-1">
-            <Link to="/tutor" className="text-caption-xs text-primary hover:underline">
+            <button
+              type="button"
+              onClick={() => openChat()}
+              className="text-caption-xs text-primary hover:underline"
+            >
               {locale === "cs" ? "Studovat →" : "Start studying →"}
-            </Link>
+            </button>
             <Link to="/settings" className="text-caption-xs text-content-tertiary hover:text-content-secondary transition-colors">
               {locale === "cs" ? "Upravit cíle" : "Adjust goals"}
             </Link>

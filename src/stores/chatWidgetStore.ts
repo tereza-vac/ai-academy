@@ -40,3 +40,10 @@ export function openChatWithConcept(context: Partial<TutorContext>, message?: st
   useChatWidgetStore.getState().open(context);
   if (message) useChatWidgetStore.getState().setPendingMessage(message);
 }
+
+/** Convenience — open the floating widget with no preset context (generic chat).
+ *  Used by the universal "Ask AI / open tutor" buttons scattered across the app. */
+export function openChat(message?: string) {
+  useChatWidgetStore.getState().open();
+  if (message) useChatWidgetStore.getState().setPendingMessage(message);
+}

@@ -17,6 +17,7 @@ import {
   type AchievementCategory,
 } from "@/services/achievements";
 import { useLocaleStore, selectLocale } from "@/stores/localeStore";
+import { openChat } from "@/stores/chatWidgetStore";
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
@@ -174,10 +175,14 @@ export function Component() {
 
         {/* Quick links */}
         <div className="mt-4 flex flex-wrap gap-2">
-          <Link to="/tutor" className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-caption-xs text-primary hover:bg-primary/10 transition-colors">
+          <button
+            type="button"
+            onClick={() => openChat()}
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-caption-xs text-primary hover:bg-primary/10 transition-colors"
+          >
             <Award className="h-3 w-3" />
             {locale === "cs" ? "Začít studovat" : "Start studying"}
-          </Link>
+          </button>
           <Link to="/progress" className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-base px-3 py-1 text-caption-xs text-content-secondary hover:text-content-primary transition-colors">
             <TrendingUp className="h-3 w-3" />
             {locale === "cs" ? "Pokrok" : "Progress dashboard"}
