@@ -64,10 +64,41 @@ const OPEN_WEIGHT_HINTS = [
   "nous", "hermes", "dolphin", "bge", "e5-", "stable-diffusion", "flux",
 ];
 
-const MAINSTREAM_IDS = [
-  "gpt-4", "gpt-4o", "claude-3", "claude-sonnet", "claude-opus", "gemini",
-  "llama-3", "llama-3.3", "deepseek", "mistral-large", "command-r",
+// First-party flagship families, matched by OpenRouter `provider/model` id
+// prefix. A hit marks the model mainstream and boosts its score so newly
+// released flagships (e.g. `anthropic/claude-fable-5`) surface near the top
+// instead of sinking below hundreds of community models. Version-agnostic on
+// purpose — new Claude/GPT/Gemini releases are recognised without a code change.
+const FLAGSHIP_PREFIXES = [
+  "anthropic/claude",
+  "openai/gpt", "openai/o1", "openai/o3", "openai/o4", "openai/chatgpt",
+  "google/gemini", "google/gemma",
+  "x-ai/grok",
+  "meta-llama/llama",
+  "deepseek/deepseek",
+  "mistralai/mistral", "mistralai/mixtral", "mistralai/magistral",
+  "qwen/qwen",
+  "cohere/command",
+  "amazon/nova",
 ];
+
+const LEGACY_HINTS = [
+  "gpt-3.5", "gpt-3", "davinci", "babbage", "ada", "curie",
+  "claude-1", "claude-2", "claude-instant", "text-davinci",
+];
+
+function isFlagship(id: string): boolean {
+  const low = id.toLowerCase().replace(/^~+/, "");
+  return FLAGSHIP_PREFIXES.some((p) => low.startsWith(p));
+}
+
+/** OpenRouter `created` is unix seconds; tolerate ms too. Returns YYYY-MM-DD. */
+function isoDateFromUnix(value?: number): string | null {
+  if (!value || !Number.isFinite(value)) return null;
+  const ms = value > 1e12 ? value : value * 1000;
+  const d = new Date(ms);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+}
 
 function slugify(provider: string, id: string): string {
   const base = `${provider}-${id}`.toLowerCase()
@@ -89,10 +120,11 @@ function inferLicense(id: string, name: string): LicenseType {
 
 function inferPopularity(id: string, downloads?: number): PopularityTier {
   const hay = id.toLowerCase();
-  if (MAINSTREAM_IDS.some((m) => hay.includes(m))) return "mainstream";
-  if (downloads != null && downloads < 50_000) return "niche";
-  if (hay.includes("gpt-3.5") || hay.includes("davinci") || hay.includes("babbage")) {
-    return "legacy";
+  if (LEGACY_HINTS.some((h) => hay.includes(h))) return "legacy";
+  if (isFlagship(id)) return "mainstream";
+  if (downloads != null) {
+    if (downloads >= 500_000) return "mainstream";
+    if (downloads < 50_000) return "niche";
   }
   return "emerging";
 }
@@ -125,11 +157,27 @@ function pricingHint(pricing?: { prompt?: string; completion?: string }): string
   return `~$${perM}/M in · $${perMc}/M out`;
 }
 
-function scoreFor(id: string, context?: number, downloads?: number): number {
-  let s = 50;
-  if (MAINSTREAM_IDS.some((m) => id.toLowerCase().includes(m))) s += 40;
-  if (context && context >= 128_000) s += 10;
-  if (downloads) s += Math.min(30, Math.log10(downloads + 1) * 8);
+function scoreFor(
+  id: string,
+  context?: number,
+  downloads?: number,
+  createdSec?: number,
+): number {
+  let s = 40;
+  if (isFlagship(id)) s += 45;
+  if (context) {
+    if (context >= 1_000_000) s += 16;
+    else if (context >= 200_000) s += 12;
+    else if (context >= 128_000) s += 8;
+    else if (context >= 32_000) s += 4;
+  }
+  if (downloads) s += Math.min(28, Math.log10(downloads + 1) * 8);
+  // Recency: brand-new releases get a boost that decays over ~18 months, so a
+  // freshly launched flagship outranks an older one of the same family.
+  if (createdSec && createdSec > 0) {
+    const ageDays = (Date.now() / 1000 - createdSec) / 86_400;
+    if (ageDays >= 0 && ageDays <= 540) s += Math.round((1 - ageDays / 540) * 14);
+  }
   return Math.round(s * 10) / 10;
 }
 
@@ -144,12 +192,16 @@ async function fetchOpenRouter(): Promise<ModelRow[]> {
   for (const m of body.data ?? []) {
     const id = String(m.id ?? "");
     if (!id) continue;
+    // Skip OpenRouter variant aliases (e.g. `~anthropic/claude-fable-latest`):
+    // they duplicate a concrete versioned model and produce junk provider names.
+    if (id.startsWith("~")) continue;
     const [providerPart] = id.split("/");
     const provider = (providerPart ?? "unknown").replace(/-/g, " ");
     const name = String(m.name ?? id);
     const license = inferLicense(id, name);
     const arch = m.architecture as ModelRow["raw"] | undefined;
     const context = typeof m.context_length === "number" ? m.context_length : null;
+    const created = typeof m.created === "number" ? m.created : undefined;
     const slug = slugify(providerPart ?? "model", id.replace(/^[^/]+\//, ""));
 
     rows.push({
@@ -161,7 +213,7 @@ async function fetchOpenRouter(): Promise<ModelRow[]> {
       modalities: parseModalities(arch as Parameters<typeof parseModalities>[0]),
       context_window: context,
       parameter_count: null,
-      release_date: null,
+      release_date: isoDateFromUnix(created),
       summary: typeof m.description === "string"
         ? m.description.slice(0, 280)
         : null,
@@ -183,7 +235,7 @@ async function fetchOpenRouter(): Promise<ModelRow[]> {
       source: "openrouter",
       preserve_curated: false,
       raw: m as Record<string, unknown>,
-      score: scoreFor(id, context ?? undefined),
+      score: scoreFor(id, context ?? undefined, undefined, created),
     });
   }
   return rows;

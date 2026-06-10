@@ -117,6 +117,20 @@ export async function getLlmModelBySlug(slug: string): Promise<LlmModel | null> 
   return data ? mapModel(data as unknown as LlmModelRow) : null;
 }
 
+/**
+ * Triggers a live catalog refresh by invoking the `models-ingest` edge function
+ * (OpenRouter + Hugging Face). Resolves once the upstream upsert has completed,
+ * so the caller can safely refetch fresh rows afterwards. No-op in mock mode.
+ */
+export async function triggerModelsCatalogSync(): Promise<void> {
+  if (isMock) return;
+
+  const { error } = await supabase.functions.invoke("models-ingest", {
+    body: {},
+  });
+  if (error) throw new Error(error.message);
+}
+
 export async function getModelsCatalogMeta(): Promise<{ count: number; lastFetchedAt: string | null }> {
   if (isMock) {
     const latest = mockLlmModels.reduce(

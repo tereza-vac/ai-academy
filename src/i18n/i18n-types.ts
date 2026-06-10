@@ -1249,27 +1249,27 @@ export type NamespaceNavTranslation = {
 	 */
 	collapseSidebar: string
 	/**
-	 * Flashcards
+	 * K​a​r​t​i​č​k​y
 	 */
 	flashcardsLink: string
 	/**
-	 * Progress
+	 * P​o​k​r​o​k
 	 */
 	progressLink: string
 	/**
-	 * Achievements
+	 * Ú​s​p​ě​c​h​y
 	 */
 	achievementsLink: string
 	/**
-	 * Study plans
+	 * S​t​u​d​i​j​n​í​ ​p​l​á​n​y
 	 */
 	planLink: string
 	/**
-	 * Settings
+	 * N​a​s​t​a​v​e​n​í
 	 */
 	settingsLink: string
 	/**
-	 * Search
+	 * H​l​e​d​a​t​…
 	 */
 	searchPlaceholder: string
 }
@@ -1807,6 +1807,18 @@ export type NamespaceSpectrumTranslation = {
 	 * O​b​n​o​v​i​t
 	 */
 	refresh: string
+	/**
+	 * A​k​t​u​a​l​i​z​u​j​i​ ​k​a​t​a​l​o​g​ ​z​ ​O​p​e​n​R​o​u​t​e​r​…
+	 */
+	syncing: string
+	/**
+	 * K​a​t​a​l​o​g​ ​b​y​l​ ​a​k​t​u​a​l​i​z​o​v​á​n
+	 */
+	syncDone: string
+	/**
+	 * S​y​n​c​h​r​o​n​i​z​a​c​e​ ​s​e​ ​n​e​z​d​a​ř​i​l​a​,​ ​z​o​b​r​a​z​u​j​i​ ​u​l​o​ž​e​n​o​u​ ​v​e​r​z​i
+	 */
+	syncFailed: string
 	/**
 	 * N​e​j​p​o​p​u​l​á​r​n​ě​j​š​í
 	 */
@@ -3334,27 +3346,27 @@ export type TranslationFunctions = {
 		 */
 		collapseSidebar: () => LocalizedString
 		/**
-		 * Flashcards
+		 * Kartičky
 		 */
 		flashcardsLink: () => LocalizedString
 		/**
-		 * Progress
+		 * Pokrok
 		 */
 		progressLink: () => LocalizedString
 		/**
-		 * Achievements
+		 * Úspěchy
 		 */
 		achievementsLink: () => LocalizedString
 		/**
-		 * Study plans
+		 * Studijní plány
 		 */
 		planLink: () => LocalizedString
 		/**
-		 * Settings
+		 * Nastavení
 		 */
 		settingsLink: () => LocalizedString
 		/**
-		 * Search
+		 * Hledat…
 		 */
 		searchPlaceholder: () => LocalizedString
 	}
@@ -3863,6 +3875,18 @@ export type TranslationFunctions = {
 		 * Obnovit
 		 */
 		refresh: () => LocalizedString
+		/**
+		 * Aktualizuji katalog z OpenRouter…
+		 */
+		syncing: () => LocalizedString
+		/**
+		 * Katalog byl aktualizován
+		 */
+		syncDone: () => LocalizedString
+		/**
+		 * Synchronizace se nezdařila, zobrazuji uloženou verzi
+		 */
+		syncFailed: () => LocalizedString
 		/**
 		 * Nejpopulárnější
 		 */
